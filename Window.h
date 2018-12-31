@@ -12,10 +12,10 @@ public:
 	Window(GLuint width, GLuint height, std::string name);
 	void update();
 	virtual ~Window();
+
 private:
 	GLuint width, height;
 	std::string name;
 	SDL_Window* window;
 	SDL_GLContext glContext;
 };
-
