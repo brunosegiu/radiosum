@@ -2,5 +2,36 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Window.cpp">
+      <Filter>Source\Display</Filter>
+    </ClCompile>
+    <ClCompile Include="UIntBuffer.cpp">
+      <Filter>Source\Buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="Buffer.cpp">
+      <Filter>Source\Buffers</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source">
+      <UniqueIdentifier>{ee940d1f-1232-4c7a-88f4-3c3c6b38d919}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Display">
+      <UniqueIdentifier>{c3bcba49-2e67-4001-98da-0dd1821e8ce7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Buffers">
+      <UniqueIdentifier>{75b6374a-8bc3-4469-b60c-615df8f4869f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Window.h">
+      <Filter>Source\Display</Filter>
+    </ClInclude>
+    <ClInclude Include="Buffer.h">
+      <Filter>Source\Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="UIntBuffer.h">
+      <Filter>Source\Buffers</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
