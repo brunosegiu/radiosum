@@ -7,6 +7,8 @@
 #include <SDL.h>
 #include <SDL_opengl.h>
 
+#include "CameraController.h"
+
 class Window {
 public:
 	Window(GLuint width, GLuint height, std::string name);
@@ -18,4 +20,5 @@ private:
 	std::string name;
 	SDL_Window* window;
 	SDL_GLContext glContext;
+	CameraController* camera;
 };

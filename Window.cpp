@@ -5,6 +5,7 @@ Window::Window(GLuint width = 1280, GLuint height = 800,
 	this->width = width;
 	this->height = height;
 	this->name = name;
+
 	if (SDL_Init(SDL_INIT_VIDEO) >= 0) {
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
@@ -24,12 +25,20 @@ Window::Window(GLuint width = 1280, GLuint height = 800,
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glEnable(GL_CULL_FACE);
 		glEnable(GL_DEPTH_TEST);
+
+		this->camera = new CameraController(window);
 	}
 	else {
 		throw std::runtime_error("Failed to initialize SDL");
 	}
 }
 
-void Window::update() { SDL_GL_SwapWindow(window); }
+void Window::update() {
+	this->camera->update();
+	SDL_GL_SwapWindow(window);
+}
 
-Window::~Window() { SDL_DestroyWindow(window); }
+Window::~Window() {
+	delete this->camera;
+	SDL_DestroyWindow(window);
+}

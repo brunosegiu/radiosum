@@ -17,6 +17,8 @@ public:
 	glm::vec3 getDirection();
 	glm::vec3 getUp();
 
+	glm::mat4 getMVPMatrix();
+
 	virtual ~Camera();
 
 private:

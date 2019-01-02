@@ -44,6 +44,10 @@ glm::vec3 Camera::getUp() {
 	return this->up;
 }
 
+glm::mat4 Camera::getMVPMatrix() {
+	return this->projectionMatrix *  this->viewMatrix;
+}
+
 
 Camera::~Camera() {
 }
