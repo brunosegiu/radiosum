@@ -16,6 +16,7 @@ public:
 
 	std::vector<glm::vec3> getVertices();
 	std::vector<unsigned int> getIds();
+	GLuint size();
 
 	virtual ~Mesh();
 

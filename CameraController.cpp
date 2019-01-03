@@ -10,13 +10,13 @@
 #include <glm.hpp>
 #include <gtx/rotate_vector.hpp>
 
-CameraController::CameraController(SDL_Window* win = nullptr, Camera* camera = nullptr, float sensitivity = 50.0f, float speed = 50.0f) {
+CameraController::CameraController(SDL_Window* win, Camera* camera, float sensitivity, float speed) {
 	if (!win) {
 		throw std::runtime_error("No window object to wrap camera to");
 	}
 	else {
-		if (camera)
-			this->camera = new Camera(1280, 800, 45, 0.5f, 5000.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		if (camera == nullptr)
+			camera = new Camera(800, 600, 45, 0.5f, 5000.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		this->camera = camera;
 		this->sensitivity = sensitivity;
 		this->speed = speed;
@@ -24,6 +24,10 @@ CameraController::CameraController(SDL_Window* win = nullptr, Camera* camera = n
 		this->set = false;
 		this->win = win;
 		this->lastUpdate = std::clock();
+		int width, height;
+		SDL_GetWindowSize(win, &width, &height);
+		this->width = GLuint(width);
+		this->height = GLuint(height);
 	}
 }
 

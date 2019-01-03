@@ -80,7 +80,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)lib\SDL2-2.0.8\include;$(ProjectDir)lib\glew-2.1.0\include;$(ProjectDir)lib\glm;$(ProjectDir)lib\Eigen\src;$(IncludePath);$(ProjectDir)lib\glew-2.1.0\bin\Release\x64</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)lib\SDL2-2.0.8\include;$(ProjectDir)lib\glew-2.1.0\include;$(ProjectDir)lib\glm;$(ProjectDir)lib\Eigen\src;$(IncludePath)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;glew32.lib;OpenGL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -94,7 +94,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)lib\SDL2-2.0.8\include;$(ProjectDir)lib\glew-2.1.0\include;$(ProjectDir)lib\glm;$(ProjectDir)lib\Eigen\src;$(IncludePath);$(ProjectDir)lib\glew-2.1.0\bin\Release\x64</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)lib\SDL2-2.0.8\include;$(ProjectDir)lib\glew-2.1.0\include;$(ProjectDir)lib\glm;$(ProjectDir)lib\Eigen\src;$(IncludePath)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;glew32.lib;OpenGL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -110,7 +110,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)lib\SDL2-2.0.8\include;$(ProjectDir)lib\glew-2.1.0\include;$(ProjectDir)lib\glm;$(ProjectDir)lib\Eigen\src;$(IncludePath);$(ProjectDir)lib\glew-2.1.0\bin\Release\x64</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)lib\SDL2-2.0.8\include;$(ProjectDir)lib\glew-2.1.0\include;$(ProjectDir)lib\glm;$(ProjectDir)lib\Eigen\src;$(IncludePath)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -128,7 +128,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)lib\SDL2-2.0.8\include;$(ProjectDir)lib\glew-2.1.0\include;$(ProjectDir)lib\glm;$(ProjectDir)lib\Eigen\src;$(IncludePath);$(ProjectDir)lib\glew-2.1.0\bin\Release\x64</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)lib\SDL2-2.0.8\include;$(ProjectDir)lib\glew-2.1.0\include;$(ProjectDir)lib\glm;$(ProjectDir)lib\Eigen\src;$(IncludePath)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -142,11 +142,14 @@
     <ClCompile Include="Buffer.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CameraController.cpp" />
+    <ClCompile Include="ConfigurationManager.cpp" />
     <ClCompile Include="IDRenderer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="PreprocessingController.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="BufferRenderer.cpp" />
     <ClCompile Include="UIntBuffer.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
@@ -154,12 +157,22 @@
     <ClInclude Include="Buffer.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CameraController.h" />
+    <ClInclude Include="ConfigurationManager.h" />
     <ClInclude Include="IDRenderer.h" />
     <ClInclude Include="Mesh.h" />
+    <ClInclude Include="PreprocessingController.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="BufferRenderer.h" />
     <ClInclude Include="UIntBuffer.h" />
     <ClInclude Include="Window.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="config.ini" />
+    <None Include="id.frag" />
+    <None Include="id.vert" />
+    <None Include="renderFromText.frag" />
+    <None Include="renderFromText.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

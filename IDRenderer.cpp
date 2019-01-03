@@ -1,11 +1,13 @@
 #include "IDRenderer.h"
 
+#include "ConfigurationManager.h"
 
-
-IDRenderer::IDRenderer(std::vector<Mesh*> meshes, Camera* camera) {
+IDRenderer::IDRenderer(std::vector<Mesh*> meshes) {
 	this->shader = new Shader("id.vert", "id.frag");
 	this->meshes = meshes;
-	this->camera = camera;
+	std::string width = ConfigurationManager::get("INTERNAL_WIDTH");
+	std::string height = ConfigurationManager::get("INTERNAL_HEIGHT");
+	this->camera = new Camera(GLuint(std::stoi(width)), GLuint(std::stoi(height)), 45.0f, 0.5f, 5000.0f);
 }
 
 void IDRenderer::render() {
@@ -20,4 +22,5 @@ void IDRenderer::render() {
 
 IDRenderer::~IDRenderer() {
 	delete this->shader;
+	delete this->camera;
 }

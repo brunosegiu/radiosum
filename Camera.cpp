@@ -7,7 +7,7 @@
 #include <gtx/rotate_vector.hpp>
 
 
-Camera::Camera(GLuint width, GLuint height, float fov = 45.0f, float near = 0.5f, float far = 5000.0f, glm::vec3 origin = glm::vec3(5.0f, 0, 0), glm::vec3 direction = glm::vec3(-1, 0, 0), glm::vec3 up = glm::vec3(0, 1, 0)) {
+Camera::Camera(GLuint width, GLuint height, float fov, float near, float far, glm::vec3 origin, glm::vec3 direction, glm::vec3 up) {
 	this->origin = origin;
 	this->direction = glm::normalize(direction);
 	this->up = glm::normalize(up);

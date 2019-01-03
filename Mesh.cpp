@@ -12,7 +12,7 @@ Mesh::Mesh(std::vector<glm::vec3> vertices) {
 		this->ids.push_back(id);
 	}
 
-	Mesh::faceCount += this->ids.size();
+	Mesh::faceCount += GLuint(this->ids.size());
 
 	//Copy vertices to GPU
 	glGenBuffers(1, &this->GLVerticesId);
@@ -95,7 +95,7 @@ std::vector<glm::vec3> loadOBJ(std::ifstream* input) {
 
 	}
 
-	return vertices
+	return vertices;
 }
 
 Mesh* Mesh::load(std::string path) {
@@ -114,7 +114,7 @@ void Mesh::draw() {
 	glBindVertexArray(this->GLVaoId);
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
-	glDrawArrays(GL_TRIANGLES, 0, this->vertices.size());
+	glDrawArrays(GL_TRIANGLES, 0, GLsizei(this->vertices.size()));
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
 }
@@ -127,9 +127,13 @@ std::vector<GLuint> Mesh::getIds() {
 	return this->ids;
 }
 
+GLuint Mesh::size() {
+	return GLuint(this->vertices.size());
+}
+
 Mesh::~Mesh() {
 	glBindVertexArray(this->GLVaoId);
 	glDeleteBuffers(1, &this->GLVerticesId);
 	glDeleteBuffers(1, &this->GLIdsId);
-	glDeleteVertexArrays(1, &this->GLVaoId)
+	glDeleteVertexArrays(1, &this->GLVaoId);
 }

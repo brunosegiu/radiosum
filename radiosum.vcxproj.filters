@@ -13,18 +13,31 @@
     <ClCompile Include="main.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CameraController.cpp">
       <Filter>Source\Display</Filter>
     </ClCompile>
     <ClCompile Include="Mesh.cpp">
       <Filter>Source\Geometry</Filter>
     </ClCompile>
-    <ClCompile Include="Renderer.cpp" />
-    <ClCompile Include="Shader.cpp" />
     <ClCompile Include="IDRenderer.cpp">
+      <Filter>Source\Preprocessing</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="BufferRenderer.cpp">
       <Filter>Source\Display</Filter>
     </ClCompile>
+    <ClCompile Include="PreprocessingController.cpp">
+      <Filter>Source\Preprocessing</Filter>
+    </ClCompile>
+    <ClCompile Include="ConfigurationManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source">
@@ -39,6 +52,9 @@
     <Filter Include="Source\Geometry">
       <UniqueIdentifier>{8a21db75-e3d9-4037-a011-49496d44ad43}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Preprocessing">
+      <UniqueIdentifier>{61d7531a-8b3f-4947-953a-b3d8a0533a3e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h">
@@ -50,17 +66,47 @@
     <ClInclude Include="UIntBuffer.h">
       <Filter>Source\Buffers</Filter>
     </ClInclude>
-    <ClInclude Include="Camera.h" />
     <ClInclude Include="CameraController.h">
       <Filter>Source\Display</Filter>
     </ClInclude>
     <ClInclude Include="Mesh.h">
       <Filter>Source\Geometry</Filter>
     </ClInclude>
-    <ClInclude Include="Renderer.h" />
-    <ClInclude Include="Shader.h" />
     <ClInclude Include="IDRenderer.h">
+      <Filter>Source\Preprocessing</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="BufferRenderer.h">
       <Filter>Source\Display</Filter>
     </ClInclude>
+    <ClInclude Include="PreprocessingController.h">
+      <Filter>Source\Preprocessing</Filter>
+    </ClInclude>
+    <ClInclude Include="ConfigurationManager.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="renderFromText.vert">
+      <Filter>Source\Display</Filter>
+    </None>
+    <None Include="renderFromText.frag">
+      <Filter>Source\Display</Filter>
+    </None>
+    <None Include="config.ini">
+      <Filter>Source</Filter>
+    </None>
+    <None Include="id.frag">
+      <Filter>Source\Preprocessing</Filter>
+    </None>
+    <None Include="id.vert">
+      <Filter>Source\Preprocessing</Filter>
+    </None>
   </ItemGroup>
 </Project>

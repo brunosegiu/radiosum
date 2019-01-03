@@ -8,6 +8,7 @@
 
 class Renderer {
 public:
+	Renderer();
 	Renderer(std::vector<Mesh*> meshes, Shader* shader, Camera* camera);
 	virtual void render() = 0;
 	virtual ~Renderer();
