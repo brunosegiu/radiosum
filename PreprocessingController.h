@@ -3,7 +3,6 @@
 #include <vector>
 
 #include "IDRenderer.h"
-#include "BufferRenderer.h"
 #include "Mesh.h"
 
 class PreprocessingController {
@@ -15,7 +14,6 @@ public:
 	virtual ~PreprocessingController();
 private:
 	IDRenderer* renderer;
-	BufferRenderer* bufferRenderer;
 	std::vector<Mesh*> meshes;
 	unsigned int meshStep, faceStep;
 	Camera* cam;
