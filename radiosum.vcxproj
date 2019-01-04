@@ -147,6 +147,8 @@
     <ClCompile Include="IDRenderer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="SceneRenderer.cpp" />
     <ClCompile Include="PreprocessingController.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Shader.cpp" />
@@ -163,6 +165,8 @@
     <ClInclude Include="EventListener.h" />
     <ClInclude Include="IDRenderer.h" />
     <ClInclude Include="Mesh.h" />
+    <ClInclude Include="Scene.h" />
+    <ClInclude Include="SceneRenderer.h" />
     <ClInclude Include="PreprocessingController.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Shader.h" />
@@ -172,6 +176,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="config.ini" />
+    <None Include="final.frag" />
+    <None Include="final.vert" />
     <None Include="id.frag" />
     <None Include="id.vert" />
     <None Include="renderFromText.frag" />

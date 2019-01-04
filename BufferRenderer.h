@@ -9,4 +9,3 @@ private:
 	Shader* shader;
 	GLuint GLQuadId, GLVerticesId;
 };
-

@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "Mesh.h"
+#include "Scene.h"
 #include "Shader.h"
 #include "Camera.h"
 #include "Buffer.h"
@@ -15,7 +15,7 @@ public:
 	void read();
 	virtual ~Renderer();
 protected:
-	std::vector<Mesh*> meshes;
+	Scene* scene;
 	Shader* shader;
 	Camera* camera;
 	Buffer* buffer;

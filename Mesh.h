@@ -10,7 +10,7 @@ class Mesh {
 public:
 	static Mesh* load(std::string path);
 
-	Mesh(std::vector<glm::vec3> vertices);
+	Mesh(std::vector<glm::vec3> vertices, std::vector<glm::vec3> normals);
 
 	void draw();
 
@@ -22,9 +22,10 @@ public:
 
 private:
 	std::vector<glm::vec3> vertices;
+	std::vector<glm::vec3> normals;
 	std::vector<GLuint> ids;
 
 	static GLuint faceCount;
-	GLuint GLVerticesId, GLIdsId, GLVaoId;
+	GLuint GLVerticesId, GLNormalsId, GLIdsId, GLVaoId;
 };
 

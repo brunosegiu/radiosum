@@ -4,7 +4,7 @@
 
 class IDRenderer : public Renderer {
 public:
-	IDRenderer(std::vector<Mesh*> meshes);
+	IDRenderer(Scene* scene);
 	void render();
 	virtual ~IDRenderer();
 };

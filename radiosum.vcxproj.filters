@@ -43,6 +43,12 @@
     <ClCompile Include="DisplayController.cpp">
       <Filter>Source\Display</Filter>
     </ClCompile>
+    <ClCompile Include="SceneRenderer.cpp">
+      <Filter>Source\Display</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Source\Geometry</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source">
@@ -59,6 +65,18 @@
     </Filter>
     <Filter Include="Source\Preprocessing">
       <UniqueIdentifier>{61d7531a-8b3f-4947-953a-b3d8a0533a3e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Shaders">
+      <UniqueIdentifier>{238d59c9-c536-4fce-9970-1525ff3eae69}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Shaders\Preprocessing">
+      <UniqueIdentifier>{eb898d23-1a49-43cf-b698-a93f42279e13}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Shaders\Debugging">
+      <UniqueIdentifier>{c341cacf-9a75-47f8-a9b3-d2841e96d28a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Shaders\Final">
+      <UniqueIdentifier>{6900cfbc-8b8f-4ff4-a5e9-03c3b2d671b1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -104,22 +122,34 @@
     <ClInclude Include="DisplayController.h">
       <Filter>Source\Display</Filter>
     </ClInclude>
+    <ClInclude Include="SceneRenderer.h">
+      <Filter>Source\Display</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>Source\Geometry</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="renderFromText.vert">
-      <Filter>Source\Display</Filter>
-    </None>
-    <None Include="renderFromText.frag">
-      <Filter>Source\Display</Filter>
-    </None>
     <None Include="config.ini">
       <Filter>Source</Filter>
     </None>
-    <None Include="id.frag">
-      <Filter>Source\Preprocessing</Filter>
-    </None>
     <None Include="id.vert">
-      <Filter>Source\Preprocessing</Filter>
+      <Filter>Source\Shaders\Preprocessing</Filter>
+    </None>
+    <None Include="id.frag">
+      <Filter>Source\Shaders\Preprocessing</Filter>
+    </None>
+    <None Include="renderFromText.frag">
+      <Filter>Source\Shaders\Debugging</Filter>
+    </None>
+    <None Include="renderFromText.vert">
+      <Filter>Source\Shaders\Debugging</Filter>
+    </None>
+    <None Include="final.frag">
+      <Filter>Source\Shaders\Final</Filter>
+    </None>
+    <None Include="final.vert">
+      <Filter>Source\Shaders\Final</Filter>
     </None>
   </ItemGroup>
 </Project>

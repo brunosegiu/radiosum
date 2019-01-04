@@ -2,15 +2,14 @@
 
 #include "PreprocessingController.h"
 #include "DisplayController.h"
-#include "Mesh.h"
+#include "Scene.h"
 
 int main(int argc, char *args[]) {
 	Window *win = Window::get();
-	Mesh* mesh = Mesh::load("mesh.obj");
-	std::vector<Mesh*> meshes;
-	meshes.push_back(mesh);
-	PreprocessingController* pre = new PreprocessingController(meshes);
-	DisplayController* dis = new DisplayController();
+	Scene* world = new Scene();
+	world->addMesh("mesh.obj");
+	PreprocessingController* pre = new PreprocessingController(world);
+	DisplayController* dis = new DisplayController(world);
 	while (true) {
 		pre->runStep();
 		dis->render();

@@ -4,8 +4,8 @@
 #include "ConfigurationManager.h"
 #include "CameraController.h"
 
-PreprocessingController::PreprocessingController(std::vector<Mesh*> meshes) {
-	this->renderer = new IDRenderer(meshes);
+PreprocessingController::PreprocessingController(Scene* scene) {
+	this->renderer = new IDRenderer(scene);
 	this->meshStep = this->faceStep = 0;
 	this->meshes = meshes;
 }

@@ -4,9 +4,9 @@
 
 GLuint Mesh::faceCount = 0;
 
-Mesh::Mesh(std::vector<glm::vec3> vertices) {
+Mesh::Mesh(std::vector<glm::vec3> vertices, std::vector<glm::vec3> normals) {
 	this->vertices = vertices;
-	this->GLVerticesId, this->GLIdsId, this->GLVaoId = 0;
+	this->GLVerticesId, this->GLNormalsId = this->GLIdsId, this->GLVaoId = 0;
 
 	for (GLuint id = Mesh::faceCount; id < this->vertices.size(); id++) {
 		this->ids.push_back(id);
@@ -18,6 +18,11 @@ Mesh::Mesh(std::vector<glm::vec3> vertices) {
 	glGenBuffers(1, &this->GLVerticesId);
 	glBindBuffer(GL_ARRAY_BUFFER, this->GLVerticesId);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * vertices.size(), &vertices[0].x, GL_STATIC_DRAW);
+
+	//Copy normals to GPU
+	glGenBuffers(1, &this->GLNormalsId);
+	glBindBuffer(GL_ARRAY_BUFFER, this->GLNormalsId);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * normals.size(), &normals[0].x, GL_STATIC_DRAW);
 
 	//Copy ids to GPU
 	std::vector<GLuint> replicatedIds;
@@ -38,14 +43,20 @@ Mesh::Mesh(std::vector<glm::vec3> vertices) {
 	glBindBuffer(GL_ARRAY_BUFFER, this->GLVerticesId);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
+	//Bind Normals
+	glBindBuffer(GL_ARRAY_BUFFER, this->GLNormalsId);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
 	//Bind Ids
 	glBindBuffer(GL_ARRAY_BUFFER, this->GLIdsId);
-	glVertexAttribIPointer(1, 1, GL_UNSIGNED_INT, 0, (void*)0);
+	glVertexAttribIPointer(2, 1, GL_UNSIGNED_INT, 0, (void*)0);
 }
 
-std::vector<glm::vec3> loadOBJ(std::ifstream* input) {
+Mesh* loadOBJ(std::ifstream* input) {
 	std::vector<glm::vec3> indexedVertices;
-	std::vector<GLuint> indices;
+	std::vector<glm::vec3> indexedNormals;
+	std::vector<GLuint> verticesIndices;
+	std::vector<GLuint> normalsIndices;
 
 	//Load every vertex, normals and indices
 	std::string line;
@@ -62,6 +73,19 @@ std::vector<glm::vec3> loadOBJ(std::ifstream* input) {
 
 			indexedVertices.push_back(vertex);
 		}
+		else if (line[0] == 'v' && line[1] == 'n') {
+			line[0] = ' ';
+			line[1] = ' ';
+
+			glm::vec3 normal;
+
+			sscanf_s(line.c_str(), "%f %f %f ",
+				&normal.x,
+				&normal.y,
+				&normal.z);
+
+			indexedNormals.push_back(normal);
+		}
 		else if (line[0] == 'f') {
 			line[0] = ' ';
 
@@ -73,29 +97,44 @@ std::vector<glm::vec3> loadOBJ(std::ifstream* input) {
 				&second_v, &second_n,
 				&third_v, &third_n);
 
-			indices.push_back(first_v - 1);
-			indices.push_back(second_v - 1);
-			indices.push_back(third_v - 1);
+			verticesIndices.push_back(first_v - 1);
+			verticesIndices.push_back(second_v - 1);
+			verticesIndices.push_back(third_v - 1);
+
+			normalsIndices.push_back(first_v - 1);
+			normalsIndices.push_back(second_n - 1);
+			normalsIndices.push_back(third_n - 1);
+
 		}
 	}
 
 	//Per-face vertices
 
 	std::vector<glm::vec3> vertices;
+	std::vector<glm::vec3> normals;
 
-	for (unsigned int i = 0; i < indices.size(); i += 3) {
+	for (unsigned int i = 0; i < verticesIndices.size(); i += 3) {
 
-		glm::vec3 v0 = indexedVertices[indices[i]];
-		glm::vec3 v1 = indexedVertices[indices[i + 1]];
-		glm::vec3 v2 = indexedVertices[indices[i + 2]];
+		glm::vec3 v0 = indexedVertices[verticesIndices[i]];
+		glm::vec3 v1 = indexedVertices[verticesIndices[i + 1]];
+		glm::vec3 v2 = indexedVertices[verticesIndices[i + 2]];
+
+		glm::vec3 n0 = indexedNormals[normalsIndices[i]];
+		glm::vec3 n1 = indexedNormals[normalsIndices[i + 1]];
+		glm::vec3 n2 = indexedNormals[normalsIndices[i + 2]];
 
 		vertices.push_back(v0);
 		vertices.push_back(v1);
 		vertices.push_back(v2);
 
+		normals.push_back(n0);
+		normals.push_back(n1);
+		normals.push_back(n2);
+
 	}
 
-	return vertices;
+
+	return new Mesh(vertices, normals);
 }
 
 Mesh* Mesh::load(std::string path) {
@@ -105,18 +144,20 @@ Mesh* Mesh::load(std::string path) {
 	std::vector<glm::vec3> vertices;
 
 	if (fileExt == "obj")
-		vertices = loadOBJ(&input);
+		return loadOBJ(&input);
 
-	return new Mesh(vertices);
+	throw std::runtime_error("Unable to load mesh, format not supported");
 }
 
 void Mesh::draw() {
 	glBindVertexArray(this->GLVaoId);
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
+	glEnableVertexAttribArray(2);
 	glDrawArrays(GL_TRIANGLES, 0, GLsizei(this->vertices.size()));
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
+	glDisableVertexAttribArray(2);
 }
 
 std::vector<glm::vec3> Mesh::getVertices() {

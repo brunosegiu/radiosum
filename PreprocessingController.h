@@ -3,11 +3,11 @@
 #include <vector>
 
 #include "IDRenderer.h"
-#include "Mesh.h"
+#include "Scene.h"
 
 class PreprocessingController {
 public:
-	PreprocessingController(std::vector<Mesh*> meshes);
+	PreprocessingController(Scene* scene);
 	void reset();
 	void runStep();
 	bool end();

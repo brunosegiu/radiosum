@@ -1,13 +1,13 @@
 #version 330 core
 
 layout (location = 0) in vec3 position;
-layout (location = 2) in uint id;
+layout (location = 1) in vec3 normal;
 
-flat out uint idToFrag;
+out vec3 normalToFrag;
 
 uniform mat4 worldTransform;
 
 void main(){
 	gl_Position =  worldTransform * vec4(position,1.0f);
-	idToFrag = id;
+	normalToFrag = normal;
 }
