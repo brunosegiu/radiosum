@@ -5,7 +5,6 @@
 #include "IDRenderer.h"
 #include "BufferRenderer.h"
 #include "Mesh.h"
-#include "UIntBuffer.h"
 
 class PreprocessingController {
 public:
@@ -20,6 +19,5 @@ private:
 	std::vector<Mesh*> meshes;
 	unsigned int meshStep, faceStep;
 	Camera* cam;
-	UIntBuffer* buffer;
 };
 

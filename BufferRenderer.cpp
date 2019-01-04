@@ -5,6 +5,8 @@
 BufferRenderer::BufferRenderer() {
 	this->shader = new Shader(ConfigurationManager::get("DEBUG_SHADER_VERT"), ConfigurationManager::get("DEBUG_SHADER_FRAG"));
 
+	this->buffer = new Buffer();
+
 	static const GLfloat quad[] = {
 	-1.0f, -1.0f, 0.0f,
 	1.0f, -1.0f, 0.0f,
@@ -31,8 +33,8 @@ BufferRenderer::BufferRenderer() {
 
 void BufferRenderer::render() {
 	this->shader->bind();
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	this->buffer->bind();
+	this->buffer->clean();
 	GLuint textureBufferID = glGetUniformLocation(shader->getID(), "buffer");
 	glUniform1i(textureBufferID, 0);
 	glBindVertexArray(this->GLQuadId);
@@ -42,5 +44,5 @@ void BufferRenderer::render() {
 }
 
 BufferRenderer::~BufferRenderer() {
-
+	delete this->buffer;
 }

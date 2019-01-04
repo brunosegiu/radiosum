@@ -25,13 +25,14 @@ UIntBuffer::UIntBuffer(GLuint width, GLuint height) : Buffer(width, height) {
 		GL_RENDERBUFFER, this->GLDepthId);
 
 	// Attach elements to buffer
-	glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, this->GLTextureId,
-		0);
+	glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, this->GLTextureId, 0);
 	GLenum buffers[1] = { GL_COLOR_ATTACHMENT0 };
 	glDrawBuffers(1, buffers);
 }
 
-void UIntBuffer::bind() { glBindFramebuffer(GL_FRAMEBUFFER, this->GLId); }
+void UIntBuffer::bind() {
+	glBindFramebuffer(GL_FRAMEBUFFER, this->GLId);
+}
 
 void UIntBuffer::read() {
 	glActiveTexture(GL_TEXTURE0);

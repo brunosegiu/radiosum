@@ -1,10 +1,20 @@
 #include "Window.h"
 
-Window::Window(GLuint width = 1280, GLuint height = 800,
-	std::string name = "Display") {
-	this->width = width;
-	this->height = height;
-	this->name = name;
+#include "ConfigurationManager.h"
+
+Window* Window::instance = nullptr;
+
+Window* Window::get() {
+	if (!Window::instance) {
+		Window::instance = new Window();
+	}
+	return Window::instance;
+}
+
+Window::Window() {
+	this->width = std::stoi(ConfigurationManager::get("APP_RES_WIDTH"));
+	this->height = std::stoi(ConfigurationManager::get("APP_RES_HEIGHT"));
+	this->name = ConfigurationManager::get("APP_NAME");
 
 	if (SDL_Init(SDL_INIT_VIDEO) >= 0) {
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
@@ -23,10 +33,10 @@ Window::Window(GLuint width = 1280, GLuint height = 800,
 
 		// Load OpenGL setting
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		glEnable(GL_CULL_FACE);
 		glEnable(GL_DEPTH_TEST);
 
 		this->camera = new CameraController(window);
+		this->listeners.push_back(this->camera);
 	}
 	else {
 		throw std::runtime_error("Failed to initialize SDL");
@@ -35,8 +45,19 @@ Window::Window(GLuint width = 1280, GLuint height = 800,
 
 void Window::update() {
 	this->camera->update();
+	SDL_Event event;
+	while (SDL_PollEvent(&event) != 0) {
+		for (auto listener : this->listeners) {
+			listener->process(event);
+		}
+	}
 	SDL_GL_SwapWindow(window);
 }
+
+Camera* Window::getCamera() {
+	return this->camera->getCamera();
+}
+
 
 Window::~Window() {
 	delete this->camera;

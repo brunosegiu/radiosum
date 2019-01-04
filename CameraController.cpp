@@ -10,7 +10,9 @@
 #include <glm.hpp>
 #include <gtx/rotate_vector.hpp>
 
-CameraController::CameraController(SDL_Window* win, Camera* camera, float sensitivity, float speed) {
+#include "ConfigurationManager.h"
+
+CameraController::CameraController(SDL_Window* win, Camera* camera) {
 	if (!win) {
 		throw std::runtime_error("No window object to wrap camera to");
 	}
@@ -18,8 +20,8 @@ CameraController::CameraController(SDL_Window* win, Camera* camera, float sensit
 		if (camera == nullptr)
 			camera = new Camera(800, 600, 45, 0.5f, 5000.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		this->camera = camera;
-		this->sensitivity = sensitivity;
-		this->speed = speed;
+		this->sensitivity = std::stoi(ConfigurationManager::get("MOUSE_SENSITIVITY"));
+		this->speed = std::stoi(ConfigurationManager::get("MOUSE_SPEED"));
 		this->in = false;
 		this->set = false;
 		this->win = win;
@@ -94,6 +96,23 @@ void CameraController::update() {
 		mouseY = unsigned int(height / 2);
 	}
 	this->lastUpdate = clock();
+}
+
+void CameraController::process(SDL_Event &event) {
+	switch (event.type) {
+	case SDL_KEYDOWN: {
+		if (event.key.keysym.sym == SDLK_ESCAPE) {
+			this->in = false;
+		}
+	} break;
+	case SDL_MOUSEBUTTONDOWN: {
+		this->toggleIn();
+	} break;
+	}
+}
+
+Camera* CameraController::getCamera() {
+	return this->camera;
 }
 
 void CameraController::toggleIn() {

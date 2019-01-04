@@ -1,12 +1,14 @@
 #include "PreprocessingController.h"
 
+#include "Window.h"
 #include "ConfigurationManager.h"
+#include "CameraController.h"
 
 PreprocessingController::PreprocessingController(std::vector<Mesh*> meshes) {
 	this->renderer = new IDRenderer(meshes);
 	this->meshStep = this->faceStep = 0;
 	this->meshes = meshes;
-	this->buffer = new UIntBuffer(std::stoi(ConfigurationManager::get("INTERNAL_WIDTH")), std::stoi(ConfigurationManager::get("INTERNAL_HEIGHT")));
+
 	this->bufferRenderer = new BufferRenderer();
 }
 
@@ -17,17 +19,19 @@ void PreprocessingController::reset() {
 
 void PreprocessingController::runStep() {
 	if (!this->end()) {
-		this->buffer->bind();
-		this->renderer->render();
 		if (ConfigurationManager::get("DEBUG") == "true") {
-			this->buffer->read();
+			this->renderer->setCamera(Window::get()->getCamera());
+			this->renderer->render();
+			this->renderer->read();
 			this->bufferRenderer->render();
+		}
+		else {
+			this->renderer->render();
 		}
 
 		// TODO: save results for face
 
-
-		if (this->meshes[this->meshStep]->size() >= this->faceStep) {
+		if (this->meshes[this->meshStep]->size() <= this->faceStep) {
 			this->meshStep++;
 			this->faceStep = 0;
 		}
@@ -36,6 +40,7 @@ void PreprocessingController::runStep() {
 		}
 	}
 }
+
 
 bool PreprocessingController::end() {
 	return this->meshStep >= this->meshes.size();

@@ -4,10 +4,10 @@ out vec4 outColor;
 
 in vec2 uv;
 
-uniform usampler2D textureBuffer;
+uniform usampler2D buffer;
 
 void main() {
-	uint id = texture(textureBuffer, uv).r;
+	uint id = texture(buffer, uv).r;
 	float r = float( (id >> 16) & uint(0xFF)) / 255.0f;
 	float g = float( (id >> 8)  & uint(0xFF)) / 255.0f;
 	float b = float(  id        & uint(0xFF)) / 255.0f;

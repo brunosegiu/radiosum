@@ -4,7 +4,7 @@
 #include "Mesh.h"
 
 int main(int argc, char *args[]) {
-	Window *win = new Window(800, 600, "Radiosum");
+	Window *win = Window::get();
 	Mesh* mesh = Mesh::load("mesh.obj");
 	std::vector<Mesh*> meshes;
 	meshes.push_back(mesh);

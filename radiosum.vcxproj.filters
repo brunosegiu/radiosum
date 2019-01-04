@@ -37,7 +37,9 @@
     <ClCompile Include="PreprocessingController.cpp">
       <Filter>Source\Preprocessing</Filter>
     </ClCompile>
-    <ClCompile Include="ConfigurationManager.cpp" />
+    <ClCompile Include="ConfigurationManager.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source">
@@ -90,7 +92,12 @@
     <ClInclude Include="PreprocessingController.h">
       <Filter>Source\Preprocessing</Filter>
     </ClInclude>
-    <ClInclude Include="ConfigurationManager.h" />
+    <ClInclude Include="EventListener.h">
+      <Filter>Source\Display</Filter>
+    </ClInclude>
+    <ClInclude Include="ConfigurationManager.h">
+      <Filter>Source</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="renderFromText.vert">

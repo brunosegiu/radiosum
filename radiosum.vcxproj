@@ -158,6 +158,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CameraController.h" />
     <ClInclude Include="ConfigurationManager.h" />
+    <ClInclude Include="EventListener.h" />
     <ClInclude Include="IDRenderer.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="PreprocessingController.h" />

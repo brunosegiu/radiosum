@@ -4,11 +4,11 @@
 
 class Buffer {
 public:
-	Buffer(GLuint width, GLuint height);
-	virtual void bind() = 0;
-	virtual void read() = 0;
-	virtual ~Buffer() = 0;
-
+	Buffer(GLuint width = 0, GLuint height = 0);
+	virtual void bind();
+	virtual void read();
+	void clean();
+	virtual ~Buffer();
 protected:
 	GLuint width, height;
 };

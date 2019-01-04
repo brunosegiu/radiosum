@@ -6,10 +6,13 @@ Renderer::Renderer() {
 
 }
 
-Renderer::Renderer(std::vector<Mesh*> meshes, Shader* shader, Camera* camera) {
-	this->meshes = meshes;
-	this->shader = shader;
+
+void Renderer::setCamera(Camera* camera) {
 	this->camera = camera;
+}
+
+void Renderer::read() {
+	this->buffer->read();
 }
 
 

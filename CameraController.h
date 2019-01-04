@@ -3,12 +3,17 @@
 #include <ctime>
 
 #include "Camera.h"
+#include "EventListener.h"
 
-class CameraController {
+class CameraController : public EventListener {
 public:
-	CameraController(SDL_Window* win, Camera* camera = nullptr, float sensitivity = 50.0f, float speed = 50.0f);
+	CameraController(SDL_Window* win, Camera* camera = nullptr);
 	void update();
 	void toggleIn();
+	void process(SDL_Event &event);
+
+	Camera* getCamera();
+
 	virtual ~CameraController();
 private:
 	float sensitivity, speed;
