@@ -49,6 +49,9 @@
     <ClCompile Include="Scene.cpp">
       <Filter>Source\Geometry</Filter>
     </ClCompile>
+    <ClCompile Include="HemicubeBuffer.cpp">
+      <Filter>Source\Buffers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source">
@@ -128,6 +131,9 @@
     <ClInclude Include="Scene.h">
       <Filter>Source\Geometry</Filter>
     </ClInclude>
+    <ClInclude Include="HemicubeBuffer.h">
+      <Filter>Source\Buffers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="config.ini">
@@ -150,6 +156,15 @@
     </None>
     <None Include="final.vert">
       <Filter>Source\Shaders\Final</Filter>
+    </None>
+    <None Include="hemicube.frag">
+      <Filter>Source\Shaders\Preprocessing</Filter>
+    </None>
+    <None Include="hemicube.vert">
+      <Filter>Source\Shaders\Preprocessing</Filter>
+    </None>
+    <None Include="hemicube.geom">
+      <Filter>Source\Shaders\Preprocessing</Filter>
     </None>
   </ItemGroup>
 </Project>

@@ -144,6 +144,7 @@
     <ClCompile Include="CameraController.cpp" />
     <ClCompile Include="ConfigurationManager.cpp" />
     <ClCompile Include="DisplayController.cpp" />
+    <ClCompile Include="HemicubeBuffer.cpp" />
     <ClCompile Include="IDRenderer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mesh.cpp" />
@@ -163,6 +164,7 @@
     <ClInclude Include="ConfigurationManager.h" />
     <ClInclude Include="DisplayController.h" />
     <ClInclude Include="EventListener.h" />
+    <ClInclude Include="HemicubeBuffer.h" />
     <ClInclude Include="IDRenderer.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Scene.h" />
@@ -176,8 +178,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="config.ini" />
+    <None Include="hemicube.geom" />
     <None Include="final.frag" />
     <None Include="final.vert" />
+    <None Include="hemicube.frag" />
+    <None Include="hemicube.vert" />
     <None Include="id.frag" />
     <None Include="id.vert" />
     <None Include="renderFromText.frag" />

@@ -1,15 +1,15 @@
 #include "IDRenderer.h"
 
 #include "ConfigurationManager.h"
-#include "UIntBuffer.h"
+#include "HemicubeBuffer.h"
 
 IDRenderer::IDRenderer(Scene* scene) {
-	this->shader = new Shader("id.vert", "id.frag");
+	this->shader = new Shader("id.vert", "hemicube.geom", "id.frag");
 	this->scene = scene;
 	std::string width = ConfigurationManager::get("INTERNAL_WIDTH");
 	std::string height = ConfigurationManager::get("INTERNAL_HEIGHT");
 	this->camera = new Camera(GLuint(std::stoi(width)), GLuint(std::stoi(height)), 45.0f, 0.5f, 5000.0f);
-	this->buffer = new UIntBuffer(std::stoi(ConfigurationManager::get("INTERNAL_WIDTH")), std::stoi(ConfigurationManager::get("INTERNAL_HEIGHT")));
+	this->buffer = new HemicubeBuffer(std::stoi(ConfigurationManager::get("INTERNAL_WIDTH")), std::stoi(ConfigurationManager::get("INTERNAL_HEIGHT")));
 }
 
 void IDRenderer::render() {
