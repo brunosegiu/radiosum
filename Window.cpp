@@ -50,6 +50,7 @@ void Window::update() {
 		if (event.type == SDL_QUIT)
 			this->isOpen = false;
 	}
+	SDL_GL_SwapWindow(window);
 }
 
 bool Window::open() {
