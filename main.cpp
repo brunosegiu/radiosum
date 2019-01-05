@@ -10,11 +10,14 @@ int main(int argc, char *args[]) {
 	world->addMesh("mesh.obj");
 	PreprocessingController* pre = new PreprocessingController(world);
 	DisplayController* dis = new DisplayController(world);
-	while (true) {
+	while (win->open()) {
 		pre->runStep();
 		dis->render();
 		win->update();
 	}
 	delete win;
+	delete pre;
+	delete dis;
+	delete world;
 	return 0;
 }

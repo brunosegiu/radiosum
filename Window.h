@@ -16,6 +16,7 @@ public:
 	static Window* get();
 
 	void update();
+	bool open();
 
 	Camera* getCamera();
 
@@ -31,4 +32,5 @@ private:
 	SDL_GLContext glContext;
 	CameraController* camera;
 	std::vector<EventListener*> listeners;
+	bool isOpen;
 };

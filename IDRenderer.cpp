@@ -4,7 +4,7 @@
 #include "HemicubeBuffer.h"
 
 IDRenderer::IDRenderer(Scene* scene) {
-	this->shader = new Shader("id.vert", "hemicube.geom", "id.frag");
+	this->shader = new Shader("hemicube.vert", "hemicube.geom", "hemicube.frag");
 	this->scene = scene;
 	std::string width = ConfigurationManager::get("INTERNAL_WIDTH");
 	std::string height = ConfigurationManager::get("INTERNAL_HEIGHT");

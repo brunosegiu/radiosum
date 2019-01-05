@@ -15,7 +15,7 @@ Window::Window() {
 	this->width = std::stoi(ConfigurationManager::get("APP_RES_WIDTH"));
 	this->height = std::stoi(ConfigurationManager::get("APP_RES_HEIGHT"));
 	this->name = ConfigurationManager::get("APP_NAME");
-
+	this->isOpen = true;
 	if (SDL_Init(SDL_INIT_VIDEO) >= 0) {
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
@@ -44,11 +44,16 @@ void Window::update() {
 	this->camera->update();
 	SDL_Event event;
 	while (SDL_PollEvent(&event) != 0) {
-		for (auto listener : this->listeners) {
+		for (auto listener : this->listeners)
 			listener->process(event);
-		}
+
+		if (event.type == SDL_QUIT)
+			this->isOpen = false;
 	}
-	SDL_GL_SwapWindow(window);
+}
+
+bool Window::open() {
+	return this->isOpen;
 }
 
 Camera* Window::getCamera() {

@@ -5,5 +5,5 @@ out uint id;
 flat in uint idToFrag;
 
 void main() {
-	id = uint(100);// idToFrag;
+	id = idToFrag;
 }

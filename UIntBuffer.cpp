@@ -1,5 +1,7 @@
 #include "UIntBuffer.h"
 
+#include <stdexcept>
+
 UIntBuffer::UIntBuffer(GLuint width, GLuint height) : Buffer(width, height) {
 	this->GLId = 0;
 	this->GLTextureId = 0;
@@ -12,8 +14,7 @@ UIntBuffer::UIntBuffer(GLuint width, GLuint height) : Buffer(width, height) {
 	// Generate ID's texture, single uint value per pixel
 	glGenTextures(1, &this->GLTextureId);
 	glBindTexture(GL_TEXTURE_2D, this->GLTextureId);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_R32UI, width, height, 0, GL_RED_INTEGER,
-		GL_UNSIGNED_BYTE, 0);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_R32UI, width, height, 0, GL_RED_INTEGER, GL_UNSIGNED_BYTE, 0);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
@@ -28,6 +29,10 @@ UIntBuffer::UIntBuffer(GLuint width, GLuint height) : Buffer(width, height) {
 	glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, this->GLTextureId, 0);
 	GLenum buffers[1] = { GL_COLOR_ATTACHMENT0 };
 	glDrawBuffers(1, buffers);
+
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+		throw std::runtime_error("Error configuring cubemap buffer");
+	}
 }
 
 void UIntBuffer::bind() {

@@ -4,7 +4,7 @@ out vec4 outColor;
 
 in vec2 uv;
 
-uniform usampler3D buffer;
+uniform usamplerCube buffer;
 
 void main() {
 	uint id = texture(buffer, vec3(0.0f,1.0f,0.0f)).r;
