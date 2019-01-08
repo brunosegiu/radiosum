@@ -6,8 +6,8 @@
 
 PreprocessingController::PreprocessingController(Scene* scene) {
 	this->renderer = new IDRenderer(scene);
-	this->meshStep = this->faceStep = 0;
-	this->meshes = meshes;
+	this->faceStep = 0;
+	this->scene = scene;
 }
 
 
@@ -25,11 +25,7 @@ void PreprocessingController::runStep() {
 
 		// TODO: save results for face
 
-		if (this->meshes[this->meshStep]->size() <= this->faceStep) {
-			this->meshStep++;
-			this->faceStep = 0;
-		}
-		else {
+		if (this->scene->size() < this->faceStep) {
 			this->faceStep++;
 		}
 	}
@@ -37,7 +33,7 @@ void PreprocessingController::runStep() {
 
 
 bool PreprocessingController::end() {
-	return this->meshStep >= this->meshes.size();
+	return this->faceStep >= this->scene->size();
 }
 
 PreprocessingController::~PreprocessingController() {

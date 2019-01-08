@@ -20,6 +20,13 @@ void Scene::draw() {
 	}
 }
 
+GLuint Scene::size() {
+	GLuint size = 0;
+	for (auto mesh : this->meshes)
+		size += mesh->size();
+	return size;
+}
+
 
 Scene::~Scene() {
 	for (auto mesh : meshes) {

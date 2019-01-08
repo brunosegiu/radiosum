@@ -14,7 +14,7 @@ public:
 	virtual ~PreprocessingController();
 private:
 	IDRenderer* renderer;
-	std::vector<Mesh*> meshes;
+	Scene* scene;
 	unsigned int meshStep, faceStep;
 	Camera* cam;
 };

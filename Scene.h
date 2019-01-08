@@ -8,6 +8,7 @@ public:
 	void addMesh(std::string path);
 	void addMesh(Mesh* mesh);
 	void draw();
+	GLuint size();
 	virtual ~Scene();
 private:
 	std::vector<Mesh*> meshes;
