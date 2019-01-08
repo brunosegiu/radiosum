@@ -44,8 +44,39 @@ glm::vec3 Camera::getUp() {
 	return this->up;
 }
 
+std::vector<glm::mat4> Camera::getCubeMatrices() {
+	std::vector<glm::mat4> matrices;
+	// Front
+	matrices.push_back(this->getMVPMatrix());
+
+	glm::vec3 dir = this->getDirection();
+
+	// Right
+	dir = glm::rotate(dir, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+	matrices.push_back(this->projectionMatrix *  glm::lookAt(origin, origin + dir, up));
+
+	// Left
+	dir = glm::rotate(dir, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+	matrices.push_back(this->projectionMatrix *  glm::lookAt(origin, origin + dir, up));
+
+	// Top
+	dir = glm::rotate(dir, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+	matrices.push_back(this->projectionMatrix *  glm::lookAt(origin, origin + dir, up));
+
+	// Bottom
+	dir = glm::rotate(dir, -glm::radians(270.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+	matrices.push_back(this->projectionMatrix *  glm::lookAt(origin, origin + dir, up));
+
+
+	// Back
+	dir = glm::rotate(dir, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	matrices.push_back(this->projectionMatrix *  glm::lookAt(origin, origin + dir, glm::vec3(0.0f, 0.0f, 1.0f)));
+
+	return matrices;
+}
+
 glm::mat4 Camera::getMVPMatrix() {
-	return this->projectionMatrix *  this->viewMatrix;
+	return this->projectionMatrix * this->viewMatrix;
 }
 
 

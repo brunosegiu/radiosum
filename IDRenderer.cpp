@@ -3,13 +3,15 @@
 #include "ConfigurationManager.h"
 #include "HemicubeBuffer.h"
 
+#include <gtc/type_ptr.hpp>
+
 IDRenderer::IDRenderer(Scene* scene) {
 	this->shader = new Shader("hemicube.vert", "hemicube.geom", "hemicube.frag");
 	this->scene = scene;
-	std::string width = ConfigurationManager::get("INTERNAL_WIDTH");
-	std::string height = ConfigurationManager::get("INTERNAL_HEIGHT");
-	this->camera = new Camera(GLuint(std::stoi(width)), GLuint(std::stoi(height)), 45.0f, 0.5f, 5000.0f);
-	this->buffer = new HemicubeBuffer(std::stoi(ConfigurationManager::get("INTERNAL_WIDTH")), std::stoi(ConfigurationManager::get("INTERNAL_HEIGHT")));
+	std::string widthstr = ConfigurationManager::get("INTERNAL_WIDTH");
+	GLuint width = std::stoi(widthstr);
+	this->camera = new Camera(width, width, 45.0f, 0.5f, 5000.0f);
+	this->buffer = new HemicubeBuffer(width);
 }
 
 void IDRenderer::render() {
@@ -17,8 +19,8 @@ void IDRenderer::render() {
 	this->buffer->bind();
 	this->buffer->clean();
 	GLuint worldTransformID = glGetUniformLocation(shader->getID(), "worldTransform");
-	glm::mat4 toWorldCoords = this->camera->getMVPMatrix();
-	glUniformMatrix4fv(worldTransformID, 1, GL_FALSE, &toWorldCoords[0][0]);
+	std::vector<glm::mat4> toWorldCoords = this->camera->getCubeMatrices();
+	glUniformMatrix4fv(worldTransformID, toWorldCoords.size(), GL_FALSE, glm::value_ptr(toWorldCoords[0]));
 	this->scene->draw();
 }
 

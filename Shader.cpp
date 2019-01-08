@@ -14,6 +14,7 @@ void Shader::loadShader(GLenum type, GLuint &shaderID, std::string path) {
 		GLint shaderCompiled = GL_FALSE;
 		glGetShaderiv(shaderID, GL_COMPILE_STATUS, &shaderCompiled);
 		if (shaderCompiled != GL_TRUE) {
+
 			throw std::runtime_error("Unable to compile shader");
 			glDeleteShader(shaderID);
 			shaderID = 0;

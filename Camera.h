@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 #include <GL/glew.h>
 #include <glm.hpp>
 #include <SDL.h>
@@ -18,6 +20,7 @@ public:
 	glm::vec3 getUp();
 
 	glm::mat4 getMVPMatrix();
+	std::vector<glm::mat4> getCubeMatrices();
 
 	virtual ~Camera();
 

@@ -6,7 +6,7 @@
 
 class HemicubeBuffer : public Buffer {
 public:
-	HemicubeBuffer(GLuint width, GLuint height);
+	HemicubeBuffer(GLuint width);
 	void bind();
 	void read();
 	virtual ~HemicubeBuffer();
