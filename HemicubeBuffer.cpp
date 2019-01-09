@@ -1,5 +1,6 @@
 #include "HemicubeBuffer.h"
 
+#define FACES 5
 
 #include <stdexcept>
 
@@ -14,22 +15,17 @@ HemicubeBuffer::HemicubeBuffer(GLuint width) : Buffer(width, width) {
 
 	// Generate ID's textures, single uint value per pixel
 	glGenTextures(1, &this->GLTextureId);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, this->GLTextureId);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-	for (int i = 0; i < 6; i++) {
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_R32UI, width, width, 0, GL_RED_INTEGER, GL_UNSIGNED_BYTE, 0);
-	}
+	glBindTexture(GL_TEXTURE_2D_ARRAY, this->GLTextureId);
+	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_R32UI, width, width, FACES, 0, GL_RED_INTEGER, GL_UNSIGNED_BYTE, 0);
 
 	// Generate depth buffer (so that depth test works)
 	glGenTextures(1, &this->GLDepthId);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, this->GLDepthId);
-	for (int i = 0; i < 6; i++) {
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_DEPTH_COMPONENT, width, width, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
-	}
+	glBindTexture(GL_TEXTURE_2D_ARRAY, this->GLDepthId);
+	glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_DEPTH_COMPONENT, width, width, FACES, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
 
 	// Attach elements to buffer
 	glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, this->GLTextureId, 0);
@@ -48,12 +44,12 @@ void HemicubeBuffer::bind() {
 
 void HemicubeBuffer::read() {
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, this->GLTextureId);
+	glBindTexture(GL_TEXTURE_2D_ARRAY, this->GLTextureId);
 }
 
 HemicubeBuffer::~HemicubeBuffer() {
 	this->bind();
 	glDeleteTextures(1, &this->GLTextureId);
-	glDeleteRenderbuffers(6, &this->GLDepthId);
-	glDeleteBuffers(6, &this->GLId);
+	glDeleteRenderbuffers(FACES, &this->GLDepthId);
+	glDeleteBuffers(FACES, &this->GLId);
 }

@@ -67,11 +67,6 @@ std::vector<glm::mat4> Camera::getCubeMatrices() {
 	dir = glm::rotate(dir, -glm::radians(270.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 	matrices.push_back(this->projectionMatrix *  glm::lookAt(origin, origin + dir, up));
 
-
-	// Back
-	dir = glm::rotate(dir, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	matrices.push_back(this->projectionMatrix *  glm::lookAt(origin, origin + dir, glm::vec3(0.0f, 0.0f, 1.0f)));
-
 	return matrices;
 }
 

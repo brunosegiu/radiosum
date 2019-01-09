@@ -1,19 +1,19 @@
 #version 330 core
 
 layout (triangles) in;
-layout (triangle_strip, max_vertices=18) out;
+layout (triangle_strip, max_vertices=15) out;
 
-#define NUM_FACES 6
+#define FACES 5
 
 flat in uint idToGeom[];
 
 flat out uint idToFrag;
 
-uniform mat4 worldTransform[NUM_FACES];
+uniform mat4 worldTransform[FACES];
 
 
 void main(){
-	for (int face = 0; face < NUM_FACES; face++){
+	for (int face = 0; face < FACES; face++){
 		mat4 transform = worldTransform[face];
 		for (int vertex = 0; vertex < 3; vertex++){
 			gl_Layer = face;
