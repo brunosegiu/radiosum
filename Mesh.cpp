@@ -2,7 +2,7 @@
 
 #include <fstream>
 
-GLuint Mesh::faceCount = 0;
+GLuint Mesh::faceCount = 1;
 
 Mesh::Mesh(std::vector<glm::vec3> vertices, std::vector<glm::vec3> normals) {
 	this->vertices = vertices;

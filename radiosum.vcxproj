@@ -142,12 +142,14 @@
     <ClCompile Include="Buffer.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CameraController.cpp" />
+    <ClCompile Include="ComputeShader.cpp" />
     <ClCompile Include="ConfigurationManager.cpp" />
     <ClCompile Include="DisplayController.cpp" />
     <ClCompile Include="HemicubeBuffer.cpp" />
     <ClCompile Include="IDRenderer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="RowBuffer.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneRenderer.cpp" />
     <ClCompile Include="PreprocessingController.cpp" />
@@ -161,12 +163,14 @@
     <ClInclude Include="Buffer.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CameraController.h" />
+    <ClInclude Include="ComputeShader.h" />
     <ClInclude Include="ConfigurationManager.h" />
     <ClInclude Include="DisplayController.h" />
     <ClInclude Include="EventListener.h" />
     <ClInclude Include="HemicubeBuffer.h" />
     <ClInclude Include="IDRenderer.h" />
     <ClInclude Include="Mesh.h" />
+    <ClInclude Include="RowBuffer.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneRenderer.h" />
     <ClInclude Include="PreprocessingController.h" />
@@ -187,6 +191,20 @@
     <None Include="id.vert" />
     <None Include="renderFromText.frag" />
     <None Include="renderFromText.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="computeRow.comp">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <FileType>Document</FileType>
+    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

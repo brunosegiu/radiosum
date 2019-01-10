@@ -4,6 +4,8 @@
 
 #include "IDRenderer.h"
 #include "Scene.h"
+#include "ComputeShader.h"
+#include "RowBuffer.h"
 
 class PreprocessingController {
 public:
@@ -15,7 +17,12 @@ public:
 private:
 	IDRenderer* renderer;
 	Scene* scene;
-	unsigned int meshStep, faceStep;
+	unsigned int faceStep;
 	Camera* cam;
+	ComputeShader* reducer;
+	RowBuffer* row;
+	GLuint instances;
+
+	std::vector<GLuint> getMatrixRow(GLuint face);
 };
 

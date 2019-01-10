@@ -45,6 +45,7 @@ void HemicubeBuffer::bind() {
 void HemicubeBuffer::read() {
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D_ARRAY, this->GLTextureId);
+	glBindImageTexture(0, this->GLTextureId, 0, GL_FALSE, 0, GL_READ_ONLY, GL_R32UI);
 }
 
 HemicubeBuffer::~HemicubeBuffer() {

@@ -1,10 +1,10 @@
-#version 330 core
+#version 430 core
 
 out vec4 outColor;
 
 in vec2 uv;
 
-uniform usampler2DArray buffer;
+uniform usampler2DArray hemicube;
 
 vec3 getLayer(vec2 uv){
 	float x,y,z;
@@ -38,7 +38,7 @@ vec3 getLayer(vec2 uv){
 }
 
 void main() {
-	uint id = texture(buffer,getLayer(uv)).r;
+	uint id = texture(hemicube,getLayer(uv)).r;
 	float r = float( (id >> 16) & uint(0xFF)) / 255.0f;
 	float g = float( (id >> 8)  & uint(0xFF)) / 255.0f;
 	float b = float(  id        & uint(0xFF)) / 255.0f;

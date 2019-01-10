@@ -28,9 +28,6 @@
     <ClCompile Include="Renderer.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Shader.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
     <ClCompile Include="BufferRenderer.cpp">
       <Filter>Source\Display</Filter>
     </ClCompile>
@@ -50,6 +47,15 @@
       <Filter>Source\Geometry</Filter>
     </ClCompile>
     <ClCompile Include="HemicubeBuffer.cpp">
+      <Filter>Source\Buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>Source\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="ComputeShader.cpp">
+      <Filter>Source\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="RowBuffer.cpp">
       <Filter>Source\Buffers</Filter>
     </ClCompile>
   </ItemGroup>
@@ -107,9 +113,6 @@
     <ClInclude Include="Renderer.h">
       <Filter>Source</Filter>
     </ClInclude>
-    <ClInclude Include="Shader.h">
-      <Filter>Source</Filter>
-    </ClInclude>
     <ClInclude Include="BufferRenderer.h">
       <Filter>Source\Display</Filter>
     </ClInclude>
@@ -132,6 +135,15 @@
       <Filter>Source\Geometry</Filter>
     </ClInclude>
     <ClInclude Include="HemicubeBuffer.h">
+      <Filter>Source\Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Source\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="ComputeShader.h">
+      <Filter>Source\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="RowBuffer.h">
       <Filter>Source\Buffers</Filter>
     </ClInclude>
   </ItemGroup>
@@ -166,5 +178,10 @@
     <None Include="hemicube.geom">
       <Filter>Source\Shaders\Preprocessing</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="computeRow.comp">
+      <Filter>Source\Shaders\Preprocessing</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
