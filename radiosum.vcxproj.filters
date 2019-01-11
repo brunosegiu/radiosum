@@ -58,6 +58,9 @@
     <ClCompile Include="RowBuffer.cpp">
       <Filter>Source\Buffers</Filter>
     </ClCompile>
+    <ClCompile Include="Face.cpp">
+      <Filter>Source\Geometry</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source">
@@ -146,6 +149,9 @@
     <ClInclude Include="RowBuffer.h">
       <Filter>Source\Buffers</Filter>
     </ClInclude>
+    <ClInclude Include="Face.h">
+      <Filter>Source\Geometry</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="config.ini">
@@ -178,10 +184,6 @@
     <None Include="hemicube.geom">
       <Filter>Source\Shaders\Preprocessing</Filter>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="computeRow.comp">
-      <Filter>Source\Shaders\Preprocessing</Filter>
-    </FxCompile>
+    <None Include="computeRow.comp" />
   </ItemGroup>
 </Project>

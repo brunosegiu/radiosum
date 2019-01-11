@@ -6,6 +6,8 @@
 #include <GL/glew.h>
 #include <glm.hpp>
 
+#include "Face.h"
+
 class Mesh {
 public:
 	static Mesh* load(std::string path);
@@ -17,6 +19,7 @@ public:
 	std::vector<glm::vec3> getVertices();
 	std::vector<unsigned int> getIds();
 	GLuint size();
+	Face getFace(GLuint index);
 
 	virtual ~Mesh();
 

@@ -172,6 +172,10 @@ GLuint Mesh::size() {
 	return GLuint(this->vertices.size());
 }
 
+Face Mesh::getFace(GLuint index) {
+	return Face(this->vertices[index], this->vertices[index + 1], this->vertices[index + 2]);
+}
+
 Mesh::~Mesh() {
 	glBindVertexArray(this->GLVaoId);
 	glDeleteBuffers(1, &this->GLVerticesId);

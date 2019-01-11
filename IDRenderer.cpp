@@ -10,7 +10,7 @@ IDRenderer::IDRenderer(Scene* scene) {
 	this->scene = scene;
 	std::string widthstr = ConfigurationManager::get("INTERNAL_WIDTH");
 	GLuint width = std::stoi(widthstr);
-	this->camera = new Camera(width, width, 45.0f, 0.5f, 5000.0f);
+	this->camera = nullptr;
 	this->buffer = new HemicubeBuffer(width);
 }
 
@@ -18,13 +18,23 @@ void IDRenderer::render() {
 	this->shader->bind();
 	this->buffer->bind();
 	this->buffer->clean();
-	GLuint worldTransformID = glGetUniformLocation(shader->getID(), "worldTransform");
+
+	GLuint worldTransformId = glGetUniformLocation(shader->getID(), "worldTransform");
 	std::vector<glm::mat4> toWorldCoords = this->camera->getCubeMatrices();
-	glUniformMatrix4fv(worldTransformID, toWorldCoords.size(), GL_FALSE, glm::value_ptr(toWorldCoords[0]));
+	glUniformMatrix4fv(worldTransformId, toWorldCoords.size(), GL_FALSE, glm::value_ptr(toWorldCoords[0]));
+
+	glEnable(GL_CLIP_DISTANCE0);
+	GLuint clipPlaneId = glGetUniformLocation(shader->getID(), "clipPlane");
+	glUniform4fv(clipPlaneId, 1, glm::value_ptr(this->clipPlane));
+
 	this->scene->draw();
+	glDisable(GL_CLIP_DISTANCE0);
+}
+
+void IDRenderer::setClipPlane(glm::vec4 plane) {
+	this->clipPlane = plane;
 }
 
 IDRenderer::~IDRenderer() {
 	delete this->shader;
-	delete this->camera;
 }

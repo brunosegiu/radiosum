@@ -27,9 +27,52 @@ GLuint Scene::size() {
 	return size;
 }
 
+Face Scene::getFace(GLuint index) {
+	GLuint iterator = index;
+	for (auto mesh : this->meshes) {
+		if (iterator > mesh->size()) {
+			iterator -= mesh->size();
+		}
+		else {
+			return mesh->getFace(iterator);
+		}
+	}
+
+	throw std::runtime_error("Face index out of range");
+}
+
 
 Scene::~Scene() {
 	for (auto mesh : meshes) {
 		delete mesh;
 	}
+}
+
+SceneIterator::SceneIterator(Scene* scene) {
+	this->scene = scene;
+	this->index = 0;
+	this->top = this->scene->size();
+}
+
+GLuint SceneIterator::begin() {
+	this->index = 0;
+	return this->index;
+}
+
+GLuint SceneIterator::next() {
+	if (!this->end())
+		this->index += 3;
+	return this->index;
+}
+
+Face SceneIterator::get() {
+	return this->scene->getFace(index);
+}
+
+GLuint SceneIterator::faceIndex() {
+	return this->index / 3;
+}
+
+bool SceneIterator::end() {
+	return this->index >= this->top;
 }

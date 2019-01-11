@@ -10,18 +10,16 @@
 class PreprocessingController {
 public:
 	PreprocessingController(Scene* scene);
-	void reset();
 	void runStep();
-	bool end();
 	virtual ~PreprocessingController();
 private:
 	IDRenderer* renderer;
 	Scene* scene;
-	unsigned int faceStep;
 	Camera* cam;
 	ComputeShader* reducer;
 	RowBuffer* row;
 	GLuint instances;
+	SceneIterator* iterator;
 
 	std::vector<GLuint> getMatrixRow(GLuint face);
 };

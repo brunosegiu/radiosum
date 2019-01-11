@@ -145,6 +145,7 @@
     <ClCompile Include="ComputeShader.cpp" />
     <ClCompile Include="ConfigurationManager.cpp" />
     <ClCompile Include="DisplayController.cpp" />
+    <ClCompile Include="Face.cpp" />
     <ClCompile Include="HemicubeBuffer.cpp" />
     <ClCompile Include="IDRenderer.cpp" />
     <ClCompile Include="main.cpp" />
@@ -167,6 +168,7 @@
     <ClInclude Include="ConfigurationManager.h" />
     <ClInclude Include="DisplayController.h" />
     <ClInclude Include="EventListener.h" />
+    <ClInclude Include="Face.h" />
     <ClInclude Include="HemicubeBuffer.h" />
     <ClInclude Include="IDRenderer.h" />
     <ClInclude Include="Mesh.h" />
