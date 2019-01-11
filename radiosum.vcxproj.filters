@@ -1,65 +1,65 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="Window.cpp">
-      <Filter>Source\Display</Filter>
-    </ClCompile>
-    <ClCompile Include="UIntBuffer.cpp">
+    <ClCompile Include="src\common\buffers\Buffer.cpp">
       <Filter>Source\Buffers</Filter>
     </ClCompile>
-    <ClCompile Include="Buffer.cpp">
+    <ClCompile Include="src\common\buffers\HemicubeBuffer.cpp">
       <Filter>Source\Buffers</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
-      <Filter>Source</Filter>
+    <ClCompile Include="src\common\buffers\RowBuffer.cpp">
+      <Filter>Source\Buffers</Filter>
     </ClCompile>
-    <ClCompile Include="CameraController.cpp">
+    <ClCompile Include="src\common\buffers\UIntBuffer.cpp">
+      <Filter>Source\Buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\display\BufferRenderer.cpp">
       <Filter>Source\Display</Filter>
     </ClCompile>
-    <ClCompile Include="Mesh.cpp">
+    <ClCompile Include="src\display\CameraController.cpp">
+      <Filter>Source\Display</Filter>
+    </ClCompile>
+    <ClCompile Include="src\display\DisplayController.cpp">
+      <Filter>Source\Display</Filter>
+    </ClCompile>
+    <ClCompile Include="src\display\SceneRenderer.cpp">
+      <Filter>Source\Display</Filter>
+    </ClCompile>
+    <ClCompile Include="src\display\Window.cpp">
+      <Filter>Source\Display</Filter>
+    </ClCompile>
+    <ClCompile Include="src\common\geometry\Face.cpp">
       <Filter>Source\Geometry</Filter>
     </ClCompile>
-    <ClCompile Include="IDRenderer.cpp">
+    <ClCompile Include="src\common\geometry\Mesh.cpp">
+      <Filter>Source\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="src\common\geometry\Scene.cpp">
+      <Filter>Source\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="src\preprocessing\IDRenderer.cpp">
       <Filter>Source\Preprocessing</Filter>
     </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="BufferRenderer.cpp">
-      <Filter>Source\Display</Filter>
-    </ClCompile>
-    <ClCompile Include="PreprocessingController.cpp">
+    <ClCompile Include="src\preprocessing\PreprocessingController.cpp">
       <Filter>Source\Preprocessing</Filter>
     </ClCompile>
-    <ClCompile Include="ConfigurationManager.cpp">
+    <ClCompile Include="src\common\Camera.cpp">
+      <Filter>Source\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="src\common\ConfigurationManager.cpp">
+      <Filter>Source\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="src\common\Renderer.cpp">
+      <Filter>Source\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="DisplayController.cpp">
-      <Filter>Source\Display</Filter>
-    </ClCompile>
-    <ClCompile Include="SceneRenderer.cpp">
-      <Filter>Source\Display</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene.cpp">
-      <Filter>Source\Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="HemicubeBuffer.cpp">
-      <Filter>Source\Buffers</Filter>
-    </ClCompile>
-    <ClCompile Include="Shader.cpp">
+    <ClCompile Include="src\shaders\ComputeShader.cpp">
       <Filter>Source\Shaders</Filter>
     </ClCompile>
-    <ClCompile Include="ComputeShader.cpp">
+    <ClCompile Include="src\shaders\Shader.cpp">
       <Filter>Source\Shaders</Filter>
-    </ClCompile>
-    <ClCompile Include="RowBuffer.cpp">
-      <Filter>Source\Buffers</Filter>
-    </ClCompile>
-    <ClCompile Include="Face.cpp">
-      <Filter>Source\Geometry</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -90,100 +90,105 @@
     <Filter Include="Source\Shaders\Final">
       <UniqueIdentifier>{6900cfbc-8b8f-4ff4-a5e9-03c3b2d671b1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Common">
+      <UniqueIdentifier>{1c43f981-e357-4850-a4e6-8a8d79d4bf53}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Window.h">
-      <Filter>Source\Display</Filter>
-    </ClInclude>
-    <ClInclude Include="Buffer.h">
+    <ClInclude Include="src\common\buffers\Buffer.h">
       <Filter>Source\Buffers</Filter>
     </ClInclude>
-    <ClInclude Include="UIntBuffer.h">
+    <ClInclude Include="src\common\buffers\HemicubeBuffer.h">
       <Filter>Source\Buffers</Filter>
     </ClInclude>
-    <ClInclude Include="CameraController.h">
+    <ClInclude Include="src\common\buffers\RowBuffer.h">
+      <Filter>Source\Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\common\buffers\UIntBuffer.h">
+      <Filter>Source\Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\display\BufferRenderer.h">
       <Filter>Source\Display</Filter>
     </ClInclude>
-    <ClInclude Include="Mesh.h">
+    <ClInclude Include="src\display\CameraController.h">
+      <Filter>Source\Display</Filter>
+    </ClInclude>
+    <ClInclude Include="src\display\DisplayController.h">
+      <Filter>Source\Display</Filter>
+    </ClInclude>
+    <ClInclude Include="src\display\EventListener.h">
+      <Filter>Source\Display</Filter>
+    </ClInclude>
+    <ClInclude Include="src\display\SceneRenderer.h">
+      <Filter>Source\Display</Filter>
+    </ClInclude>
+    <ClInclude Include="src\display\Window.h">
+      <Filter>Source\Display</Filter>
+    </ClInclude>
+    <ClInclude Include="src\common\geometry\Face.h">
       <Filter>Source\Geometry</Filter>
     </ClInclude>
-    <ClInclude Include="IDRenderer.h">
+    <ClInclude Include="src\common\geometry\Mesh.h">
+      <Filter>Source\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="src\common\geometry\Scene.h">
+      <Filter>Source\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="src\preprocessing\IDRenderer.h">
       <Filter>Source\Preprocessing</Filter>
     </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>Source</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer.h">
-      <Filter>Source</Filter>
-    </ClInclude>
-    <ClInclude Include="BufferRenderer.h">
-      <Filter>Source\Display</Filter>
-    </ClInclude>
-    <ClInclude Include="PreprocessingController.h">
+    <ClInclude Include="src\preprocessing\PreprocessingController.h">
       <Filter>Source\Preprocessing</Filter>
     </ClInclude>
-    <ClInclude Include="EventListener.h">
-      <Filter>Source\Display</Filter>
+    <ClInclude Include="src\common\Camera.h">
+      <Filter>Source\Common</Filter>
     </ClInclude>
-    <ClInclude Include="ConfigurationManager.h">
-      <Filter>Source</Filter>
+    <ClInclude Include="src\common\ConfigurationManager.h">
+      <Filter>Source\Common</Filter>
     </ClInclude>
-    <ClInclude Include="DisplayController.h">
-      <Filter>Source\Display</Filter>
+    <ClInclude Include="src\common\Renderer.h">
+      <Filter>Source\Common</Filter>
     </ClInclude>
-    <ClInclude Include="SceneRenderer.h">
-      <Filter>Source\Display</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene.h">
-      <Filter>Source\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="HemicubeBuffer.h">
-      <Filter>Source\Buffers</Filter>
-    </ClInclude>
-    <ClInclude Include="Shader.h">
+    <ClInclude Include="src\shaders\ComputeShader.h">
       <Filter>Source\Shaders</Filter>
     </ClInclude>
-    <ClInclude Include="ComputeShader.h">
+    <ClInclude Include="src\shaders\Shader.h">
       <Filter>Source\Shaders</Filter>
-    </ClInclude>
-    <ClInclude Include="RowBuffer.h">
-      <Filter>Source\Buffers</Filter>
-    </ClInclude>
-    <ClInclude Include="Face.h">
-      <Filter>Source\Geometry</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="config.ini">
       <Filter>Source</Filter>
     </None>
-    <None Include="id.vert">
-      <Filter>Source\Shaders\Preprocessing</Filter>
-    </None>
-    <None Include="id.frag">
-      <Filter>Source\Shaders\Preprocessing</Filter>
-    </None>
-    <None Include="renderFromText.frag">
+    <None Include="src\shaders\renderFromText.frag">
       <Filter>Source\Shaders\Debugging</Filter>
     </None>
-    <None Include="renderFromText.vert">
+    <None Include="src\shaders\renderFromText.vert">
       <Filter>Source\Shaders\Debugging</Filter>
     </None>
-    <None Include="final.frag">
+    <None Include="src\shaders\final.frag">
       <Filter>Source\Shaders\Final</Filter>
     </None>
-    <None Include="final.vert">
+    <None Include="src\shaders\final.vert">
       <Filter>Source\Shaders\Final</Filter>
     </None>
-    <None Include="hemicube.frag">
+    <None Include="src\shaders\hemicube.frag">
       <Filter>Source\Shaders\Preprocessing</Filter>
     </None>
-    <None Include="hemicube.vert">
+    <None Include="src\shaders\hemicube.geom">
       <Filter>Source\Shaders\Preprocessing</Filter>
     </None>
-    <None Include="hemicube.geom">
+    <None Include="src\shaders\hemicube.vert">
       <Filter>Source\Shaders\Preprocessing</Filter>
     </None>
-    <None Include="computeRow.comp" />
+    <None Include="src\shaders\id.frag">
+      <Filter>Source\Shaders\Preprocessing</Filter>
+    </None>
+    <None Include="src\shaders\id.vert">
+      <Filter>Source\Shaders\Preprocessing</Filter>
+    </None>
+    <None Include="src\shaders\computeRow.comp">
+      <Filter>Source\Shaders\Preprocessing</Filter>
+    </None>
   </ItemGroup>
 </Project>

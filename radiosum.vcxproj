@@ -80,7 +80,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)lib\SDL2-2.0.8\include;$(ProjectDir)lib\glew-2.1.0\include;$(ProjectDir)lib\glm;$(ProjectDir)lib\Eigen\src;$(IncludePath)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src;$(ProjectDir)lib\SDL2-2.0.8\include;$(ProjectDir)lib\glew-2.1.0\include;$(ProjectDir)lib\glm;$(ProjectDir)lib\Eigen\src;$(IncludePath)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;glew32.lib;OpenGL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -94,7 +94,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)lib\SDL2-2.0.8\include;$(ProjectDir)lib\glew-2.1.0\include;$(ProjectDir)lib\glm;$(ProjectDir)lib\Eigen\src;$(IncludePath)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src;$(ProjectDir)lib\SDL2-2.0.8\include;$(ProjectDir)lib\glew-2.1.0\include;$(ProjectDir)lib\glm;$(ProjectDir)lib\Eigen\src;$(IncludePath)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;glew32.lib;OpenGL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -110,7 +110,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)lib\SDL2-2.0.8\include;$(ProjectDir)lib\glew-2.1.0\include;$(ProjectDir)lib\glm;$(ProjectDir)lib\Eigen\src;$(IncludePath)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src;$(ProjectDir)lib\SDL2-2.0.8\include;$(ProjectDir)lib\glew-2.1.0\include;$(ProjectDir)lib\glm;$(ProjectDir)lib\Eigen\src;$(IncludePath)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -128,7 +128,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)lib\SDL2-2.0.8\include;$(ProjectDir)lib\glew-2.1.0\include;$(ProjectDir)lib\glm;$(ProjectDir)lib\Eigen\src;$(IncludePath)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src;$(ProjectDir)lib\SDL2-2.0.8\include;$(ProjectDir)lib\glew-2.1.0\include;$(ProjectDir)lib\glm;$(ProjectDir)lib\Eigen\src;$(IncludePath)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -139,74 +139,61 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Buffer.cpp" />
-    <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="CameraController.cpp" />
-    <ClCompile Include="ComputeShader.cpp" />
-    <ClCompile Include="ConfigurationManager.cpp" />
-    <ClCompile Include="DisplayController.cpp" />
-    <ClCompile Include="Face.cpp" />
-    <ClCompile Include="HemicubeBuffer.cpp" />
-    <ClCompile Include="IDRenderer.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="Mesh.cpp" />
-    <ClCompile Include="RowBuffer.cpp" />
-    <ClCompile Include="Scene.cpp" />
-    <ClCompile Include="SceneRenderer.cpp" />
-    <ClCompile Include="PreprocessingController.cpp" />
-    <ClCompile Include="Renderer.cpp" />
-    <ClCompile Include="Shader.cpp" />
-    <ClCompile Include="BufferRenderer.cpp" />
-    <ClCompile Include="UIntBuffer.cpp" />
-    <ClCompile Include="Window.cpp" />
+    <ClCompile Include="src\common\buffers\Buffer.cpp" />
+    <ClCompile Include="src\common\buffers\HemicubeBuffer.cpp" />
+    <ClCompile Include="src\common\buffers\RowBuffer.cpp" />
+    <ClCompile Include="src\common\buffers\UIntBuffer.cpp" />
+    <ClCompile Include="src\common\Camera.cpp" />
+    <ClCompile Include="src\common\ConfigurationManager.cpp" />
+    <ClCompile Include="src\common\geometry\Face.cpp" />
+    <ClCompile Include="src\common\geometry\Mesh.cpp" />
+    <ClCompile Include="src\common\geometry\Scene.cpp" />
+    <ClCompile Include="src\common\Renderer.cpp" />
+    <ClCompile Include="src\display\BufferRenderer.cpp" />
+    <ClCompile Include="src\display\CameraController.cpp" />
+    <ClCompile Include="src\display\DisplayController.cpp" />
+    <ClCompile Include="src\display\SceneRenderer.cpp" />
+    <ClCompile Include="src\display\Window.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\preprocessing\IDRenderer.cpp" />
+    <ClCompile Include="src\preprocessing\PreprocessingController.cpp" />
+    <ClCompile Include="src\shaders\ComputeShader.cpp" />
+    <ClCompile Include="src\shaders\Shader.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Buffer.h" />
-    <ClInclude Include="Camera.h" />
-    <ClInclude Include="CameraController.h" />
-    <ClInclude Include="ComputeShader.h" />
-    <ClInclude Include="ConfigurationManager.h" />
-    <ClInclude Include="DisplayController.h" />
-    <ClInclude Include="EventListener.h" />
-    <ClInclude Include="Face.h" />
-    <ClInclude Include="HemicubeBuffer.h" />
-    <ClInclude Include="IDRenderer.h" />
-    <ClInclude Include="Mesh.h" />
-    <ClInclude Include="RowBuffer.h" />
-    <ClInclude Include="Scene.h" />
-    <ClInclude Include="SceneRenderer.h" />
-    <ClInclude Include="PreprocessingController.h" />
-    <ClInclude Include="Renderer.h" />
-    <ClInclude Include="Shader.h" />
-    <ClInclude Include="BufferRenderer.h" />
-    <ClInclude Include="UIntBuffer.h" />
-    <ClInclude Include="Window.h" />
+    <ClInclude Include="src\common\buffers\Buffer.h" />
+    <ClInclude Include="src\common\buffers\HemicubeBuffer.h" />
+    <ClInclude Include="src\common\buffers\RowBuffer.h" />
+    <ClInclude Include="src\common\buffers\UIntBuffer.h" />
+    <ClInclude Include="src\common\Camera.h" />
+    <ClInclude Include="src\common\ConfigurationManager.h" />
+    <ClInclude Include="src\common\geometry\Face.h" />
+    <ClInclude Include="src\common\geometry\Mesh.h" />
+    <ClInclude Include="src\common\geometry\Scene.h" />
+    <ClInclude Include="src\common\Renderer.h" />
+    <ClInclude Include="src\display\BufferRenderer.h" />
+    <ClInclude Include="src\display\CameraController.h" />
+    <ClInclude Include="src\display\DisplayController.h" />
+    <ClInclude Include="src\display\EventListener.h" />
+    <ClInclude Include="src\display\SceneRenderer.h" />
+    <ClInclude Include="src\display\Window.h" />
+    <ClInclude Include="src\preprocessing\IDRenderer.h" />
+    <ClInclude Include="src\preprocessing\PreprocessingController.h" />
+    <ClInclude Include="src\shaders\ComputeShader.h" />
+    <ClInclude Include="src\shaders\Shader.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.ini" />
-    <None Include="hemicube.geom" />
-    <None Include="final.frag" />
-    <None Include="final.vert" />
-    <None Include="hemicube.frag" />
-    <None Include="hemicube.vert" />
-    <None Include="id.frag" />
-    <None Include="id.vert" />
-    <None Include="renderFromText.frag" />
-    <None Include="renderFromText.vert" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="computeRow.comp">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compute</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Compute</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <FileType>Document</FileType>
-    </None>
+    <None Include="src\shaders\computeRow.comp" />
+    <None Include="src\shaders\final.frag" />
+    <None Include="src\shaders\final.vert" />
+    <None Include="src\shaders\hemicube.frag" />
+    <None Include="src\shaders\hemicube.geom" />
+    <None Include="src\shaders\hemicube.vert" />
+    <None Include="src\shaders\id.frag" />
+    <None Include="src\shaders\id.vert" />
+    <None Include="src\shaders\renderFromText.frag" />
+    <None Include="src\shaders\renderFromText.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
