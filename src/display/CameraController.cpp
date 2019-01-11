@@ -18,7 +18,7 @@ CameraController::CameraController(SDL_Window* win, Camera* camera) {
 	}
 	else {
 		if (camera == nullptr)
-			camera = new Camera(800, 600, 45, 0.5f, 5000.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+			camera = new Camera(1.0f, 90.0f, 0.5f, 5000.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		this->camera = camera;
 		this->sensitivity = std::stoi(ConfigurationManager::get("MOUSE_SENSITIVITY"));
 		this->speed = std::stoi(ConfigurationManager::get("MOUSE_SPEED"));

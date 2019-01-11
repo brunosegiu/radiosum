@@ -7,12 +7,12 @@
 #include <gtx/rotate_vector.hpp>
 
 
-Camera::Camera(GLuint width, GLuint height, float fov, float near, float far, glm::vec3 origin, glm::vec3 direction, glm::vec3 up) {
+Camera::Camera(float aspectRatio, float fov, float near, float far, glm::vec3 origin, glm::vec3 direction, glm::vec3 up) {
 	this->origin = origin;
 	this->direction = glm::normalize(direction);
 	this->up = glm::normalize(up);
 
-	this->projectionMatrix = glm::perspective(glm::radians(fov), float(width) / float(height), near, far);
+	this->projectionMatrix = glm::perspective(glm::radians(fov), aspectRatio, near, far);
 	this->viewMatrix = glm::lookAt(origin, origin + this->direction, up);
 	this->MVPMatrix = this->projectionMatrix * this->viewMatrix;
 }

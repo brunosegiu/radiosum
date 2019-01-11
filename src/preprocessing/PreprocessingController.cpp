@@ -27,7 +27,7 @@ void PreprocessingController::runStep() {
 			glm::vec4 plane = face.getPlane();
 			origin = face.getBarycenter();
 			normal = face.getNormal();
-			Camera faceCamera = Camera(this->instances, this->instances, 45.0f, 0.5f, 5000.0f, origin, normal);
+			Camera faceCamera = Camera(1.0f, 90.0f, 0.5f, 5000.0f, origin, normal);
 			this->renderer->setCamera(&faceCamera);
 			this->renderer->setClipPlane(plane);
 		}

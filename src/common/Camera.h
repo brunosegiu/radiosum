@@ -9,7 +9,7 @@
 
 class Camera {
 public:
-	Camera(GLuint width, GLuint height, float fov = 45.0f, float near = 0.5f, float far = 5000.0f, glm::vec3 origin = glm::vec3(5.0f, 0, 0), glm::vec3 direction = glm::vec3(-1, 0, 0), glm::vec3 up = glm::vec3(0, 1, 0));
+	Camera(float aspectRatio = 1.0f, float fov = 90.0f, float near = 0.5f, float far = 5000.0f, glm::vec3 origin = glm::vec3(5.0f, 0, 0), glm::vec3 direction = glm::vec3(-1, 0, 0), glm::vec3 up = glm::vec3(0, 1, 0));
 
 	void setOrigin(glm::vec3 origin);
 	void setDirection(glm::vec3 direction);

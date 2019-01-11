@@ -1,3 +1,5 @@
+#define GLM_FORCE_RADIANS
+
 #include "display/Window.h"
 #include "display/DisplayController.h"
 #include "preprocessing/PreprocessingController.h"
