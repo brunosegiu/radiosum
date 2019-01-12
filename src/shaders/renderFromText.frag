@@ -11,14 +11,15 @@ vec3 getLayer(vec2 uv){
 	if (uv.y < .5f){
 		y = uv.y * 1.0f;
 		if (uv.x < .33f){
-			x = uv.x * 3.0f;
-			z = 0.0f;
+			x = 2.0f;
+			y = 2.0f;
+			z = 2.0f;
 		} else if (uv.x <.66f){
 			x = (uv.x - .33f) * 3.0f;
-			z=  1.0f;
+			z= 2.0f;
 		}else{
 			x = (uv.x - .66f)* 3.0f;
-			z = 2.0f;
+			z = 4.0f;
 		}
 	} else {
 		y = (uv.y -.5f) * 1.0f;
@@ -27,11 +28,10 @@ vec3 getLayer(vec2 uv){
 			z = 3.0f;
 		} else if (uv.x <.66f){
 			x = (uv.x -.33f) * 3.0f;
-			z = 4.0f;
-		}else{
-			x = 2.0f;
 			z = 0.0f;
-			y = 2.0f;
+		}else{
+			x = (uv.x - .66f)* 3.0f;
+			z = 1.0f;
 		}
 	}
 	return vec3(x,y,z);

@@ -8,8 +8,8 @@ Mesh::Mesh(std::vector<glm::vec3> vertices, std::vector<glm::vec3> normals) {
 	this->vertices = vertices;
 	this->GLVerticesId, this->GLNormalsId = this->GLIdsId, this->GLVaoId = 0;
 
-	for (GLuint id = Mesh::faceCount; id < this->vertices.size(); id++) {
-		this->ids.push_back(id);
+	for (GLuint id = 0; id < this->vertices.size(); id++) {
+		this->ids.push_back(id + Mesh::faceCount);
 	}
 
 	Mesh::faceCount += GLuint(this->ids.size());

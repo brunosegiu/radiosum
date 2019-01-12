@@ -18,7 +18,7 @@ Window::Window() {
 	this->isOpen = true;
 	if (SDL_Init(SDL_INIT_VIDEO) >= 0) {
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
-		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 4);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 5);
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 		this->window = SDL_CreateWindow(name.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
 		if (window == NULL) throw std::runtime_error("Failed to initialize SDL");
@@ -28,7 +28,7 @@ Window::Window() {
 		glewExperimental = GL_TRUE;
 		glewInit();
 
-		// Load OpenGL setting
+		// Load OpenGL settings
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glEnable(GL_DEPTH_TEST);
 

@@ -10,7 +10,7 @@
 Camera::Camera(float aspectRatio, float fov, float near, float far, glm::vec3 origin, glm::vec3 direction, glm::vec3 up) {
 	this->origin = origin;
 	this->direction = glm::normalize(direction);
-	this->up = glm::normalize(up);
+	this->up = glm::cross(glm::cross(this->direction, up), this->direction);
 
 	this->projectionMatrix = glm::perspective(glm::radians(fov), aspectRatio, near, far);
 	this->viewMatrix = glm::lookAt(origin, origin + this->direction, up);
@@ -24,6 +24,7 @@ void Camera::setOrigin(glm::vec3 origin) {
 
 void Camera::setDirection(glm::vec3 direction) {
 	this->direction = glm::normalize(direction);
+	this->up = glm::cross(glm::cross(this->direction, this->up), this->direction);
 	this->viewMatrix = glm::lookAt(origin, origin + this->direction, up);
 }
 
@@ -53,19 +54,19 @@ std::vector<glm::mat4> Camera::getCubeMatrices() {
 
 	// Right
 	glm::vec3 right = glm::cross(dir, up);
-	matrices.push_back(this->projectionMatrix *  glm::lookAt(origin, origin + right, up));
+	matrices.push_back(this->projectionMatrix *  glm::lookAt(origin, origin + right, dir));
 
 	// Bottom
 	glm::vec3 bottom = glm::rotate(right, glm::radians(90.0f), dir);
-	matrices.push_back(this->projectionMatrix *  glm::lookAt(origin, origin + bottom, up));
+	matrices.push_back(this->projectionMatrix *  glm::lookAt(origin, origin + bottom, dir));
 
 	// Left
-	glm::vec3 left = glm::rotate(bottom, glm::radians(90.0f), dir);
-	matrices.push_back(this->projectionMatrix *  glm::lookAt(origin, origin + left, up));
+	glm::vec3 left = -right;
+	matrices.push_back(this->projectionMatrix *  glm::lookAt(origin, origin + left, dir));
 
 	// Top
-	glm::vec3 top = glm::rotate(left, glm::radians(90.0f), dir);
-	matrices.push_back(this->projectionMatrix *  glm::lookAt(origin, origin + top, up));
+	glm::vec3 top = glm::rotate(right, glm::radians(270.0f), dir);
+	matrices.push_back(this->projectionMatrix *  glm::lookAt(origin, origin + top, dir));
 
 	return matrices;
 }
