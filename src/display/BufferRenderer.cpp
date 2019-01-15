@@ -1,17 +1,20 @@
 #include "display/BufferRenderer.h"
 
+#include "common/ConfigurationManager.h"
+
 BufferRenderer::BufferRenderer() {
 	this->shader = new Shader("renderFromText.vert", "renderFromText.frag");
-
-	this->buffer = new Buffer();
+	GLuint width = std::stoi(ConfigurationManager::get("APP_RES_WIDTH"));
+	GLuint height = std::stoi(ConfigurationManager::get("APP_RES_HEIGHT"));
+	this->buffer = new Buffer(width, height);
 
 	static const GLfloat quad[] = {
-	-1.0f, -1.0f, 0.0f,
-	1.0f, -1.0f, 0.0f,
-	-1.0f,  1.0f, 0.0f,
-	-1.0f,  1.0f, 0.0f,
-	1.0f, -1.0f, 0.0f,
-	1.0f,  1.0f, 0.0f,
+		-1.0f, -1.0f, 0.0f,
+		1.0f, -1.0f, 0.0f,
+		-1.0f,  1.0f, 0.0f,
+		-1.0f,  1.0f, 0.0f,
+		1.0f, -1.0f, 0.0f,
+		1.0f,  1.0f, 0.0f,
 	};
 
 	this->GLQuadId = this->GLVerticesId = 0;
@@ -33,8 +36,6 @@ void BufferRenderer::render() {
 	this->shader->bind();
 	this->buffer->bind();
 	this->buffer->clean();
-	GLuint textureBufferID = glGetUniformLocation(shader->getID(), "buffer");
-	glUniform1i(textureBufferID, 0);
 	glBindVertexArray(this->GLQuadId);
 	glEnableVertexAttribArray(0);
 	glDrawArrays(GL_TRIANGLES, 0, 6);

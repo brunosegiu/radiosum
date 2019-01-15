@@ -7,6 +7,7 @@ Buffer::Buffer(GLuint width, GLuint height) {
 
 void Buffer::bind() {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glViewport(0, 0, this->width, this->height);
 }
 
 void Buffer::clean() {

@@ -18,8 +18,8 @@ HemicubeBuffer::HemicubeBuffer(GLuint width) : Buffer(width, width) {
 	glBindTexture(GL_TEXTURE_2D_ARRAY, this->GLTextureId);
 	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
 	glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_R32UI, width, width, FACES, 0, GL_RED_INTEGER, GL_UNSIGNED_BYTE, 0);
 
 	// Generate depth buffer (so that depth test works)
@@ -40,12 +40,13 @@ HemicubeBuffer::HemicubeBuffer(GLuint width) : Buffer(width, width) {
 
 void HemicubeBuffer::bind() {
 	glBindFramebuffer(GL_FRAMEBUFFER, this->GLId);
+	glViewport(0, 0, this->width, this->width);
 }
 
 void HemicubeBuffer::read() {
-	glActiveTexture(GL_TEXTURE0);
+	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D_ARRAY, this->GLTextureId);
-	glBindImageTexture(0, this->GLTextureId, 0, GL_FALSE, 0, GL_READ_ONLY, GL_R32UI);
+	glBindImageTexture(1, this->GLTextureId, 0, GL_FALSE, 0, GL_READ_ONLY, GL_R32UI);
 }
 
 HemicubeBuffer::~HemicubeBuffer() {

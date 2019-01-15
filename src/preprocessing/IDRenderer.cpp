@@ -18,7 +18,6 @@ void IDRenderer::render() {
 	this->shader->bind();
 	this->buffer->bind();
 	this->buffer->clean();
-
 	GLuint worldTransformId = glGetUniformLocation(shader->getID(), "worldTransform");
 	std::vector<glm::mat4> toWorldCoords = this->camera->getCubeMatrices();
 	glUniformMatrix4fv(worldTransformId, toWorldCoords.size(), GL_FALSE, glm::value_ptr(toWorldCoords[0]));
@@ -29,6 +28,10 @@ void IDRenderer::render() {
 
 	this->scene->draw();
 	glDisable(GL_CLIP_DISTANCE0);
+}
+
+void IDRenderer::read() {
+	this->buffer->read();
 }
 
 void IDRenderer::setClipPlane(glm::vec4 plane) {

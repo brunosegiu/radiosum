@@ -41,6 +41,14 @@ Face Scene::getFace(GLuint index) {
 	throw std::runtime_error("Face index out of range");
 }
 
+std::vector<GLfloat> Scene::getEmissions() {
+	return std::vector<GLfloat>(this->size() / 3, 10.0f);
+}
+
+GLfloat Scene::getReflactance(GLuint faceIndex) {
+	return 0.1f;
+}
+
 
 Scene::~Scene() {
 	for (auto mesh : meshes) {

@@ -9,7 +9,8 @@ RowBuffer::RowBuffer(GLuint length) : Buffer(length, 1) {
 	// Generate and initialize buffer
 	glGenBuffers(1, &this->GLId);
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, this->GLId);
-	glBufferData(GL_SHADER_STORAGE_BUFFER, this->content.size() * sizeof(GLuint), &this->content[0], GL_DYNAMIC_COPY);
+	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, this->GLId);
+	glBufferData(GL_SHADER_STORAGE_BUFFER, this->content.size() * sizeof(GLuint), &this->content[0], GL_DYNAMIC_DRAW);
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 }
 
@@ -20,7 +21,11 @@ void RowBuffer::bind() {
 
 void RowBuffer::clean() {
 	this->bind();
-	glBufferData(GL_SHADER_STORAGE_BUFFER, this->content.size() * sizeof(GLuint), &this->content[0], GL_DYNAMIC_COPY);
+	GLuint* data = (GLuint*)glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_WRITE_ONLY);
+	for (int i = 0; i < this->content.size(); i++) {
+		data[i] = 0;
+	}
+	glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 }
 

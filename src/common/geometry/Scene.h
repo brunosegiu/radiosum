@@ -11,6 +11,8 @@ public:
 	void draw();
 	GLuint size();
 	Face getFace(GLuint index);
+	std::vector<GLfloat> getEmissions();
+	GLfloat getReflactance(GLuint faceIndex);
 	virtual ~Scene();
 private:
 	std::vector<Mesh*> meshes;

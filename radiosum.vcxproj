@@ -80,7 +80,9 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)src;$(ProjectDir)lib\SDL2-2.0.8\include;$(ProjectDir)lib\glew-2.1.0\include;$(ProjectDir)lib\glm;$(ProjectDir)lib\Eigen\src;$(IncludePath)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src;$(ProjectDir)lib\SDL2-2.0.8\include;$(ProjectDir)lib\glew-2.1.0\include;$(ProjectDir)lib\glm;$(ProjectDir)lib\Eigen;$(IncludePath)</AdditionalIncludeDirectories>
+      <OpenMPSupport>true</OpenMPSupport>
+      <AdditionalOptions> /Zc:twoPhase- %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;glew32.lib;OpenGL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -94,7 +96,9 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)src;$(ProjectDir)lib\SDL2-2.0.8\include;$(ProjectDir)lib\glew-2.1.0\include;$(ProjectDir)lib\glm;$(ProjectDir)lib\Eigen\src;$(IncludePath)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src;$(ProjectDir)lib\SDL2-2.0.8\include;$(ProjectDir)lib\glew-2.1.0\include;$(ProjectDir)lib\glm;$(ProjectDir)lib\Eigen;$(IncludePath)</AdditionalIncludeDirectories>
+      <OpenMPSupport>true</OpenMPSupport>
+      <AdditionalOptions> /Zc:twoPhase- %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;glew32.lib;OpenGL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -110,7 +114,9 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)src;$(ProjectDir)lib\SDL2-2.0.8\include;$(ProjectDir)lib\glew-2.1.0\include;$(ProjectDir)lib\glm;$(ProjectDir)lib\Eigen\src;$(IncludePath)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src;$(ProjectDir)lib\SDL2-2.0.8\include;$(ProjectDir)lib\glew-2.1.0\include;$(ProjectDir)lib\glm;$(ProjectDir)lib\Eigen;$(IncludePath)</AdditionalIncludeDirectories>
+      <OpenMPSupport>true</OpenMPSupport>
+      <AdditionalOptions> /Zc:twoPhase- %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -128,7 +134,9 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)src;$(ProjectDir)lib\SDL2-2.0.8\include;$(ProjectDir)lib\glew-2.1.0\include;$(ProjectDir)lib\glm;$(ProjectDir)lib\Eigen\src;$(IncludePath)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src;$(ProjectDir)lib\SDL2-2.0.8\include;$(ProjectDir)lib\glew-2.1.0\include;$(ProjectDir)lib\glm;$(ProjectDir)lib\Eigen;$(IncludePath)</AdditionalIncludeDirectories>
+      <OpenMPSupport>true</OpenMPSupport>
+      <AdditionalOptions> /Zc:twoPhase- %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
