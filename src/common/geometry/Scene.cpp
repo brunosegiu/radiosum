@@ -42,7 +42,7 @@ Face Scene::getFace(GLuint index) {
 }
 
 std::vector<GLfloat> Scene::getEmissions() {
-	return std::vector<GLfloat>(this->size() / 3, 10.0f);
+	return std::vector<GLfloat>(this->size(), 10.0f);
 }
 
 GLfloat Scene::getReflactance(GLuint faceIndex) {

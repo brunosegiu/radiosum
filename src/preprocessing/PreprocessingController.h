@@ -27,7 +27,7 @@ private:
 
 	SceneIterator* iterator;
 
-	Eigen::SparseMatrix<GLfloat> matrix;
+	std::vector<Eigen::Triplet<GLfloat>> triplets;
 	GLfloat pixelCount;
 
 	std::vector<GLuint> getMatrixRow(GLuint face);

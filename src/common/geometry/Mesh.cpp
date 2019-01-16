@@ -169,7 +169,7 @@ std::vector<GLuint> Mesh::getIds() {
 }
 
 GLuint Mesh::size() {
-	return GLuint(this->vertices.size());
+	return GLuint(this->vertices.size() / 3);
 }
 
 Face Mesh::getFace(GLuint index) {

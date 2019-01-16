@@ -16,7 +16,6 @@ PreprocessingController::PreprocessingController(Scene* scene) {
 	std::string widthstr = ConfigurationManager::get("INTERNAL_WIDTH");
 	this->instances = std::stoi(widthstr);
 
-	this->matrix = Eigen::SparseMatrix<GLfloat>(scene->size(), scene->size());
 	this->pixelCount = GLfloat((this->instances * this->instances) * 3);
 
 	this->iterator = new SceneIterator(scene);
@@ -32,7 +31,7 @@ void PreprocessingController::runStep() {
 			glm::vec4 plane = face.getPlane();
 			origin = face.getBarycenter();
 			normal = face.getNormal();
-			Camera faceCamera = Camera(1.0f, 45.0f, 0.5f, 5000.0f, origin, normal);
+			Camera faceCamera = Camera(1.0f, 90.0f, 0.5f, 5000.0f, origin, normal);
 			this->renderer->setCamera(&faceCamera);
 			this->renderer->setClipPlane(plane);
 		}
@@ -43,24 +42,21 @@ void PreprocessingController::runStep() {
 			this->renderer->read();
 		}
 
-		// Process hemicube and comute row
+		// Process hemicube and compute row
 		{
 			std::vector<GLuint> faceFactors = this->getMatrixRow(iterator->faceIndex());
 			GLuint iIndex = iterator->faceIndex();
 			for (GLuint jIndex = 0; jIndex < faceFactors.size() - 1; jIndex++) {
-				this->matrix.coeffRef(iIndex, jIndex) += float(faceFactors[jIndex + 1]) / this->pixelCount;
-			}
-			for (Eigen::SparseMatrix<float>::InnerIterator it(this->matrix, iIndex); it; ++it) {
-				auto cell = this->matrix.coeffRef(it.row(), it.col());
-				if (it.col() == it.row()) {
-					cell = 1.0f;
+				float seenFaces = float(faceFactors[jIndex + 1]);
+				if (seenFaces > 0.0f) {
+					GLfloat entry = -(seenFaces / this->pixelCount) * (scene->getReflactance(iIndex));
+					triplets.push_back(Eigen::Triplet<GLfloat>(iIndex, jIndex, entry));
 				}
-				else {
-					cell *= -scene->getReflactance(iIndex);
+				else if (iIndex == jIndex) {
+					triplets.push_back(Eigen::Triplet<GLfloat>(iIndex, jIndex, 1.0f));
 				}
 			}
 		}
-
 		iterator->next();
 	}
 	else {
@@ -68,24 +64,32 @@ void PreprocessingController::runStep() {
 	}
 }
 
-std::vector<float> PreprocessingController::computeRadiosity() {
+std::vector<GLfloat> PreprocessingController::computeRadiosity() {
+	Eigen::SparseMatrix<GLfloat> matrix = Eigen::SparseMatrix<GLfloat>(scene->size(), scene->size());
+	matrix.setFromTriplets(this->triplets.begin(), this->triplets.end());
+
 	if (!this->iterator->end()) {
 		throw std::runtime_error("Preprocessing not completed yet, radiosity computation called");
 	}
 	Eigen::SimplicialLDLT<Eigen::SparseMatrix<GLfloat>> solver;
-	solver.compute(this->matrix);
+	solver.compute(matrix);
 	if (solver.info() != Eigen::Success) {
 		throw std::runtime_error("Cannot compute radiosity from form factor matrix");
 	}
 	std::vector<GLfloat> _emissions = scene->getEmissions();
 	Eigen::Map<Eigen::VectorXf, Eigen::Unaligned> emissions(_emissions.data(), _emissions.size());
 	Eigen::VectorXf radiosity(emissions.size());
+
 	radiosity = solver.solve(emissions);
 	if (solver.info() != Eigen::Success) {
 		throw std::runtime_error("Cannot compute radiosity from form factor matrix");
 	}
-	std::vector<GLfloat> _radiosity(radiosity.data(), radiosity.data() + radiosity.cols()*radiosity.rows());
 
+	std::vector<GLfloat> vectorizedRad;
+	vectorizedRad.reserve(this->scene->size());
+	Eigen::VectorXf::Map(&vectorizedRad[0], radiosity.size()) = radiosity;
+
+	return vectorizedRad;
 }
 
 std::vector<GLuint> PreprocessingController::getMatrixRow(GLuint face) {
