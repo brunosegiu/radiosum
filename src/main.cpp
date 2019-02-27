@@ -13,7 +13,7 @@ int main(int argc, char *args[]) {
 	DisplayController* dis = new DisplayController(world);
 	while (win->open()) {
 		pre->runStep();
-		//dis->render();
+		dis->render();
 		win->update();
 	}
 	delete win;
