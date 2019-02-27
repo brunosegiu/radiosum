@@ -1,8 +1,12 @@
 #include "display/SceneRenderer.h"
 
+#include "common/ConfigurationManager.h"
+
 SceneRenderer::SceneRenderer(Scene* scene) {
 	this->shader = new Shader("final.vert", "final.frag");
-	this->buffer = new Buffer();
+	GLuint width = std::stoi(ConfigurationManager::get("APP_RES_WIDTH"));
+	GLuint height = std::stoi(ConfigurationManager::get("APP_RES_HEIGHT"));
+	this->buffer = new Buffer(width, height);
 	this->scene = scene;
 }
 

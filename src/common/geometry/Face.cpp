@@ -24,6 +24,17 @@ glm::vec4 Face::getPlane() {
 	return glm::vec4(normal, d);
 }
 
+glm::vec3 Face::getVertex(GLuint index) {
+	switch (index) {
+	case (0):
+		return v0;
+	case (1):
+		return v1;
+	case (2):
+		return v2;
+	}
+}
+
 Face::~Face() {
 
 }

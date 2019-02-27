@@ -57,7 +57,7 @@ void PreprocessingController::runStep() {
 				}
 			}
 		}
-		iterator->next();
+		iterator->nextFace();
 	}
 	else {
 		this->computeRadiosity();
@@ -71,22 +71,24 @@ std::vector<GLfloat> PreprocessingController::computeRadiosity() {
 	if (!this->iterator->end()) {
 		throw std::runtime_error("Preprocessing not completed yet, radiosity computation called");
 	}
-	Eigen::SimplicialLDLT<Eigen::SparseMatrix<GLfloat>> solver;
-	solver.compute(matrix);
+	Eigen::SparseLU<Eigen::SparseMatrix<GLfloat>> solver;
+	solver.analyzePattern(matrix);
+	solver.factorize(matrix);
 	if (solver.info() != Eigen::Success) {
-		throw std::runtime_error("Cannot compute radiosity from form factor matrix");
+		//throw std::runtime_error("Cannot compute radiosity from form factor matrix");
 	}
-	std::vector<GLfloat> _emissions = scene->getEmissions();
+
+	std::vector<GLfloat> _emissions = this->scene->getEmissions();
 	Eigen::Map<Eigen::VectorXf, Eigen::Unaligned> emissions(_emissions.data(), _emissions.size());
 	Eigen::VectorXf radiosity(emissions.size());
 
 	radiosity = solver.solve(emissions);
 	if (solver.info() != Eigen::Success) {
-		throw std::runtime_error("Cannot compute radiosity from form factor matrix");
+		//throw std::runtime_error("Cannot compute radiosity from form factor matrix");
 	}
 
 	std::vector<GLfloat> vectorizedRad;
-	vectorizedRad.reserve(this->scene->size());
+	vectorizedRad.reserve(radiosity.size());
 	Eigen::VectorXf::Map(&vectorizedRad[0], radiosity.size()) = radiosity;
 
 	return vectorizedRad;

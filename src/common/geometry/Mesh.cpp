@@ -101,7 +101,7 @@ Mesh* loadOBJ(std::ifstream* input) {
 			verticesIndices.push_back(second_v - 1);
 			verticesIndices.push_back(third_v - 1);
 
-			normalsIndices.push_back(first_v - 1);
+			normalsIndices.push_back(first_n - 1);
 			normalsIndices.push_back(second_n - 1);
 			normalsIndices.push_back(third_n - 1);
 

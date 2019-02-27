@@ -42,7 +42,12 @@ Face Scene::getFace(GLuint index) {
 }
 
 std::vector<GLfloat> Scene::getEmissions() {
-	return std::vector<GLfloat>(this->size(), 10.0f);
+
+	std::vector<GLfloat> testEmisions;
+	for (GLuint i = 0; i < this->size(); i++) {
+		testEmisions.push_back(float(i % 20) * 10.0f);
+	}
+	return testEmisions;
 }
 
 GLfloat Scene::getReflactance(GLuint faceIndex) {
@@ -67,9 +72,15 @@ GLuint SceneIterator::begin() {
 	return this->index;
 }
 
-GLuint SceneIterator::next() {
+GLuint SceneIterator::nextFace() {
 	if (!this->end())
 		this->index += 3;
+	return this->index;
+}
+
+GLuint SceneIterator::nextVertex() {
+	if (!this->end())
+		this->index++;
 	return this->index;
 }
 
@@ -78,7 +89,7 @@ Face SceneIterator::get() {
 }
 
 GLuint SceneIterator::faceIndex() {
-	return this->index / 3;
+	return this->index;
 }
 
 bool SceneIterator::end() {

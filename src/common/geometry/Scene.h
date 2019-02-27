@@ -22,7 +22,8 @@ class SceneIterator {
 public:
 	SceneIterator(Scene* scene);
 	GLuint begin();
-	GLuint next();
+	GLuint nextFace();
+	GLuint nextVertex();
 	Face get();
 	GLuint faceIndex();
 	bool end();

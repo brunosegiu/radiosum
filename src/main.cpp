@@ -8,12 +8,12 @@
 int main(int argc, char *args[]) {
 	Window *win = Window::get();
 	Scene* world = new Scene();
-	world->addMesh("mesh.obj");
+	world->addMesh("street.obj");
 	PreprocessingController* pre = new PreprocessingController(world);
 	DisplayController* dis = new DisplayController(world);
 	while (win->open()) {
 		pre->runStep();
-		dis->render();
+		//dis->render();
 		win->update();
 	}
 	delete win;
