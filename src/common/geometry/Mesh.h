@@ -8,11 +8,12 @@
 
 #include "common/geometry/Face.h"
 
+
 class Mesh {
 public:
 	static Mesh* load(std::string path);
 
-	Mesh(std::vector<glm::vec3> vertices, std::vector<glm::vec3> normals);
+	Mesh(std::vector<glm::vec3> vertices, std::vector<glm::vec2> textures, std::vector<glm::vec3> normals);
 
 	void draw();
 
@@ -29,6 +30,6 @@ private:
 	std::vector<GLuint> ids;
 
 	static GLuint faceCount;
-	GLuint GLVerticesId, GLNormalsId, GLIdsId, GLVaoId;
+	GLuint GLVerticesId, GLTexturesId, GLNormalsId, GLIdsId, GLVaoId;
 };
 

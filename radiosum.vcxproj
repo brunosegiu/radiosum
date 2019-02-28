@@ -80,7 +80,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)src;$(ProjectDir)lib\SDL2-2.0.8\include;$(ProjectDir)lib\glew-2.1.0\include;$(ProjectDir)lib\glm;$(ProjectDir)lib\Eigen;$(IncludePath)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src/;$(ProjectDir)lib\SDL2-2.0.8\include;$(ProjectDir)lib\glew-2.1.0\include;$(ProjectDir)lib\glm;$(ProjectDir)lib\Eigen;$(IncludePath)</AdditionalIncludeDirectories>
       <OpenMPSupport>true</OpenMPSupport>
       <AdditionalOptions> /Zc:twoPhase- %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
@@ -96,7 +96,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)src;$(ProjectDir)lib\SDL2-2.0.8\include;$(ProjectDir)lib\glew-2.1.0\include;$(ProjectDir)lib\glm;$(ProjectDir)lib\Eigen;$(IncludePath)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src/;$(ProjectDir)lib\SDL2-2.0.8\include;$(ProjectDir)lib\glew-2.1.0\include;$(ProjectDir)lib\glm;$(ProjectDir)lib\Eigen;$(IncludePath)</AdditionalIncludeDirectories>
       <OpenMPSupport>true</OpenMPSupport>
       <AdditionalOptions> /Zc:twoPhase- %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
@@ -114,7 +114,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)src;$(ProjectDir)lib\SDL2-2.0.8\include;$(ProjectDir)lib\glew-2.1.0\include;$(ProjectDir)lib\glm;$(ProjectDir)lib\Eigen;$(IncludePath)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src/;$(ProjectDir)lib\SDL2-2.0.8\include;$(ProjectDir)lib\glew-2.1.0\include;$(ProjectDir)lib\glm;$(ProjectDir)lib\Eigen;$(IncludePath)</AdditionalIncludeDirectories>
       <OpenMPSupport>true</OpenMPSupport>
       <AdditionalOptions> /Zc:twoPhase- %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
@@ -134,7 +134,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)src;$(ProjectDir)lib\SDL2-2.0.8\include;$(ProjectDir)lib\glew-2.1.0\include;$(ProjectDir)lib\glm;$(ProjectDir)lib\Eigen;$(IncludePath)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src/;$(ProjectDir)lib\SDL2-2.0.8\include;$(ProjectDir)lib\glew-2.1.0\include;$(ProjectDir)lib\glm;$(ProjectDir)lib\Eigen;$(IncludePath)</AdditionalIncludeDirectories>
       <OpenMPSupport>true</OpenMPSupport>
       <AdditionalOptions> /Zc:twoPhase- %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
@@ -156,6 +156,7 @@
     <ClCompile Include="src\common\geometry\Face.cpp" />
     <ClCompile Include="src\common\geometry\Mesh.cpp" />
     <ClCompile Include="src\common\geometry\Scene.cpp" />
+    <ClCompile Include="src\common\geometry\VAO.cpp" />
     <ClCompile Include="src\common\Renderer.cpp" />
     <ClCompile Include="src\display\BufferRenderer.cpp" />
     <ClCompile Include="src\display\CameraController.cpp" />
@@ -177,7 +178,9 @@
     <ClInclude Include="src\common\ConfigurationManager.h" />
     <ClInclude Include="src\common\geometry\Face.h" />
     <ClInclude Include="src\common\geometry\Mesh.h" />
+    <ClInclude Include="src\common\geometry\ObjLoader.h" />
     <ClInclude Include="src\common\geometry\Scene.h" />
+    <ClInclude Include="src\common\geometry\VAO.h" />
     <ClInclude Include="src\common\Renderer.h" />
     <ClInclude Include="src\display\BufferRenderer.h" />
     <ClInclude Include="src\display\CameraController.h" />
@@ -192,16 +195,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="config.ini" />
-    <None Include="src\shaders\computeRow.comp" />
-    <None Include="src\shaders\final.frag" />
-    <None Include="src\shaders\final.vert" />
-    <None Include="src\shaders\hemicube.frag" />
-    <None Include="src\shaders\hemicube.geom" />
-    <None Include="src\shaders\hemicube.vert" />
-    <None Include="src\shaders\id.frag" />
-    <None Include="src\shaders\id.vert" />
-    <None Include="src\shaders\renderFromText.frag" />
-    <None Include="src\shaders\renderFromText.vert" />
+    <None Include="res\shaders\computeRow.comp" />
+    <None Include="res\shaders\final.frag" />
+    <None Include="res\shaders\final.vert" />
+    <None Include="res\shaders\hemicube.frag" />
+    <None Include="res\shaders\hemicube.geom" />
+    <None Include="res\shaders\hemicube.vert" />
+    <None Include="res\shaders\id.frag" />
+    <None Include="res\shaders\id.vert" />
+    <None Include="res\shaders\renderFromText.frag" />
+    <None Include="res\shaders\renderFromText.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

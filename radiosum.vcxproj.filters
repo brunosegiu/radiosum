@@ -61,6 +61,9 @@
     <ClCompile Include="src\shaders\Shader.cpp">
       <Filter>Source\Shaders</Filter>
     </ClCompile>
+    <ClCompile Include="src\common\geometry\VAO.cpp">
+      <Filter>Source\Geometry</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source">
@@ -155,39 +158,45 @@
     <ClInclude Include="src\shaders\Shader.h">
       <Filter>Source\Shaders</Filter>
     </ClInclude>
+    <ClInclude Include="src\common\geometry\ObjLoader.h">
+      <Filter>Source\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="src\common\geometry\VAO.h">
+      <Filter>Source\Geometry</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="config.ini">
       <Filter>Source</Filter>
     </None>
-    <None Include="src\shaders\renderFromText.frag">
+    <None Include="res\shaders\renderFromText.frag">
       <Filter>Source\Shaders\Debugging</Filter>
     </None>
-    <None Include="src\shaders\renderFromText.vert">
+    <None Include="res\shaders\renderFromText.vert">
       <Filter>Source\Shaders\Debugging</Filter>
     </None>
-    <None Include="src\shaders\final.frag">
+    <None Include="res\shaders\final.frag">
       <Filter>Source\Shaders\Final</Filter>
     </None>
-    <None Include="src\shaders\final.vert">
+    <None Include="res\shaders\final.vert">
       <Filter>Source\Shaders\Final</Filter>
     </None>
-    <None Include="src\shaders\hemicube.frag">
+    <None Include="res\shaders\id.vert">
       <Filter>Source\Shaders\Preprocessing</Filter>
     </None>
-    <None Include="src\shaders\hemicube.geom">
+    <None Include="res\shaders\id.frag">
       <Filter>Source\Shaders\Preprocessing</Filter>
     </None>
-    <None Include="src\shaders\hemicube.vert">
+    <None Include="res\shaders\hemicube.vert">
       <Filter>Source\Shaders\Preprocessing</Filter>
     </None>
-    <None Include="src\shaders\id.frag">
+    <None Include="res\shaders\hemicube.geom">
       <Filter>Source\Shaders\Preprocessing</Filter>
     </None>
-    <None Include="src\shaders\id.vert">
+    <None Include="res\shaders\hemicube.frag">
       <Filter>Source\Shaders\Preprocessing</Filter>
     </None>
-    <None Include="src\shaders\computeRow.comp">
+    <None Include="res\shaders\computeRow.comp">
       <Filter>Source\Shaders\Preprocessing</Filter>
     </None>
   </ItemGroup>
