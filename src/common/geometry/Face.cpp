@@ -6,6 +6,15 @@ Face::Face(glm::vec3 v0, glm::vec3 v1, glm::vec3 v2) {
 	this->v0 = v0;
 	this->v1 = v1;
 	this->v2 = v2;
+	this->mode = TRIANGLE;
+}
+
+Face::Face(glm::vec3 v0, glm::vec3 v1, glm::vec3 v2, glm::vec3 v3) {
+	this->v0 = v0;
+	this->v1 = v1;
+	this->v2 = v2;
+	this->v3 = v3;
+	this->mode = QUAD;
 }
 
 glm::vec3 Face::getNormal() {
@@ -15,7 +24,10 @@ glm::vec3 Face::getNormal() {
 }
 
 glm::vec3 Face::getBarycenter() {
-	return (v0 + v1 + v2) / 3.0f;
+	if (mode == TRIANGLE)
+		return (v0 + v1 + v2) / 3.0f;
+	else
+		return (v0 + v1 + v2 + v3) / 4.0f;
 }
 
 glm::vec4 Face::getPlane() {
@@ -32,6 +44,8 @@ glm::vec3 Face::getVertex(GLuint index) {
 		return v1;
 	case (2):
 		return v2;
+	case (3):
+		return v3;
 	}
 }
 

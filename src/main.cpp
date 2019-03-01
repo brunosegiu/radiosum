@@ -9,7 +9,7 @@
 int main(int argc, char *args[]) {
 	Window *win = Window::get();
 	Scene* world = new Scene();
-	world->addMesh("res/scenes/mesh.obj");
+	world->addMesh("res/scenes/IBPSA_street.obj");
 	PreprocessingController* pre = new PreprocessingController(world);
 	DisplayController* dis = new DisplayController(world);
 

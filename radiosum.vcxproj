@@ -86,7 +86,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;glew32.lib;OpenGL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <AdditionalLibraryDirectories>$(ProjectDir)lib\SDL2-2.0.8\lib\x64;$(ProjectDir)lib\glew-2.1.0\lib\Release\x64;$(ProjectDir)lib\glew-2.1.0\bin\Release\x64</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -102,7 +102,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;glew32.lib;OpenGL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <AdditionalLibraryDirectories>$(ProjectDir)lib\SDL2-2.0.8\lib\x64;$(ProjectDir)lib\glew-2.1.0\lib\Release\x64;$(ProjectDir)lib\glew-2.1.0\bin\Release\x64</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -177,6 +177,7 @@
     <ClInclude Include="src\common\Camera.h" />
     <ClInclude Include="src\common\ConfigurationManager.h" />
     <ClInclude Include="src\common\geometry\Face.h" />
+    <ClInclude Include="src\common\geometry\GeometryContainer.h" />
     <ClInclude Include="src\common\geometry\Mesh.h" />
     <ClInclude Include="src\common\geometry\ObjLoader.h" />
     <ClInclude Include="src\common\geometry\Scene.h" />

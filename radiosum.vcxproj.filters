@@ -164,6 +164,7 @@
     <ClInclude Include="src\common\geometry\VAO.h">
       <Filter>Source\Geometry</Filter>
     </ClInclude>
+    <ClInclude Include="src\common\geometry\GeometryContainer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.ini">
