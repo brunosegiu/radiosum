@@ -191,9 +191,6 @@
     <None Include="res\shaders\hemicube.vert">
       <Filter>Source\Shaders\Preprocessing</Filter>
     </None>
-    <None Include="res\shaders\hemicube.geom">
-      <Filter>Source\Shaders\Preprocessing</Filter>
-    </None>
     <None Include="res\shaders\hemicube.frag">
       <Filter>Source\Shaders\Preprocessing</Filter>
     </None>

@@ -26,10 +26,11 @@ public:
 	virtual ~Mesh();
 
 private:
-	std::vector<glm::vec3> tVertices, qVertices;
+	std::vector<glm::vec3> vertices;
 	std::vector<GLuint> tIds, qIds;
 
-	VAO *tVao, *qVao;
+	VAO* vao;
+	GLuint faces, tFaces, qFaces;
 
 	static GLuint faceCount;
 

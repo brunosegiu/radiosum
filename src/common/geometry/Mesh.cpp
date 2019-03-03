@@ -23,74 +23,67 @@ Mesh* Mesh::load(std::string path) {
 }
 
 Mesh::Mesh(GeometryBuffers geometry) {
-	this->tVertices = geometry.triangles.vertices;
-	this->qVertices = geometry.quads.vertices;
 
-	for (GLuint id = 0; id < this->tVertices.size() / 3; id++) {
+	for (GLuint id = 0; id < geometry.triangles.vertices.size() / 3; id++) {
 		this->tIds.push_back(id + Mesh::faceCount);
 	}
 
 	Mesh::faceCount += GLuint(this->tIds.size());
 
-	for (GLuint id = 0; id < this->qVertices.size() / 4; id++) {
+	for (GLuint id = 0; id < geometry.quads.vertices.size() / 4; id++) {
 		this->qIds.push_back(id + Mesh::faceCount);
 	}
 
 	Mesh::faceCount += GLuint(this->qIds.size());
 
-	std::vector<GLuint> tReplicatedIds;
+	std::vector<GLuint> replicatedIds;
 	for (auto id : this->tIds) {
-		tReplicatedIds.push_back(id);
-		tReplicatedIds.push_back(id);
-		tReplicatedIds.push_back(id);
+		replicatedIds.push_back(id);
+		replicatedIds.push_back(id);
+		replicatedIds.push_back(id);
 	}
 
-	std::vector<GLuint> qReplicatedIds;
 	for (auto id : this->qIds) {
-		qReplicatedIds.push_back(id);
-		qReplicatedIds.push_back(id);
-		qReplicatedIds.push_back(id);
-		qReplicatedIds.push_back(id);
+		replicatedIds.push_back(id);
+		replicatedIds.push_back(id);
+		replicatedIds.push_back(id);
+		replicatedIds.push_back(id);
+		replicatedIds.push_back(id);
+		replicatedIds.push_back(id);
 	}
 
-	// Set up triangles VAO
-	if (tVertices.size() > 0) {
-		this->tVao = new VAO();
-		this->tVao->addAttribute(sizeof(glm::vec3) * tVertices.size(), &tVertices[0].x, 3, GL_FLOAT, 0);
-		if (geometry.triangles.textures.size())
-			this->tVao->addAttribute(sizeof(glm::vec2) * geometry.triangles.textures.size(), &geometry.triangles.textures[0].x, 2, GL_FLOAT, 1);
-		if (geometry.triangles.normals.size())
-			this->tVao->addAttribute(sizeof(glm::vec3) * geometry.triangles.normals.size(), &geometry.triangles.normals[0].x, 3, GL_FLOAT, 2);
-		this->tVao->addAttribute(sizeof(GLuint) * tReplicatedIds.size(), &tReplicatedIds[0], 1, GL_UNSIGNED_INT, 3);
+	this->tFaces = geometry.triangles.vertices.size() / 3;
+	this->qFaces = geometry.quads.vertices.size() / 4;
+	this->faces = tFaces + qFaces;
+
+	this->vertices = geometry.triangles.vertices;
+	for (GLuint i = 0; i < geometry.quads.vertices.size(); i += 4) {
+		this->vertices.push_back(geometry.quads.vertices[i]);
+		this->vertices.push_back(geometry.quads.vertices[i + 1]);
+		this->vertices.push_back(geometry.quads.vertices[i + 3]);
+
+		this->vertices.push_back(geometry.quads.vertices[i + 1]);
+		this->vertices.push_back(geometry.quads.vertices[i + 2]);
+		this->vertices.push_back(geometry.quads.vertices[i + 3]);
 	}
 
-	// Set up quads VAO
-	if (qVertices.size() > 0) {
-		this->qVao = new VAO();
-		this->qVao->addAttribute(sizeof(glm::vec3) * qVertices.size(), &qVertices[0].x, 3, GL_FLOAT, 0);
-		if (geometry.quads.textures.size())
-			this->qVao->addAttribute(sizeof(glm::vec2) * geometry.quads.textures.size(), &geometry.quads.textures[0].x, 2, GL_FLOAT, 1);
-		if (geometry.quads.normals.size())
-			this->qVao->addAttribute(sizeof(glm::vec3) * geometry.quads.normals.size(), &geometry.quads.normals[0].x, 3, GL_FLOAT, 2);
-		this->qVao->addAttribute(sizeof(GLuint) * qReplicatedIds.size(), &qReplicatedIds[0], 1, GL_UNSIGNED_INT, 3);
-	}
+	this->vao = new VAO();
+	this->vao->addAttribute(sizeof(glm::vec3) * vertices.size(), &vertices[0].x, 3, GL_FLOAT, 0);
+	if (geometry.triangles.textures.size())
+		this->vao->addAttribute(sizeof(glm::vec2) * geometry.triangles.textures.size(), &geometry.triangles.textures[0].x, 2, GL_FLOAT, 1);
+	if (geometry.triangles.normals.size())
+		this->vao->addAttribute(sizeof(glm::vec3) * geometry.triangles.normals.size(), &geometry.triangles.normals[0].x, 3, GL_FLOAT, 2);
+	this->vao->addAttribute(sizeof(GLuint) * replicatedIds.size(), &replicatedIds[0], 1, GL_UNSIGNED_INT, 3);
 }
 
 void Mesh::draw() {
-	if (tVertices.size() > 0) {
-		this->tVao->bind();
-		glDrawArrays(GL_TRIANGLES, 0, GLsizei(this->tVertices.size()));
-		this->tVao->unbind();
-	}
-	if (qVertices.size() > 0) {
-		this->qVao->bind();
-		glDrawArrays(GL_QUADS, 0, GLsizei(this->qVertices.size()));
-		this->qVao->unbind();
-	}
+	this->vao->bind();
+	glDrawArrays(GL_TRIANGLES, 0, GLsizei(this->vertices.size()));
+	this->vao->unbind();
 }
 
 std::vector<glm::vec3> Mesh::getVertices() {
-	return this->tVertices;
+	return this->vertices;
 }
 
 std::vector<GLuint> Mesh::getIds() {
@@ -98,19 +91,18 @@ std::vector<GLuint> Mesh::getIds() {
 }
 
 GLuint Mesh::size() {
-	return GLuint((this->tVertices.size() / 3) + (this->qVertices.size() / 4));
+	return faces;
 }
 
 Face Mesh::getFace(GLuint index) {
-	if (index < this->tVertices.size())
-		return Face(this->tVertices[index], this->tVertices[index + 1], this->tVertices[index + 2]);
-	else
-		return Face(this->qVertices[index], this->qVertices[index + 1], this->qVertices[index + 2], this->qVertices[index + 3]);
+	if (index < tFaces)
+		return Face(this->vertices[3 * index], this->vertices[3 * index + 1], this->vertices[3 * index + 2]);
+	else {
+		GLuint startsAt = 6 * index - 3 * tFaces;
+		return Face(this->vertices[startsAt], this->vertices[startsAt + 1], this->vertices[startsAt + 4], this->vertices[startsAt + 2]);
+	}
 }
 
 Mesh::~Mesh() {
-	if (tVertices.size() > 0)
-		delete this->tVao;
-	if (qVertices.size() > 0)
-		delete this->qVao;
+	delete this->vao;
 }

@@ -74,7 +74,7 @@ GLuint SceneIterator::begin() {
 
 GLuint SceneIterator::nextFace() {
 	if (!this->end())
-		this->index += 3;
+		this->index += 1;
 	return this->index;
 }
 
