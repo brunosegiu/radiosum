@@ -8,7 +8,7 @@ DisplayController::DisplayController(Scene* scene) {
 	Camera* userCamera = Window::get()->getCamera();
 	this->sceneRenderer->setCamera(userCamera);
 	// TODO: allow setup of several renderers at runtime
-	this->renderer = this->sceneRenderer;
+	this->renderer = this->bufferRenderer;
 }
 
 void DisplayController::render() {

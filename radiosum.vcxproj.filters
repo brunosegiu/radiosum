@@ -64,6 +64,25 @@
     <ClCompile Include="src\common\geometry\VAO.cpp">
       <Filter>Source\Geometry</Filter>
     </ClCompile>
+    <ClCompile Include="src\display\ui\UI.cpp" />
+    <ClCompile Include="lib\imgui-1.68\imgui.cpp">
+      <Filter>Source\Display\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="lib\imgui-1.68\imgui_demo.cpp">
+      <Filter>Source\Display\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="lib\imgui-1.68\imgui_draw.cpp">
+      <Filter>Source\Display\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="lib\imgui-1.68\imgui_widgets.cpp">
+      <Filter>Source\Display\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="lib\imgui-1.68\imgui_impl_opengl3.cpp">
+      <Filter>Source\Display\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="lib\imgui-1.68\imgui_impl_sdl.cpp">
+      <Filter>Source\Display\ImGUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source">
@@ -95,6 +114,9 @@
     </Filter>
     <Filter Include="Source\Common">
       <UniqueIdentifier>{1c43f981-e357-4850-a4e6-8a8d79d4bf53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Display\ImGUI">
+      <UniqueIdentifier>{8dab3941-56fd-48b3-b49c-35c8f39b2782}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -165,6 +187,7 @@
       <Filter>Source\Geometry</Filter>
     </ClInclude>
     <ClInclude Include="src\common\geometry\GeometryContainer.h" />
+    <ClInclude Include="src\display\ui\UI.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.ini">

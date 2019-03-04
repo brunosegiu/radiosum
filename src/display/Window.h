@@ -10,6 +10,7 @@
 
 #include "display/EventListener.h"
 #include "display/CameraController.h"
+#include "display/ui/UI.h"
 
 class Window {
 public:
@@ -32,5 +33,6 @@ private:
 	SDL_GLContext glContext;
 	CameraController* camera;
 	std::vector<EventListener*> listeners;
+	UI* ui;
 	bool isOpen;
 };

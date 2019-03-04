@@ -33,7 +33,10 @@ Window::Window() {
 		glEnable(GL_DEPTH_TEST);
 
 		this->camera = new CameraController(window);
-		this->listeners.push_back(this->camera);
+		//this->listeners.push_back(this->camera);
+
+		this->ui = new UI(window, glContext);
+		this->listeners.push_back(this->ui);
 	}
 	else {
 		throw std::runtime_error("Failed to initialize SDL");
@@ -46,10 +49,10 @@ void Window::update() {
 	while (SDL_PollEvent(&event) != 0) {
 		for (auto listener : this->listeners)
 			listener->process(event);
-
 		if (event.type == SDL_QUIT)
 			this->isOpen = false;
 	}
+	this->ui->render();
 	SDL_GL_SwapWindow(window);
 }
 
