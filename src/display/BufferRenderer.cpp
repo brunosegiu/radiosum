@@ -4,9 +4,8 @@
 
 BufferRenderer::BufferRenderer() {
 	this->shader = new Shader("renderFromText.vert", "renderFromText.frag");
-	GLuint width = std::stoi(ConfigurationManager::get("APP_RES_WIDTH"));
 	GLuint height = std::stoi(ConfigurationManager::get("APP_RES_HEIGHT"));
-	this->buffer = new Buffer(width, height);
+	this->buffer = new Buffer(height, height);
 
 	static const GLfloat quad[] = {
 		-1.0f, -1.0f, 0.0f,

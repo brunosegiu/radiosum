@@ -153,6 +153,7 @@
     <ClCompile Include="lib\imgui-1.68\imgui_impl_opengl3.cpp" />
     <ClCompile Include="lib\imgui-1.68\imgui_impl_sdl.cpp" />
     <ClCompile Include="lib\imgui-1.68\imgui_widgets.cpp" />
+    <ClCompile Include="src\common\Logger.cpp" />
     <ClCompile Include="src\common\buffers\Buffer.cpp" />
     <ClCompile Include="src\common\buffers\HemicubeBuffer.cpp" />
     <ClCompile Include="src\common\buffers\RowBuffer.cpp" />
@@ -175,8 +176,10 @@
     <ClCompile Include="src\shaders\ComputeShader.cpp" />
     <ClCompile Include="src\shaders\Shader.cpp" />
     <ClCompile Include="src\display\ui\UI.cpp" />
+    <ClCompile Include="src\common\Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\common\Logger.h" />
     <ClInclude Include="src\common\buffers\Buffer.h" />
     <ClInclude Include="src\common\buffers\HemicubeBuffer.h" />
     <ClInclude Include="src\common\buffers\RowBuffer.h" />
@@ -195,12 +198,15 @@
     <ClInclude Include="src\display\DisplayController.h" />
     <ClInclude Include="src\display\EventListener.h" />
     <ClInclude Include="src\display\SceneRenderer.h" />
+    <ClInclude Include="src\display\ui\DebugInfo.h" />
+    <ClInclude Include="src\display\ui\Menu.h" />
     <ClInclude Include="src\display\Window.h" />
     <ClInclude Include="src\preprocessing\IDRenderer.h" />
     <ClInclude Include="src\preprocessing\PreprocessingController.h" />
     <ClInclude Include="src\shaders\ComputeShader.h" />
     <ClInclude Include="src\shaders\Shader.h" />
     <ClInclude Include="src\display\ui\UI.h" />
+    <ClInclude Include="src\common\Timer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.ini" />

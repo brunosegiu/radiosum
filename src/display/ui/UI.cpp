@@ -1,6 +1,8 @@
 #include "display/ui/UI.h"
 
-
+#include "display/ui/DebugInfo.h"
+#include "display/ui/Menu.h"
+#include "common/Logger.h"
 
 UI::UI(SDL_Window* window, SDL_GLContext &glContext) {
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, 0);
@@ -10,7 +12,7 @@ UI::UI(SDL_Window* window, SDL_GLContext &glContext) {
 	SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
 	SDL_DisplayMode current;
 	SDL_GetCurrentDisplayMode(0, &current);
-
+	Logger::log("Setting up ImGui");
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGui::StyleColorsDark();
@@ -29,7 +31,10 @@ void UI::render() {
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame(window);
 	ImGui::NewFrame();
-	ImGui::ShowDemoWindow();
+
+	renderMenu();
+	renderDebugInfo();
+
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }

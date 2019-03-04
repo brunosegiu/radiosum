@@ -5,6 +5,8 @@
 #include "display/Window.h"
 #include "common/ConfigurationManager.h"
 #include "common/geometry/Face.h"
+#include "common/Logger.h"
+#include "common/Timer.h"
 
 PreprocessingController::PreprocessingController(Scene* scene) {
 	this->scene = scene;
@@ -23,7 +25,7 @@ PreprocessingController::PreprocessingController(Scene* scene) {
 
 void PreprocessingController::runStep() {
 	if (!this->iterator->end()) {
-
+		Timer stepTimer = Timer();
 		// Get camera configuration and prepare for render
 		{
 			Face face = this->iterator->get();
@@ -35,6 +37,7 @@ void PreprocessingController::runStep() {
 			this->renderer->setCamera(&faceCamera);
 			this->renderer->setClipPlane(plane);
 		}
+
 
 		// Render hemicube and read results
 		{
@@ -57,6 +60,7 @@ void PreprocessingController::runStep() {
 				}
 			}
 		}
+		Logger::log("RenderRow", std::to_string(stepTimer.get()) + "s");
 		iterator->nextFace();
 	}
 	else {
@@ -65,6 +69,7 @@ void PreprocessingController::runStep() {
 }
 
 std::vector<GLfloat> PreprocessingController::computeRadiosity() {
+	Logger::log("Computing radiosity for " + std::to_string(int(scene->size())) + "faces");
 	Eigen::SparseMatrix<GLfloat> matrix = Eigen::SparseMatrix<GLfloat>(scene->size(), scene->size());
 	matrix.setFromTriplets(this->triplets.begin(), this->triplets.end());
 
@@ -75,7 +80,7 @@ std::vector<GLfloat> PreprocessingController::computeRadiosity() {
 	solver.analyzePattern(matrix);
 	solver.factorize(matrix);
 	if (solver.info() != Eigen::Success) {
-		//throw std::runtime_error("Cannot compute radiosity from form factor matrix");
+		throw std::runtime_error("Cannot compute radiosity from form factor matrix");
 	}
 
 	std::vector<GLfloat> _emissions = this->scene->getEmissions();
@@ -84,7 +89,7 @@ std::vector<GLfloat> PreprocessingController::computeRadiosity() {
 
 	radiosity = solver.solve(emissions);
 	if (solver.info() != Eigen::Success) {
-		//throw std::runtime_error("Cannot compute radiosity from form factor matrix");
+		throw std::runtime_error("Cannot compute radiosity from form factor matrix");
 	}
 
 	std::vector<GLfloat> vectorizedRad;

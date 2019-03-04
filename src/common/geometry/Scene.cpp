@@ -1,11 +1,12 @@
 #include "common/geometry/Scene.h"
 
-
+#include "common/Logger.h"
 
 Scene::Scene() {
 }
 
 void Scene::addMesh(std::string path) {
+	Logger::log("Adding mesh from path: " + path);
 	Mesh* toAdd = Mesh::load(path);
 	this->addMesh(toAdd);
 }

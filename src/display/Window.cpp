@@ -1,6 +1,7 @@
 #include "display/Window.h"
 
 #include "common/ConfigurationManager.h"
+#include "common/Logger.h"
 
 Window* Window::instance = nullptr;
 
@@ -22,6 +23,7 @@ Window::Window() {
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 		this->window = SDL_CreateWindow(name.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
 		if (window == NULL) throw std::runtime_error("Failed to initialize SDL");
+		Logger::log("Setting up OpenGL 4.5");
 		glContext = SDL_GL_CreateContext(window);
 		if (glContext == NULL)
 			throw std::runtime_error("Failed to initialize OpenGL");

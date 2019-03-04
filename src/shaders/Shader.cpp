@@ -3,6 +3,7 @@
 #include <fstream>
 
 #include "common/ConfigurationManager.h"
+#include "common/Logger.h"
 
 void Shader::loadShader(GLenum type, GLuint &shaderID, std::string path) {
 	std::string program;
@@ -31,6 +32,9 @@ Shader::Shader(std::string vertName, std::string geomName, std::string fragName)
 	GLuint GLVertexId, GLgeomId, GLfragId;
 	GLVertexId = GLfragId = GLgeomId = 0;
 	std::string base = ConfigurationManager::get("SHADER_BASE_PATH");
+	Logger::log("Loading vertex shader " + vertName);
+	Logger::log("Loading geometry shader " + geomName);
+	Logger::log("Loading fragment shader " + fragName);
 	loadShader(GL_VERTEX_SHADER, GLVertexId, base + vertName);
 	loadShader(GL_GEOMETRY_SHADER, GLgeomId, base + geomName);
 	loadShader(GL_FRAGMENT_SHADER, GLfragId, base + fragName);
@@ -48,6 +52,8 @@ Shader::Shader(std::string vertName, std::string fragName) {
 	GLuint GLVertexId, GLfragId;
 	GLVertexId = GLfragId = 0;
 	std::string base = ConfigurationManager::get("SHADER_BASE_PATH");
+	Logger::log("Loading vertex shader " + vertName);
+	Logger::log("Loading fragment shader " + fragName);
 	loadShader(GL_VERTEX_SHADER, GLVertexId, base + vertName);
 	loadShader(GL_FRAGMENT_SHADER, GLfragId, base + fragName);
 	GLProgramId = glCreateProgram();

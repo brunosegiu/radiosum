@@ -3,8 +3,10 @@
 #include <fstream>
 
 #include "common/ConfigurationManager.h"
+#include "common/Logger.h"
 
 ComputeShader::ComputeShader(std::string name) {
+	Logger::log("Loading compute shader " + name);
 	GLuint GLComputeId = 0;
 	std::string program;
 	std::string base = ConfigurationManager::get("SHADER_BASE_PATH");

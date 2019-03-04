@@ -83,6 +83,8 @@
     <ClCompile Include="lib\imgui-1.68\imgui_impl_sdl.cpp">
       <Filter>Source\Display\ImGUI</Filter>
     </ClCompile>
+    <ClCompile Include="src\common\Logger.cpp" />
+    <ClCompile Include="src\common\Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source">
@@ -188,6 +190,10 @@
     </ClInclude>
     <ClInclude Include="src\common\geometry\GeometryContainer.h" />
     <ClInclude Include="src\display\ui\UI.h" />
+    <ClInclude Include="src\display\ui\DebugInfo.h" />
+    <ClInclude Include="src\display\ui\Menu.h" />
+    <ClInclude Include="src\common\Logger.h" />
+    <ClInclude Include="src\common\Timer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.ini">
