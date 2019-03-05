@@ -35,7 +35,7 @@ Window::Window() {
 		glEnable(GL_DEPTH_TEST);
 
 		this->camera = new CameraController(window);
-		//this->listeners.push_back(this->camera);
+		this->listeners.push_back(this->camera);
 
 		this->ui = new UI(window, glContext);
 		this->listeners.push_back(this->ui);

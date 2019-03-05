@@ -4,8 +4,9 @@
 
 class SceneRenderer : public Renderer {
 public:
-	SceneRenderer(Scene* scene);
+	SceneRenderer();
 	void render();
+	void read();
 	virtual ~SceneRenderer();
 };
 

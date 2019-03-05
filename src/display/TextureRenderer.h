@@ -2,11 +2,11 @@
 
 #include "common/Renderer.h"
 
-class BufferRenderer : public Renderer {
+class TextureRenderer : public Renderer {
 public:
-	BufferRenderer();
+	TextureRenderer(std::string fragName);
 	void render();
-	virtual ~BufferRenderer();
+	virtual ~TextureRenderer();
 private:
 	Shader* shader;
 	GLuint GLQuadId, GLVerticesId;

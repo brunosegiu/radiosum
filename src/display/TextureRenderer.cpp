@@ -1,11 +1,13 @@
-#include "display/BufferRenderer.h"
+#include "display/TextureRenderer.h"
 
 #include "common/ConfigurationManager.h"
+#include "common/buffers/PickingBuffer.h"
 
-BufferRenderer::BufferRenderer() {
-	this->shader = new Shader("renderFromText.vert", "renderFromText.frag");
+TextureRenderer::TextureRenderer(std::string fragName) {
+	this->shader = new Shader("renderFromText.vert", fragName);
+	GLuint width = std::stoi(ConfigurationManager::get("APP_RES_WIDTH"));
 	GLuint height = std::stoi(ConfigurationManager::get("APP_RES_HEIGHT"));
-	this->buffer = new Buffer(height, height);
+	this->buffer = new Buffer(width, height);
 
 	static const GLfloat quad[] = {
 		-1.0f, -1.0f, 0.0f,
@@ -31,7 +33,7 @@ BufferRenderer::BufferRenderer() {
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 }
 
-void BufferRenderer::render() {
+void TextureRenderer::render() {
 	this->shader->bind();
 	this->buffer->bind();
 	this->buffer->clean();
@@ -41,6 +43,6 @@ void BufferRenderer::render() {
 	glDisableVertexAttribArray(0);
 }
 
-BufferRenderer::~BufferRenderer() {
+TextureRenderer::~TextureRenderer() {
 	delete this->buffer;
 }

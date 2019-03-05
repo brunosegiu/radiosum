@@ -12,6 +12,7 @@ public:
 	Renderer();
 	virtual void render() = 0;
 	virtual void setCamera(Camera* camera);
+	void setScene(Scene* scene);
 	void read();
 	virtual ~Renderer();
 protected:

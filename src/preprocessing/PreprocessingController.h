@@ -13,7 +13,7 @@ class PreprocessingController {
 public:
 	PreprocessingController(Scene* scene);
 	std::vector<float> computeRadiosity();
-	void runStep();
+	GLuint runStep();
 	virtual ~PreprocessingController();
 private:
 	Scene* scene;

@@ -104,9 +104,9 @@ void CameraController::process(SDL_Event &event) {
 		if (event.key.keysym.sym == SDLK_ESCAPE) {
 			this->in = false;
 		}
-	} break;
-	case SDL_MOUSEBUTTONDOWN: {
-		this->toggleIn();
+		else if (event.key.keysym.sym == SDLK_F11) {
+			this->toggleIn();
+		}
 	} break;
 	}
 }

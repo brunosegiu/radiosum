@@ -13,9 +13,6 @@
     <ClCompile Include="src\common\buffers\UIntBuffer.cpp">
       <Filter>Source\Buffers</Filter>
     </ClCompile>
-    <ClCompile Include="src\display\BufferRenderer.cpp">
-      <Filter>Source\Display</Filter>
-    </ClCompile>
     <ClCompile Include="src\display\CameraController.cpp">
       <Filter>Source\Display</Filter>
     </ClCompile>
@@ -85,6 +82,9 @@
     </ClCompile>
     <ClCompile Include="src\common\Logger.cpp" />
     <ClCompile Include="src\common\Timer.cpp" />
+    <ClCompile Include="src\common\buffers\PickingBuffer.cpp" />
+    <ClCompile Include="src\display\TextureRenderer.cpp" />
+    <ClCompile Include="src\common\Application.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source">
@@ -133,9 +133,6 @@
     </ClInclude>
     <ClInclude Include="src\common\buffers\UIntBuffer.h">
       <Filter>Source\Buffers</Filter>
-    </ClInclude>
-    <ClInclude Include="src\display\BufferRenderer.h">
-      <Filter>Source\Display</Filter>
     </ClInclude>
     <ClInclude Include="src\display\CameraController.h">
       <Filter>Source\Display</Filter>
@@ -194,13 +191,14 @@
     <ClInclude Include="src\display\ui\Menu.h" />
     <ClInclude Include="src\common\Logger.h" />
     <ClInclude Include="src\common\Timer.h" />
+    <ClInclude Include="src\common\buffers\PickingBuffer.h" />
+    <ClInclude Include="src\display\TextureRenderer.h" />
+    <ClInclude Include="src\common\Application.h" />
+    <ClInclude Include="src\common\AppTypes.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.ini">
       <Filter>Source</Filter>
-    </None>
-    <None Include="res\shaders\renderFromText.frag">
-      <Filter>Source\Shaders\Debugging</Filter>
     </None>
     <None Include="res\shaders\renderFromText.vert">
       <Filter>Source\Shaders\Debugging</Filter>
@@ -226,5 +224,7 @@
     <None Include="res\shaders\computeRow.comp">
       <Filter>Source\Shaders\Preprocessing</Filter>
     </None>
+    <None Include="res\shaders\renderHemicube.frag" />
+    <None Include="res\shaders\renderScene.frag" />
   </ItemGroup>
 </Project>

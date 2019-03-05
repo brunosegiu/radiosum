@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -147,12 +147,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\common\Application.cpp" />
     <ClCompile Include="lib\imgui-1.68\imgui.cpp" />
     <ClCompile Include="lib\imgui-1.68\imgui_demo.cpp" />
     <ClCompile Include="lib\imgui-1.68\imgui_draw.cpp" />
     <ClCompile Include="lib\imgui-1.68\imgui_impl_opengl3.cpp" />
     <ClCompile Include="lib\imgui-1.68\imgui_impl_sdl.cpp" />
     <ClCompile Include="lib\imgui-1.68\imgui_widgets.cpp" />
+    <ClCompile Include="src\common\buffers\PickingBuffer.cpp" />
     <ClCompile Include="src\common\Logger.cpp" />
     <ClCompile Include="src\common\buffers\Buffer.cpp" />
     <ClCompile Include="src\common\buffers\HemicubeBuffer.cpp" />
@@ -165,7 +167,7 @@
     <ClCompile Include="src\common\geometry\Scene.cpp" />
     <ClCompile Include="src\common\geometry\VAO.cpp" />
     <ClCompile Include="src\common\Renderer.cpp" />
-    <ClCompile Include="src\display\BufferRenderer.cpp" />
+    <ClCompile Include="src\display\TextureRenderer.cpp" />
     <ClCompile Include="src\display\CameraController.cpp" />
     <ClCompile Include="src\display\DisplayController.cpp" />
     <ClCompile Include="src\display\SceneRenderer.cpp" />
@@ -179,6 +181,9 @@
     <ClCompile Include="src\common\Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\common\Application.h" />
+    <ClInclude Include="src\common\AppTypes.h" />
+    <ClInclude Include="src\common\buffers\PickingBuffer.h" />
     <ClInclude Include="src\common\Logger.h" />
     <ClInclude Include="src\common\buffers\Buffer.h" />
     <ClInclude Include="src\common\buffers\HemicubeBuffer.h" />
@@ -193,7 +198,7 @@
     <ClInclude Include="src\common\geometry\Scene.h" />
     <ClInclude Include="src\common\geometry\VAO.h" />
     <ClInclude Include="src\common\Renderer.h" />
-    <ClInclude Include="src\display\BufferRenderer.h" />
+    <ClInclude Include="src\display\TextureRenderer.h" />
     <ClInclude Include="src\display\CameraController.h" />
     <ClInclude Include="src\display\DisplayController.h" />
     <ClInclude Include="src\display\EventListener.h" />
@@ -217,8 +222,9 @@
     <None Include="res\shaders\hemicube.vert" />
     <None Include="res\shaders\id.frag" />
     <None Include="res\shaders\id.vert" />
-    <None Include="res\shaders\renderFromText.frag" />
+    <None Include="res\shaders\renderHemicube.frag" />
     <None Include="res\shaders\renderFromText.vert" />
+    <None Include="res\shaders\renderScene.frag" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,18 +1,21 @@
 #pragma once
 
-#include "display/BufferRenderer.h"
+#include "display/TextureRenderer.h"
 #include "display/SceneRenderer.h"
 #include "display/ui/UI.h"
+#include "common/AppTypes.h"
 
 class DisplayController {
 public:
-	DisplayController(Scene* scene);
+	DisplayController();
 	void render();
+	void setMode(RunMode mode);
 	virtual ~DisplayController();
 private:
 	Renderer* renderer;
-	BufferRenderer* bufferRenderer;
-	SceneRenderer* sceneRenderer;
+	TextureRenderer* bufferRenderer;
+	TextureRenderer* textureRenderer;
 	UI* ui;
+	RunMode mode;
 };
 

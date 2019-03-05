@@ -23,7 +23,8 @@ PreprocessingController::PreprocessingController(Scene* scene) {
 	this->iterator = new SceneIterator(scene);
 }
 
-void PreprocessingController::runStep() {
+GLuint PreprocessingController::runStep() {
+	GLuint index = this->iterator->faceIndex();
 	if (!this->iterator->end()) {
 		Timer stepTimer = Timer();
 		// Get camera configuration and prepare for render
@@ -63,13 +64,11 @@ void PreprocessingController::runStep() {
 		Logger::log("RenderRow", std::to_string(stepTimer.get()) + "s");
 		iterator->nextFace();
 	}
-	else {
-		this->computeRadiosity();
-	}
+	return index;
 }
 
 std::vector<GLfloat> PreprocessingController::computeRadiosity() {
-	Logger::log("Computing radiosity for " + std::to_string(int(scene->size())) + "faces");
+	Logger::log("Computing radiosity for " + std::to_string(int(scene->size())) + " faces");
 	Eigen::SparseMatrix<GLfloat> matrix = Eigen::SparseMatrix<GLfloat>(scene->size(), scene->size());
 	matrix.setFromTriplets(this->triplets.begin(), this->triplets.end());
 
