@@ -13,7 +13,6 @@ Application* Application::getInstance() {
 Application::Application() {
 	this->win = Window::get();
 	this->currentScene = new Scene();
-	this->currentScene->addMesh("res/scenes/mesh.obj");
 	this->displayer = new DisplayController();
 	this->preprocessor = nullptr;
 	this->sceneRenderer = new SceneRenderer();
@@ -45,6 +44,7 @@ void Application::setMode(RunMode mode) {
 
 Scene*  Application::getScene() {
 	Application* app = Application::getInstance();
+	return app->currentScene;
 }
 
 void Application::startPreprocessPass() {

@@ -12,7 +12,7 @@ PickingBuffer::PickingBuffer(GLuint width, GLuint height) : Buffer(width, height
 	glGenFramebuffers(1, &this->GLId);
 	glBindFramebuffer(GL_FRAMEBUFFER, this->GLId);
 
-	// Generate ID's texture, single uint value per pixel
+	// Generate colors texture
 	glGenTextures(1, &this->GLTextureId);
 	glBindTexture(GL_TEXTURE_2D, this->GLTextureId);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
@@ -52,6 +52,8 @@ void PickingBuffer::bind() {
 void PickingBuffer::read() {
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, this->GLTextureId);
+	glActiveTexture(GL_TEXTURE2);
+	glBindTexture(GL_TEXTURE_2D, this->GLPickingTextureId);
 }
 
 void PickingBuffer::clean() {

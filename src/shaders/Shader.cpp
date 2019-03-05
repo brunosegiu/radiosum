@@ -17,14 +17,13 @@ void Shader::loadShader(GLenum type, GLuint &shaderID, std::string path) {
 		GLint shaderCompiled = GL_FALSE;
 		glGetShaderiv(shaderID, GL_COMPILE_STATUS, &shaderCompiled);
 		if (shaderCompiled != GL_TRUE) {
-
 			throw std::runtime_error("Unable to compile shader");
 			glDeleteShader(shaderID);
 			shaderID = 0;
 		}
 	}
 	else {
-		throw std::runtime_error("Unable to open file");
+		throw std::runtime_error("Unable to open file" + path);
 	}
 }
 
@@ -33,10 +32,10 @@ Shader::Shader(std::string vertName, std::string geomName, std::string fragName)
 	GLVertexId = GLfragId = GLgeomId = 0;
 	std::string base = ConfigurationManager::get("SHADER_BASE_PATH");
 	Logger::log("Loading vertex shader " + vertName);
-	Logger::log("Loading geometry shader " + geomName);
-	Logger::log("Loading fragment shader " + fragName);
 	loadShader(GL_VERTEX_SHADER, GLVertexId, base + vertName);
+	Logger::log("Loading geometry shader " + geomName);
 	loadShader(GL_GEOMETRY_SHADER, GLgeomId, base + geomName);
+	Logger::log("Loading fragment shader " + fragName);
 	loadShader(GL_FRAGMENT_SHADER, GLfragId, base + fragName);
 	GLProgramId = glCreateProgram();
 	glAttachShader(GLProgramId, GLVertexId);

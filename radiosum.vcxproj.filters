@@ -1,67 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="src\common\buffers\Buffer.cpp">
-      <Filter>Source\Buffers</Filter>
-    </ClCompile>
-    <ClCompile Include="src\common\buffers\HemicubeBuffer.cpp">
-      <Filter>Source\Buffers</Filter>
-    </ClCompile>
-    <ClCompile Include="src\common\buffers\RowBuffer.cpp">
-      <Filter>Source\Buffers</Filter>
-    </ClCompile>
-    <ClCompile Include="src\common\buffers\UIntBuffer.cpp">
-      <Filter>Source\Buffers</Filter>
-    </ClCompile>
-    <ClCompile Include="src\display\CameraController.cpp">
-      <Filter>Source\Display</Filter>
-    </ClCompile>
-    <ClCompile Include="src\display\DisplayController.cpp">
-      <Filter>Source\Display</Filter>
-    </ClCompile>
-    <ClCompile Include="src\display\SceneRenderer.cpp">
-      <Filter>Source\Display</Filter>
-    </ClCompile>
-    <ClCompile Include="src\display\Window.cpp">
-      <Filter>Source\Display</Filter>
-    </ClCompile>
-    <ClCompile Include="src\common\geometry\Face.cpp">
-      <Filter>Source\Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="src\common\geometry\Mesh.cpp">
-      <Filter>Source\Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="src\common\geometry\Scene.cpp">
-      <Filter>Source\Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="src\preprocessing\IDRenderer.cpp">
-      <Filter>Source\Preprocessing</Filter>
-    </ClCompile>
-    <ClCompile Include="src\preprocessing\PreprocessingController.cpp">
-      <Filter>Source\Preprocessing</Filter>
-    </ClCompile>
-    <ClCompile Include="src\common\Camera.cpp">
-      <Filter>Source\Common</Filter>
-    </ClCompile>
-    <ClCompile Include="src\common\ConfigurationManager.cpp">
-      <Filter>Source\Common</Filter>
-    </ClCompile>
-    <ClCompile Include="src\common\Renderer.cpp">
-      <Filter>Source\Common</Filter>
-    </ClCompile>
-    <ClCompile Include="src\main.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="src\shaders\ComputeShader.cpp">
-      <Filter>Source\Shaders</Filter>
-    </ClCompile>
-    <ClCompile Include="src\shaders\Shader.cpp">
-      <Filter>Source\Shaders</Filter>
-    </ClCompile>
-    <ClCompile Include="src\common\geometry\VAO.cpp">
-      <Filter>Source\Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="src\display\ui\UI.cpp" />
     <ClCompile Include="lib\imgui-1.68\imgui.cpp">
       <Filter>Source\Display\ImGUI</Filter>
     </ClCompile>
@@ -80,11 +19,76 @@
     <ClCompile Include="lib\imgui-1.68\imgui_impl_sdl.cpp">
       <Filter>Source\Display\ImGUI</Filter>
     </ClCompile>
-    <ClCompile Include="src\common\Logger.cpp" />
-    <ClCompile Include="src\common\Timer.cpp" />
+    <ClCompile Include="src\common\buffers\Buffer.cpp">
+      <Filter>Source\Buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\common\buffers\HemicubeBuffer.cpp">
+      <Filter>Source\Buffers</Filter>
+    </ClCompile>
     <ClCompile Include="src\common\buffers\PickingBuffer.cpp" />
-    <ClCompile Include="src\display\TextureRenderer.cpp" />
+    <ClCompile Include="src\common\buffers\RowBuffer.cpp">
+      <Filter>Source\Buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\common\buffers\UIntBuffer.cpp">
+      <Filter>Source\Buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\common\geometry\Face.cpp">
+      <Filter>Source\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="src\common\geometry\Mesh.cpp">
+      <Filter>Source\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="src\common\geometry\Scene.cpp">
+      <Filter>Source\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="src\common\geometry\VAO.cpp">
+      <Filter>Source\Geometry</Filter>
+    </ClCompile>
     <ClCompile Include="src\common\Application.cpp" />
+    <ClCompile Include="src\common\Camera.cpp">
+      <Filter>Source\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="src\common\ConfigurationManager.cpp">
+      <Filter>Source\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="src\common\Logger.cpp" />
+    <ClCompile Include="src\common\Renderer.cpp">
+      <Filter>Source\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="src\common\Timer.cpp" />
+    <ClCompile Include="src\display\ui\UI.cpp" />
+    <ClCompile Include="src\display\CameraController.cpp">
+      <Filter>Source\Display</Filter>
+    </ClCompile>
+    <ClCompile Include="src\display\DisplayController.cpp">
+      <Filter>Source\Display</Filter>
+    </ClCompile>
+    <ClCompile Include="src\display\SceneRenderer.cpp">
+      <Filter>Source\Display</Filter>
+    </ClCompile>
+    <ClCompile Include="src\display\TextureRenderer.cpp" />
+    <ClCompile Include="src\display\Window.cpp">
+      <Filter>Source\Display</Filter>
+    </ClCompile>
+    <ClCompile Include="src\preprocessing\IDRenderer.cpp">
+      <Filter>Source\Preprocessing</Filter>
+    </ClCompile>
+    <ClCompile Include="src\preprocessing\PreprocessingController.cpp">
+      <Filter>Source\Preprocessing</Filter>
+    </ClCompile>
+    <ClCompile Include="src\shaders\ComputeShader.cpp">
+      <Filter>Source\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="src\shaders\Shader.cpp">
+      <Filter>Source\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\display\ui\Component.cpp" />
+    <ClCompile Include="src\display\ui\components\DebugInfo.cpp" />
+    <ClCompile Include="src\display\ui\components\MainMenu.cpp" />
+    <ClCompile Include="src\display\ui\components\Preprocess.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source">
@@ -128,12 +132,43 @@
     <ClInclude Include="src\common\buffers\HemicubeBuffer.h">
       <Filter>Source\Buffers</Filter>
     </ClInclude>
+    <ClInclude Include="src\common\buffers\PickingBuffer.h" />
     <ClInclude Include="src\common\buffers\RowBuffer.h">
       <Filter>Source\Buffers</Filter>
     </ClInclude>
     <ClInclude Include="src\common\buffers\UIntBuffer.h">
       <Filter>Source\Buffers</Filter>
     </ClInclude>
+    <ClInclude Include="src\common\geometry\Face.h">
+      <Filter>Source\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="src\common\geometry\GeometryContainer.h" />
+    <ClInclude Include="src\common\geometry\Mesh.h">
+      <Filter>Source\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="src\common\geometry\ObjLoader.h">
+      <Filter>Source\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="src\common\geometry\Scene.h">
+      <Filter>Source\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="src\common\geometry\VAO.h">
+      <Filter>Source\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="src\common\Application.h" />
+    <ClInclude Include="src\common\AppTypes.h" />
+    <ClInclude Include="src\common\Camera.h">
+      <Filter>Source\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="src\common\ConfigurationManager.h">
+      <Filter>Source\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="src\common\Logger.h" />
+    <ClInclude Include="src\common\Renderer.h">
+      <Filter>Source\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="src\common\Timer.h" />
+    <ClInclude Include="src\display\ui\UI.h" />
     <ClInclude Include="src\display\CameraController.h">
       <Filter>Source\Display</Filter>
     </ClInclude>
@@ -146,17 +181,9 @@
     <ClInclude Include="src\display\SceneRenderer.h">
       <Filter>Source\Display</Filter>
     </ClInclude>
+    <ClInclude Include="src\display\TextureRenderer.h" />
     <ClInclude Include="src\display\Window.h">
       <Filter>Source\Display</Filter>
-    </ClInclude>
-    <ClInclude Include="src\common\geometry\Face.h">
-      <Filter>Source\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="src\common\geometry\Mesh.h">
-      <Filter>Source\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="src\common\geometry\Scene.h">
-      <Filter>Source\Geometry</Filter>
     </ClInclude>
     <ClInclude Include="src\preprocessing\IDRenderer.h">
       <Filter>Source\Preprocessing</Filter>
@@ -164,37 +191,18 @@
     <ClInclude Include="src\preprocessing\PreprocessingController.h">
       <Filter>Source\Preprocessing</Filter>
     </ClInclude>
-    <ClInclude Include="src\common\Camera.h">
-      <Filter>Source\Common</Filter>
-    </ClInclude>
-    <ClInclude Include="src\common\ConfigurationManager.h">
-      <Filter>Source\Common</Filter>
-    </ClInclude>
-    <ClInclude Include="src\common\Renderer.h">
-      <Filter>Source\Common</Filter>
-    </ClInclude>
     <ClInclude Include="src\shaders\ComputeShader.h">
       <Filter>Source\Shaders</Filter>
     </ClInclude>
     <ClInclude Include="src\shaders\Shader.h">
       <Filter>Source\Shaders</Filter>
     </ClInclude>
-    <ClInclude Include="src\common\geometry\ObjLoader.h">
-      <Filter>Source\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="src\common\geometry\VAO.h">
-      <Filter>Source\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="src\common\geometry\GeometryContainer.h" />
-    <ClInclude Include="src\display\ui\UI.h" />
-    <ClInclude Include="src\display\ui\DebugInfo.h" />
-    <ClInclude Include="src\display\ui\Menu.h" />
-    <ClInclude Include="src\common\Logger.h" />
-    <ClInclude Include="src\common\Timer.h" />
-    <ClInclude Include="src\common\buffers\PickingBuffer.h" />
-    <ClInclude Include="src\display\TextureRenderer.h" />
-    <ClInclude Include="src\common\Application.h" />
-    <ClInclude Include="src\common\AppTypes.h" />
+    <ClInclude Include="src\display\ui\Component.h" />
+    <ClInclude Include="src\display\ui\components\DebugInfo.h" />
+    <ClInclude Include="src\display\ui\components\DebugInfo.h" />
+    <ClInclude Include="src\display\ui\components\MainMenu.h" />
+    <ClInclude Include="src\display\ui\components\Preprocess.h" />
+    <ClInclude Include="res\shaders\hemicube.geom" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.ini">
@@ -226,5 +234,8 @@
     </None>
     <None Include="res\shaders\renderHemicube.frag" />
     <None Include="res\shaders\renderScene.frag" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="resrource.rc" />
   </ItemGroup>
 </Project>

@@ -147,6 +147,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\display\ui\Component.cpp" />
+    <ClCompile Include="src\display\ui\components\DebugInfo.cpp" />
     <ClCompile Include="src\common\Application.cpp" />
     <ClCompile Include="lib\imgui-1.68\imgui.cpp" />
     <ClCompile Include="lib\imgui-1.68\imgui_demo.cpp" />
@@ -171,6 +173,8 @@
     <ClCompile Include="src\display\CameraController.cpp" />
     <ClCompile Include="src\display\DisplayController.cpp" />
     <ClCompile Include="src\display\SceneRenderer.cpp" />
+    <ClCompile Include="src\display\ui\components\MainMenu.cpp" />
+    <ClCompile Include="src\display\ui\components\Preprocess.cpp" />
     <ClCompile Include="src\display\Window.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\preprocessing\IDRenderer.cpp" />
@@ -181,6 +185,10 @@
     <ClCompile Include="src\common\Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="res\shaders\hemicube.geom" />
+    <ClInclude Include="src\display\ui\components\Preprocess.h" />
+    <ClInclude Include="src\display\ui\components\MainMenu.h" />
+    <ClInclude Include="src\display\ui\Component.h" />
     <ClInclude Include="src\common\Application.h" />
     <ClInclude Include="src\common\AppTypes.h" />
     <ClInclude Include="src\common\buffers\PickingBuffer.h" />
@@ -203,8 +211,7 @@
     <ClInclude Include="src\display\DisplayController.h" />
     <ClInclude Include="src\display\EventListener.h" />
     <ClInclude Include="src\display\SceneRenderer.h" />
-    <ClInclude Include="src\display\ui\DebugInfo.h" />
-    <ClInclude Include="src\display\ui\Menu.h" />
+    <ClInclude Include="src\display\ui\components\DebugInfo.h" />
     <ClInclude Include="src\display\Window.h" />
     <ClInclude Include="src\preprocessing\IDRenderer.h" />
     <ClInclude Include="src\preprocessing\PreprocessingController.h" />
@@ -225,6 +232,9 @@
     <None Include="res\shaders\renderHemicube.frag" />
     <None Include="res\shaders\renderFromText.vert" />
     <None Include="res\shaders\renderScene.frag" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="resrource.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
