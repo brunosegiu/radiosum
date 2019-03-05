@@ -203,6 +203,7 @@
     <ClInclude Include="src\display\ui\components\MainMenu.h" />
     <ClInclude Include="src\display\ui\components\Preprocess.h" />
     <ClInclude Include="res\shaders\hemicube.geom" />
+    <ClInclude Include="src\common\Utils.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.ini">

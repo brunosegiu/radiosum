@@ -4,13 +4,15 @@
 
 #include "common/ConfigurationManager.h"
 #include "common/Logger.h"
+#include "common/Utils.h"
 
 ComputeShader::ComputeShader(std::string name) {
 	Logger::log("Loading compute shader " + name);
 	GLuint GLComputeId = 0;
 	std::string program;
 	std::string base = ConfigurationManager::get("SHADER_BASE_PATH");
-	std::ifstream file((base + name).c_str());
+	std::string fullpath = resolve(base + name);
+	std::ifstream file(fullpath.c_str());
 	if (file) {
 		program.assign((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
 		GLComputeId = glCreateShader(GL_COMPUTE_SHADER);
@@ -26,7 +28,7 @@ ComputeShader::ComputeShader(std::string name) {
 		}
 	}
 	else {
-		throw std::runtime_error("Unable to open file");
+		throw std::runtime_error("Unable to open file " + fullpath);
 	}
 	GLProgramId = glCreateProgram();
 	glAttachShader(GLProgramId, GLComputeId);

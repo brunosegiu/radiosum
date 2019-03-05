@@ -32,9 +32,7 @@ void RowBuffer::clean() {
 std::vector<GLuint> RowBuffer::getBuffer() {
 	this->bind();
 	GLuint* data = (GLuint*)glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_READ_ONLY);
-	for (int i = 0; i < this->content.size(); i++) {
-		this->content[i] = data[i];
-	}
+	this->content = std::vector<GLuint>(data, data + sizeof(data) / sizeof(GLuint));
 	glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 	return this->content;
 }

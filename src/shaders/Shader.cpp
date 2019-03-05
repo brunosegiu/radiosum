@@ -4,10 +4,12 @@
 
 #include "common/ConfigurationManager.h"
 #include "common/Logger.h"
+#include "common/Utils.h"
 
 void Shader::loadShader(GLenum type, GLuint &shaderID, std::string path) {
 	std::string program;
-	std::ifstream file(path.c_str());
+	std::string fullPath = resolve(path);
+	std::ifstream file(fullPath.c_str());
 	if (file) {
 		program.assign((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
 		shaderID = glCreateShader(type);
@@ -23,7 +25,7 @@ void Shader::loadShader(GLenum type, GLuint &shaderID, std::string path) {
 		}
 	}
 	else {
-		throw std::runtime_error("Unable to open file" + path);
+		throw std::runtime_error("Unable to open file " + path);
 	}
 }
 

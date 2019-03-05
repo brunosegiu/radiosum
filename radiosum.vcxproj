@@ -186,6 +186,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="res\shaders\hemicube.geom" />
+    <ClInclude Include="src\common\Utils.h" />
     <ClInclude Include="src\display\ui\components\Preprocess.h" />
     <ClInclude Include="src\display\ui\components\MainMenu.h" />
     <ClInclude Include="src\display\ui\Component.h" />
