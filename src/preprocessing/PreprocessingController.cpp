@@ -49,17 +49,7 @@ GLuint PreprocessingController::runStep() {
 		// Process hemicube and compute row
 		{
 			std::vector<GLuint> faceFactors = this->getMatrixRow(iterator->faceIndex());
-			GLuint iIndex = iterator->faceIndex();
-			for (GLuint jIndex = 0; jIndex < faceFactors.size() - 1; jIndex++) {
-				float seenFaces = float(faceFactors[jIndex + 1]);
-				if (seenFaces > 0.0f) {
-					GLfloat entry = -(seenFaces / this->pixelCount) * (scene->getReflactance(iIndex));
-					triplets.push_back(Eigen::Triplet<GLfloat>(iIndex, jIndex, entry));
-				}
-				else if (iIndex == jIndex) {
-					triplets.push_back(Eigen::Triplet<GLfloat>(iIndex, jIndex, 1.0f));
-				}
-			}
+			this->workers.push_back(std::thread(&PreprocessingController::processRow, this, faceFactors, iterator->faceIndex()));
 		}
 		Logger::log("RenderRow", std::to_string(stepTimer.get()) + "s");
 		iterator->nextFace();
@@ -67,8 +57,27 @@ GLuint PreprocessingController::runStep() {
 	return index;
 }
 
+void PreprocessingController::processRow(std::vector<GLuint> faceFactors, GLuint faceIndex) {
+	GLuint iIndex = faceIndex;
+	for (GLuint jIndex = 0; jIndex < faceFactors.size() - 1; jIndex++) {
+		float seenFaces = float(faceFactors[jIndex + 1]);
+		tripletsLock.lock();
+		if (seenFaces > 0.0f) {
+			GLfloat entry = -(seenFaces / this->pixelCount) * (scene->getReflactance(iIndex));
+			triplets.push_back(Eigen::Triplet<GLfloat>(iIndex, jIndex, entry));
+		}
+		else if (iIndex == jIndex) {
+			triplets.push_back(Eigen::Triplet<GLfloat>(iIndex, jIndex, 1.0f));
+		}
+		tripletsLock.unlock();
+	}
+}
+
 std::vector<GLfloat> PreprocessingController::computeRadiosity() {
 	Logger::log("Computing radiosity for " + std::to_string(int(scene->size())) + " faces");
+	for (GLuint i = 0; i < this->workers.size(); i++) {
+		workers[i].join();
+	}
 	Eigen::SparseMatrix<GLfloat> matrix = Eigen::SparseMatrix<GLfloat>(scene->size(), scene->size());
 	matrix.setFromTriplets(this->triplets.begin(), this->triplets.end());
 

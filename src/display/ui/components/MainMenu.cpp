@@ -34,7 +34,8 @@ void MainMenu::render() {
 		if (ImGui::BeginMenu("Scene")) {
 			if (ImGui::MenuItem("Load")) {
 				std::string pathToObj = getFile();
-				Application::getScene()->addMesh(pathToObj);
+				if (pathToObj != "")
+					Application::getScene()->addMesh(pathToObj);
 			}
 			ImGui::MenuItem("Save");
 			ImGui::EndMenu();

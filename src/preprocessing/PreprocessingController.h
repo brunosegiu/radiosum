@@ -1,6 +1,8 @@
 #pragma once
 
 #include <vector>
+#include <thread>
+#include <mutex>
 
 #include <Sparse> 
 
@@ -30,6 +32,10 @@ private:
 	std::vector<Eigen::Triplet<GLfloat>> triplets;
 	GLfloat pixelCount;
 
+	std::vector<std::thread> workers;
+	std::mutex tripletsLock;
+
 	std::vector<GLuint> getMatrixRow(GLuint face);
+	void processRow(std::vector<GLuint> faceFactors, GLuint faceIndex);
 };
 
