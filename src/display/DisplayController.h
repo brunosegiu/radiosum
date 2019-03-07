@@ -7,14 +7,17 @@
 
 class DisplayController {
 public:
-	DisplayController();
+	DisplayController(RunMode mode);
 	void render();
+	GLuint read();
 	void setMode(RunMode mode);
 	virtual ~DisplayController();
 private:
 	Renderer* renderer;
 	TextureRenderer* bufferRenderer;
-	TextureRenderer* textureRenderer;
+	TextureRenderer* radiosityRenderer;
+	TextureRenderer* emissionsRenderer;
+	TextureRenderer* facesRenderer;
 	UI* ui;
 	RunMode mode;
 };

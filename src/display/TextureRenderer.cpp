@@ -1,13 +1,13 @@
 #include "display/TextureRenderer.h"
 
 #include "common/ConfigurationManager.h"
-#include "common/buffers/PickingBuffer.h"
+#include "common/buffers/ColorBuffer.h"
 
 TextureRenderer::TextureRenderer(std::string fragName) {
 	this->shader = new Shader("renderFromText.vert", fragName);
-	GLuint width = std::stoi(ConfigurationManager::get("APP_RES_WIDTH"));
-	GLuint height = std::stoi(ConfigurationManager::get("APP_RES_HEIGHT"));
-	this->buffer = new Buffer(width, height);
+	GLuint width = std::stoi(ConfigurationManager::get("APP_WINDOW_WIDTH"));
+	GLuint height = std::stoi(ConfigurationManager::get("APP_WINDOW_HEIGHT"));
+	this->buffer = new ColorBuffer(width, height);
 
 	static const GLfloat quad[] = {
 		-1.0f, -1.0f, 0.0f,
@@ -41,6 +41,12 @@ void TextureRenderer::render() {
 	glEnableVertexAttribArray(0);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	glDisableVertexAttribArray(0);
+	this->buffer->unbind();
+	glClear(GL_COLOR_BUFFER_BIT);
+}
+
+GLuint TextureRenderer::read() {
+	return this->buffer->read();
 }
 
 TextureRenderer::~TextureRenderer() {

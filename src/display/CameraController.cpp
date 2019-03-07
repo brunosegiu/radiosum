@@ -11,6 +11,7 @@
 #include <gtx/rotate_vector.hpp>
 
 #include "common/ConfigurationManager.h"
+#include "common/Application.h"
 
 CameraController::CameraController(SDL_Window* win, Camera* camera) {
 	if (!win) {
@@ -103,6 +104,7 @@ void CameraController::process(SDL_Event &event) {
 	case SDL_KEYDOWN: {
 		if (event.key.keysym.sym == SDLK_ESCAPE) {
 			this->in = false;
+			SDL_ShowCursor(SDL_ENABLE);
 		}
 		else if (event.key.keysym.sym == SDLK_F11) {
 			this->toggleIn();
@@ -124,7 +126,6 @@ void CameraController::toggleIn() {
 		SDL_ShowCursor(SDL_ENABLE);
 	}
 }
-
 
 CameraController::~CameraController() {
 	delete this->camera;

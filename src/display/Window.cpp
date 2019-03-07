@@ -2,15 +2,7 @@
 
 #include "common/ConfigurationManager.h"
 #include "common/Logger.h"
-
-Window* Window::instance = nullptr;
-
-Window* Window::get() {
-	if (!Window::instance) {
-		Window::instance = new Window();
-	}
-	return Window::instance;
-}
+#include "common/Application.h"
 
 Window::Window() {
 	this->width = std::stoi(ConfigurationManager::get("APP_RES_WIDTH"));
@@ -35,27 +27,17 @@ Window::Window() {
 		glEnable(GL_DEPTH_TEST);
 
 		this->camera = new CameraController(window);
-		this->listeners.push_back(this->camera);
-
-		this->ui = new UI(window, glContext);
-		this->listeners.push_back(this->ui);
+		Application::attachListener(this->camera);
 	}
 	else {
 		throw std::runtime_error("Failed to initialize SDL");
 	}
 }
 
-void Window::update() {
+void Window::process(SDL_Event &event) {
 	this->camera->update();
-	SDL_Event event;
-	while (SDL_PollEvent(&event) != 0) {
-		for (auto listener : this->listeners)
-			listener->process(event);
-		if (event.type == SDL_QUIT)
-			this->isOpen = false;
-	}
-	this->ui->render();
-	SDL_GL_SwapWindow(window);
+	if (event.type == SDL_QUIT)
+		this->isOpen = false;
 }
 
 bool Window::open() {
@@ -66,6 +48,13 @@ Camera* Window::getCamera() {
 	return this->camera->getCamera();
 }
 
+SDL_Window* Window::getSDLWindow() {
+	return this->window;
+}
+
+SDL_GLContext Window::getGlContext() {
+	return this->glContext;
+}
 
 Window::~Window() {
 	delete this->camera;

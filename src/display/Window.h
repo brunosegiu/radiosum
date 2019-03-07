@@ -10,29 +10,24 @@
 
 #include "display/EventListener.h"
 #include "display/CameraController.h"
-#include "display/ui/UI.h"
 
-class Window {
+class Window : public EventListener {
 public:
-	static Window* get();
+	Window();
 
-	void update();
 	bool open();
+	void process(SDL_Event &event);
 
 	Camera* getCamera();
+	SDL_Window* getSDLWindow();
+	SDL_GLContext getGlContext();
 
 	virtual ~Window();
 private:
-	static  Window* instance;
-
-	Window();
-
 	GLuint width, height;
 	std::string name;
 	SDL_Window* window;
 	SDL_GLContext glContext;
 	CameraController* camera;
-	std::vector<EventListener*> listeners;
-	UI* ui;
 	bool isOpen;
 };

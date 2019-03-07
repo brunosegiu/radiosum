@@ -2,14 +2,15 @@
 
 #include "common/ConfigurationManager.h"
 #include "common/buffers/PickingBuffer.h"
-#include "display/Window.h"
+#include "common/Application.h"
+#include "common/Logger.h"
 
 SceneRenderer::SceneRenderer() {
 	this->shader = new Shader("final.vert", "final.frag");
-	GLuint width = std::stoi(ConfigurationManager::get("APP_RES_WIDTH"));
-	GLuint height = std::stoi(ConfigurationManager::get("APP_RES_HEIGHT"));
+	GLuint width = std::stoi(ConfigurationManager::get("APP_WINDOW_WIDTH"));
+	GLuint height = std::stoi(ConfigurationManager::get("APP_WINDOW_HEIGHT"));
 	this->buffer = new PickingBuffer(width, height);
-	this->camera = Window::get()->getCamera();
+	this->camera = Application::getWindow()->getCamera();
 	this->scene = nullptr;
 }
 
