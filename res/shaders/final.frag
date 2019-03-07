@@ -1,12 +1,15 @@
 #version 450 core
 
-in vec3 normalToFrag;
+in flat float radiosityToFrag;
+in flat float emissionToFrag;
 in flat uint idToFrag;
 
-layout(location = 0) out vec4 color; 
-layout(location = 1) out uint id; 
+layout(location = 0) out float radiosity;
+layout(location = 1) out uint id;
+layout(location = 2) out float emission;
 
 void main() {
-	color = max(dot(normalize(normalToFrag), normalize(vec3(.2f,.4f,0.6f))), 0.05f) * vec4(1.0f);
 	id = idToFrag;
+	radiosity = max(radiosityToFrag * 1000.0f, 0.0f);
+	emission = max(emissionToFrag, 0.01f);
 }
