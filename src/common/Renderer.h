@@ -11,9 +11,12 @@ class Renderer {
 public:
 	Renderer();
 	virtual void render() = 0;
+
 	virtual void setCamera(Camera* camera);
 	void setScene(Scene* scene);
-	void read();
+	GLuint read();
+	Buffer* getBuffer();
+
 	virtual ~Renderer();
 protected:
 	Scene* scene;

@@ -8,9 +8,22 @@ Logger* Logger::getInstance() {
 	return Logger::instance;
 }
 
-void Logger::log(std::string name, std::string value) {
+void Logger::log(std::string name, GLfloat value) {
 	Logger* inst = Logger::getInstance();
-	inst->vars[name] = value;
+	if (inst->floats.count(name) == 0)
+		inst->floats[name] = std::vector<GLfloat>();
+	else if (inst->floats[name].size() >= VAR_MAX_BUFFER_S)
+		inst->floats[name].erase(inst->floats[name].begin());
+	inst->floats[name].push_back(value);
+}
+
+void Logger::log(std::string name, GLint value) {
+	Logger* inst = Logger::getInstance();
+	if (inst->ints.count(name) == 0)
+		inst->ints[name] = std::vector<GLint>();
+	else if (inst->ints[name].size() >= VAR_MAX_BUFFER_S)
+		inst->ints[name].erase(inst->ints[name].begin());
+	inst->ints[name].push_back(value);
 }
 
 void Logger::log(std::string line) {
@@ -23,7 +36,8 @@ void Logger::log(std::string line) {
 void Logger::clean() {
 	Logger* inst = Logger::getInstance();
 	inst->logs.clear();
-	inst->vars.clear();
+	inst->floats.clear();
+	inst->ints.clear();
 }
 
 std::vector<std::string> Logger::getLog() {
@@ -31,9 +45,14 @@ std::vector<std::string> Logger::getLog() {
 	return inst->logs;
 }
 
-std::map<std::string, std::string> Logger::getVars() {
+std::map<std::string, std::vector<GLfloat>> Logger::getFloats() {
 	Logger* inst = Logger::getInstance();
-	return inst->vars;
+	return inst->floats;
+}
+
+std::map<std::string, std::vector<GLint>> Logger::getInts() {
+	Logger* inst = Logger::getInstance();
+	return inst->ints;
 }
 
 Logger::Logger() {

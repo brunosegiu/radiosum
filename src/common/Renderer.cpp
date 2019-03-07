@@ -15,8 +15,12 @@ void Renderer::setScene(Scene* scene) {
 	this->scene = scene;
 }
 
-void Renderer::read() {
-	this->buffer->read();
+GLuint Renderer::read() {
+	return this->buffer->read();
+}
+
+Buffer* Renderer::getBuffer() {
+	return this->buffer;
 }
 
 
