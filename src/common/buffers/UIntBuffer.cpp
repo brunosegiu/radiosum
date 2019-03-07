@@ -35,13 +35,10 @@ UIntBuffer::UIntBuffer(GLuint width, GLuint height) : Buffer(width, height) {
 	}
 }
 
-void UIntBuffer::bind() {
-	glBindFramebuffer(GL_FRAMEBUFFER, this->GLId);
-}
-
-void UIntBuffer::read() {
+GLuint UIntBuffer::read() {
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, this->GLTextureId);
+	return GLTextureId;
 }
 
 UIntBuffer::~UIntBuffer() {

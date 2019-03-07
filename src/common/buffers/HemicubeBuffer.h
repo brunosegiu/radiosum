@@ -7,10 +7,9 @@
 class HemicubeBuffer : public Buffer {
 public:
 	HemicubeBuffer(GLuint width);
-	void bind();
-	void read();
+	GLuint read();
 	virtual ~HemicubeBuffer();
 private:
-	GLuint GLId, GLTextureId, GLDepthId;
+	GLuint GLDepthId;
 };
 

@@ -7,8 +7,7 @@
 class UIntBuffer : public Buffer {
 public:
 	UIntBuffer(GLuint width, GLuint height);
-	void bind();
-	void read();
+	GLuint read();
 	virtual ~UIntBuffer();
 
 private:

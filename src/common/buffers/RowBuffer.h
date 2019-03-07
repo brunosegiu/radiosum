@@ -9,10 +9,10 @@ public:
 	RowBuffer(GLuint length);
 	void bind();
 	void clean();
-	std::vector<GLuint> getBuffer();
+	std::vector<GLfloat> getBuffer();
 	virtual ~RowBuffer();
 private:
 	GLuint GLId;
-	std::vector<GLuint> content;
+	std::vector<GLfloat> content;
 };
 

@@ -6,11 +6,11 @@
 class PickingBuffer : public Buffer {
 public:
 	PickingBuffer(GLuint width = 0, GLuint height = 0);
-	void bind();
-	void read();
+	GLuint read();
+	GLuint getSelectedItem(GLuint x, GLuint y);
 	void clean();
 	virtual ~PickingBuffer();
 private:
-	GLuint GLId, GLTextureId, GLDepthId, GLPickingTextureId;
+	GLuint GLDepthId, GLPickingTextureId, GLEmissionsId;
 };
 
