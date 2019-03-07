@@ -1,10 +1,14 @@
 #include "display/ui/UI.h"
 
 #include "common/Logger.h"
+#include "common/Application.h"
+#include "common/ConfigurationManager.h"
 
-#include "display/ui/components/DebugInfo.h"
 #include "display/ui/components/MainMenu.h"
-
+#include "display/ui/components/RenderWindow.h"
+#include "display/ui/components/LeftPanel.h"
+#include "display/ui/components/BottomPanel.h"
+#include "display/ui/components/RightPanel.h"
 
 UI::UI(SDL_Window* window, SDL_GLContext &glContext) {
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, 0);
@@ -22,8 +26,11 @@ UI::UI(SDL_Window* window, SDL_GLContext &glContext) {
 	ImGui_ImplOpenGL3_Init("#version 150");
 	this->window = window;
 
-	this->components.push_back(new DebugInfo());
-	this->components.push_back(new MainMenu());
+	this->components["MENU"] = new MainMenu();
+	this->components["RENDER"] = new RenderWindow();
+	this->components["LEFT"] = new LeftPanel();
+	this->components["RIGHT"] = new BottomPanel();
+	this->components["BOTTOM"] = new RightPanel();
 }
 
 void UI::process(SDL_Event &event) {
@@ -35,18 +42,21 @@ void UI::render() {
 	ImGui_ImplSDL2_NewFrame(window);
 	ImGui::NewFrame();
 
-	for (auto component : components) {
-		component->render();
+	for (auto &component : components) {
+		component.second->render();
 	}
 
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
+void UI::setTexture(GLuint texture) {
+	dynamic_cast<RenderWindow*>(this->components["RENDER"])->setTexture(texture);
+}
 
 UI::~UI() {
-	for (auto component : components) {
-		delete component;
+	for (auto &component : components) {
+		delete component.second;
 	}
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplSDL2_Shutdown();

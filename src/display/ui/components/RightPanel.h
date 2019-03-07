@@ -4,9 +4,9 @@
 
 #include "display/ui/Component.h"
 
-class MainMenu : public Component {
+class RightPanel : public Component {
 public:
-	MainMenu();
+	RightPanel();
 	void render();
-	virtual ~MainMenu();
+	virtual ~RightPanel();
 };
