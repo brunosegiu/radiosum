@@ -147,8 +147,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\display\ui\components\BottomPanel.cpp" />
+    <ClCompile Include="src\display\ui\components\right\Preprocess.cpp" />
+    <ClCompile Include="src\display\ui\components\LeftPanel.cpp" />
+    <ClCompile Include="src\display\ui\components\left\EmissionEditor.cpp" />
+    <ClCompile Include="src\display\ui\components\RenderWindow.cpp" />
+    <ClCompile Include="src\common\buffers\ColorBuffer.cpp" />
+    <ClCompile Include="src\display\Picker.cpp" />
     <ClCompile Include="src\display\ui\Component.cpp" />
-    <ClCompile Include="src\display\ui\components\DebugInfo.cpp" />
     <ClCompile Include="src\common\Application.cpp" />
     <ClCompile Include="lib\imgui-1.68\imgui.cpp" />
     <ClCompile Include="lib\imgui-1.68\imgui_demo.cpp" />
@@ -174,7 +180,8 @@
     <ClCompile Include="src\display\DisplayController.cpp" />
     <ClCompile Include="src\display\SceneRenderer.cpp" />
     <ClCompile Include="src\display\ui\components\MainMenu.cpp" />
-    <ClCompile Include="src\display\ui\components\Preprocess.cpp" />
+    <ClCompile Include="src\display\ui\components\RightPanel.cpp" />
+    <ClCompile Include="src\display\ui\components\bottom\DebugInfo.cpp" />
     <ClCompile Include="src\display\Window.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\preprocessing\IDRenderer.cpp" />
@@ -185,9 +192,16 @@
     <ClCompile Include="src\common\Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\display\ui\components\BottomPanel.h" />
+    <ClInclude Include="src\display\ui\components\right\Preprocess.h" />
+    <ClInclude Include="src\display\ui\components\LeftPanel.h" />
+    <ClInclude Include="src\display\ui\components\left\EmissionEditor.h" />
+    <ClInclude Include="src\display\ui\components\RenderWindow.h" />
+    <ClInclude Include="src\common\buffers\ColorBuffer.h" />
+    <ClInclude Include="src\display\ui\components\EmissionEditor.h" />
+    <ClInclude Include="src\display\Picker.h" />
     <ClInclude Include="res\shaders\hemicube.geom" />
     <ClInclude Include="src\common\Utils.h" />
-    <ClInclude Include="src\display\ui\components\Preprocess.h" />
     <ClInclude Include="src\display\ui\components\MainMenu.h" />
     <ClInclude Include="src\display\ui\Component.h" />
     <ClInclude Include="src\common\Application.h" />
@@ -212,7 +226,8 @@
     <ClInclude Include="src\display\DisplayController.h" />
     <ClInclude Include="src\display\EventListener.h" />
     <ClInclude Include="src\display\SceneRenderer.h" />
-    <ClInclude Include="src\display\ui\components\DebugInfo.h" />
+    <ClInclude Include="src\display\ui\components\RightPanel.h" />
+    <ClInclude Include="src\display\ui\components\bottom\DebugInfo.h" />
     <ClInclude Include="src\display\Window.h" />
     <ClInclude Include="src\preprocessing\IDRenderer.h" />
     <ClInclude Include="src\preprocessing\PreprocessingController.h" />
@@ -232,7 +247,9 @@
     <None Include="res\shaders\id.vert" />
     <None Include="res\shaders\renderHemicube.frag" />
     <None Include="res\shaders\renderFromText.vert" />
-    <None Include="res\shaders\renderScene.frag" />
+    <None Include="res\shaders\renderSceneEmissions.frag" />
+    <None Include="res\shaders\renderSceneFaces.frag" />
+    <None Include="res\shaders\renderSceneRadiosity.frag" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resrource.rc" />

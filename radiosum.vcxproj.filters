@@ -86,9 +86,16 @@
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="src\display\ui\Component.cpp" />
-    <ClCompile Include="src\display\ui\components\DebugInfo.cpp" />
     <ClCompile Include="src\display\ui\components\MainMenu.cpp" />
-    <ClCompile Include="src\display\ui\components\Preprocess.cpp" />
+    <ClCompile Include="src\display\Picker.cpp" />
+    <ClCompile Include="src\common\buffers\ColorBuffer.cpp" />
+    <ClCompile Include="src\display\ui\components\RenderWindow.cpp" />
+    <ClCompile Include="src\display\ui\components\BottomPanel.cpp" />
+    <ClCompile Include="src\display\ui\components\LeftPanel.cpp" />
+    <ClCompile Include="src\display\ui\components\RightPanel.cpp" />
+    <ClCompile Include="src\display\ui\components\left\EmissionEditor.cpp" />
+    <ClCompile Include="src\display\ui\components\bottom\DebugInfo.cpp" />
+    <ClCompile Include="src\display\ui\components\right\Preprocess.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source">
@@ -199,11 +206,19 @@
     </ClInclude>
     <ClInclude Include="src\display\ui\Component.h" />
     <ClInclude Include="src\display\ui\components\DebugInfo.h" />
-    <ClInclude Include="src\display\ui\components\DebugInfo.h" />
     <ClInclude Include="src\display\ui\components\MainMenu.h" />
-    <ClInclude Include="src\display\ui\components\Preprocess.h" />
     <ClInclude Include="res\shaders\hemicube.geom" />
     <ClInclude Include="src\common\Utils.h" />
+    <ClInclude Include="src\display\Picker.h" />
+    <ClInclude Include="src\display\ui\components\EmissionEditor.h" />
+    <ClInclude Include="src\common\buffers\ColorBuffer.h" />
+    <ClInclude Include="src\display\ui\components\RenderWindow.h" />
+    <ClInclude Include="src\display\ui\components\BottomPanel.h" />
+    <ClInclude Include="src\display\ui\components\LeftPanel.h" />
+    <ClInclude Include="src\display\ui\components\RightPanel.h" />
+    <ClInclude Include="src\display\ui\components\left\EmissionEditor.h" />
+    <ClInclude Include="src\display\ui\components\bottom\DebugInfo.h" />
+    <ClInclude Include="src\display\ui\components\right\Preprocess.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.ini">
@@ -234,7 +249,9 @@
       <Filter>Source\Shaders\Preprocessing</Filter>
     </None>
     <None Include="res\shaders\renderHemicube.frag" />
-    <None Include="res\shaders\renderScene.frag" />
+    <None Include="res\shaders\renderSceneEmissions.frag" />
+    <None Include="res\shaders\renderSceneFaces.frag" />
+    <None Include="res\shaders\renderSceneRadiosity.frag" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resrource.rc" />
