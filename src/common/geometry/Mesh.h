@@ -18,8 +18,14 @@ public:
 
 	void draw();
 
+	void setEmission(GLuint faceIndex, GLfloat emission);
+	void setRadiosity(std::vector<GLfloat> radiosity);
+
 	std::vector<glm::vec3> getVertices();
-	std::vector<unsigned int> getIds();
+	std::vector<GLfloat> getEmissions();
+	GLfloat getEmission(GLuint faceIndex);
+	std::vector<GLfloat> getRadiosity();
+
 	GLuint size();
 	Face getFace(GLuint index);
 
@@ -27,12 +33,15 @@ public:
 
 private:
 	std::vector<glm::vec3> vertices;
-	std::vector<GLuint> tIds, qIds;
+	std::vector<GLfloat> emission;
+	std::vector<GLfloat> radiosity;
+
+	std::vector<GLfloat> perVertexEmission;
+	std::vector<GLfloat> perVertexRadiosity;
 
 	VAO* vao;
 	GLuint faces, tFaces, qFaces;
 
 	static GLuint faceCount;
-
 };
 

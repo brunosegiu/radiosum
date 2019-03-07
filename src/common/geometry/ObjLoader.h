@@ -97,7 +97,8 @@ inline GeometryBuffers loadOBJ(std::ifstream* input) {
 				buffers.quads.vertices.push_back(v3);
 			}
 
-
+			// Textures - not used
+			/*
 			if ((geom == 0 ? tIndexBuffers : qIndexBuffers)[TEXTURES].size() > 0) {
 				glm::vec2 t0 = indexedTextures[(geom == 0 ? tIndexBuffers : qIndexBuffers)[TEXTURES][i]];
 				glm::vec2 t1 = indexedTextures[(geom == 0 ? tIndexBuffers : qIndexBuffers)[TEXTURES][i + 1]];
@@ -116,7 +117,10 @@ inline GeometryBuffers loadOBJ(std::ifstream* input) {
 					buffers.quads.textures.push_back(t3);
 				}
 			}
+			*/
 
+			// Normals - not used
+			/*
 			if ((geom == 0 ? tIndexBuffers : qIndexBuffers)[NORMALS].size() > 0) {
 				glm::vec3 n0 = indexedNormals[(geom == 0 ? tIndexBuffers : qIndexBuffers)[NORMALS][i]];
 				glm::vec3 n1 = indexedNormals[(geom == 0 ? tIndexBuffers : qIndexBuffers)[NORMALS][i + 1]];
@@ -135,6 +139,7 @@ inline GeometryBuffers loadOBJ(std::ifstream* input) {
 					buffers.quads.normals.push_back(n3);
 				}
 			}
+			*/
 		}
 
 	}

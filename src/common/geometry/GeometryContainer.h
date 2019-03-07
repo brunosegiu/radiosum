@@ -6,8 +6,8 @@
 
 typedef struct AttributesBuffers {
 	std::vector<glm::vec3> vertices;
-	std::vector<glm::vec2> textures;
-	std::vector<glm::vec3> normals;
+	std::vector<GLfloat> emission;
+	std::vector<GLfloat> radiosity;
 } AttributesBuffers;
 
 typedef struct GeometryBuffers {

@@ -3,16 +3,7 @@
 #include "common/Logger.h"
 
 Scene::Scene() {
-}
-
-void Scene::addMesh(std::string path) {
-	Logger::log("Adding mesh from path: " + path);
-	Mesh* toAdd = Mesh::load(path);
-	this->addMesh(toAdd);
-}
-
-void Scene::addMesh(Mesh* mesh) {
-	this->meshes.push_back(mesh);
+	this->_size = 0;
 }
 
 void Scene::draw() {
@@ -22,39 +13,79 @@ void Scene::draw() {
 }
 
 GLuint Scene::size() {
-	GLuint size = 0;
-	for (auto mesh : this->meshes)
-		size += mesh->size();
-	return size;
+	return this->_size;
 }
 
 Face Scene::getFace(GLuint index) {
-	GLuint iterator = index;
-	for (auto mesh : this->meshes) {
-		if (iterator > mesh->size()) {
-			iterator -= mesh->size();
-		}
-		else {
-			return mesh->getFace(iterator);
-		}
-	}
-
-	throw std::runtime_error("Face index out of range");
+	GLuint meshIndex = 0;
+	Mesh* mesh = this->getMeshWithIndex(index, meshIndex);
+	return mesh->getFace(meshIndex);
 }
 
 std::vector<GLfloat> Scene::getEmissions() {
-
-	std::vector<GLfloat> testEmisions;
-	for (GLuint i = 0; i < this->size(); i++) {
-		testEmisions.push_back(float(i % 20) * 10.0f);
+	std::vector<GLfloat> emissions;
+	for (auto mesh : meshes) {
+		std::vector<GLfloat> meshEmissions = mesh->getEmissions();
+		emissions.insert(emissions.end(), meshEmissions.begin(), meshEmissions.end());
 	}
-	return testEmisions;
+	return emissions;
+}
+
+GLfloat Scene::getEmission(GLuint faceIndex) {
+	GLuint meshIndex = 0;
+	if (_size > 0) {
+		Mesh* mesh = this->getMeshWithIndex(faceIndex, meshIndex);
+		return mesh->getEmission(meshIndex);
+	}
+	else {
+		return .0f;
+	}
 }
 
 GLfloat Scene::getReflactance(GLuint faceIndex) {
 	return 0.1f;
 }
 
+void Scene::addMesh(std::string path) {
+	Logger::log("Adding mesh from path: " + path);
+	Mesh* toAdd = Mesh::load(path);
+	this->addMesh(toAdd);
+}
+
+void Scene::addMesh(Mesh* mesh) {
+	_size += mesh->size();
+	this->meshes.push_back(mesh);
+}
+
+void Scene::setRadiosity(std::vector<GLfloat> &radiosity) {
+	GLuint currentIndex = 0;
+	for (auto &mesh : this->meshes) {
+		mesh->setRadiosity(std::vector<GLfloat>(radiosity.begin() + currentIndex, radiosity.begin() + currentIndex + mesh->size()));
+	}
+}
+
+void Scene::setEmission(GLuint faceIndex, GLfloat emission) {
+	if (_size > 0) {
+		GLuint meshIndex = 0;
+		Mesh* mesh = this->getMeshWithIndex(faceIndex, meshIndex);
+		mesh->setEmission(meshIndex, emission);
+	}
+}
+
+Mesh* Scene::getMeshWithIndex(GLuint faceIndex, GLuint &meshIndex) {
+	GLuint iterator = faceIndex;
+	meshIndex = faceIndex;
+	for (auto &mesh : this->meshes) {
+		if (iterator > mesh->size()) {
+			iterator -= mesh->size();
+			meshIndex = iterator;
+		}
+		else {
+			return mesh;
+		}
+	}
+	throw std::runtime_error("Face index out of range");
+}
 
 Scene::~Scene() {
 	for (auto mesh : meshes) {
