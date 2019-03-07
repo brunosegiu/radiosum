@@ -96,6 +96,7 @@
     <ClCompile Include="src\display\ui\components\left\EmissionEditor.cpp" />
     <ClCompile Include="src\display\ui\components\bottom\DebugInfo.cpp" />
     <ClCompile Include="src\display\ui\components\right\Preprocess.cpp" />
+    <ClCompile Include="src\common\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source">
@@ -219,6 +220,7 @@
     <ClInclude Include="src\display\ui\components\left\EmissionEditor.h" />
     <ClInclude Include="src\display\ui\components\bottom\DebugInfo.h" />
     <ClInclude Include="src\display\ui\components\right\Preprocess.h" />
+    <ClInclude Include="src\common\Texture.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.ini">

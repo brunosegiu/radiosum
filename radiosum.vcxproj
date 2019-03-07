@@ -190,6 +190,7 @@
     <ClCompile Include="src\shaders\Shader.cpp" />
     <ClCompile Include="src\display\ui\UI.cpp" />
     <ClCompile Include="src\common\Timer.cpp" />
+    <ClCompile Include="src\common\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\display\ui\components\BottomPanel.h" />
@@ -235,6 +236,7 @@
     <ClInclude Include="src\shaders\Shader.h" />
     <ClInclude Include="src\display\ui\UI.h" />
     <ClInclude Include="src\common\Timer.h" />
+    <ClInclude Include="src\common\Texture.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.ini" />
