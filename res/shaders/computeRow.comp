@@ -7,9 +7,9 @@ layout(local_size_x = FACES) in;
 layout(std430, binding = 0) buffer ssbo {
 	float row[];
 };
-layout(r32ui, binding = 1) uniform uimage2DArray hemicube;
-
-uniform float width;
+layout(r32ui, binding = 1) readonly uniform uimage2DArray hemicube;
+layout(r32f, binding = 2) readonly uniform image2D topCorrector;
+layout(r32f, binding = 3) readonly uniform image2D sideCorrector;
 
 uint getFaceId(ivec2 coord, uint face){
 	return imageLoad(hemicube, ivec3(coord, face)).r;
@@ -18,5 +18,11 @@ uint getFaceId(ivec2 coord, uint face){
 void main() {
 	ivec2 coords = ivec2(gl_WorkGroupID.xy);
 	uint face = getFaceId(coords,gl_LocalInvocationID.x);
-	atomicAdd(row[face],1.0f);
+	float addition;
+	if (gl_LocalInvocationID.x == 0){
+		addition = imageLoad(topCorrector, coords).r;
+	} else {
+		addition = imageLoad(sideCorrector, coords).r;
+	}
+	atomicAdd(row[face],addition);
 }

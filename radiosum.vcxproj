@@ -147,6 +147,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\preprocessing\HemicubeCorrector.cpp" />
     <ClCompile Include="src\display\ui\components\BottomPanel.cpp" />
     <ClCompile Include="src\display\ui\components\right\Preprocess.cpp" />
     <ClCompile Include="src\display\ui\components\LeftPanel.cpp" />
@@ -193,6 +194,7 @@
     <ClCompile Include="src\common\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\preprocessing\HemicubeCorrector.h" />
     <ClInclude Include="src\display\ui\components\BottomPanel.h" />
     <ClInclude Include="src\display\ui\components\right\Preprocess.h" />
     <ClInclude Include="src\display\ui\components\LeftPanel.h" />

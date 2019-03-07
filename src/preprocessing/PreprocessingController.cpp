@@ -19,6 +19,7 @@ PreprocessingController::PreprocessingController(Scene* scene) {
 	this->row = new RowBuffer(scene->size() + 1); // Padding for 0 (void)
 	std::string widthstr = ConfigurationManager::get("INTERNAL_WIDTH");
 	this->instances = std::stoi(widthstr);
+	this->corrector = new HemicubeCorrector(this->instances);
 
 	this->pixelCount = GLfloat((this->instances * this->instances) * 3);
 
@@ -115,6 +116,7 @@ std::vector<GLfloat> PreprocessingController::getMatrixRow(GLuint face) {
 	this->row->clean();
 	this->row->bind();
 	this->reducer->bind();
+	this->corrector->read();
 	this->reducer->run(this->instances, this->instances, 1);
 	return this->row->getBuffer();
 }

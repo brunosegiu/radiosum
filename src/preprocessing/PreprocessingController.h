@@ -10,6 +10,7 @@
 #include "common/geometry/Scene.h"
 #include "common/buffers/RowBuffer.h"
 #include "shaders/ComputeShader.h"
+#include "preprocessing/HemicubeCorrector.h"
 
 class PreprocessingController {
 public:
@@ -25,6 +26,7 @@ private:
 
 	ComputeShader* reducer;
 	RowBuffer* row;
+	HemicubeCorrector* corrector;
 	GLuint instances;
 
 	SceneIterator* iterator;

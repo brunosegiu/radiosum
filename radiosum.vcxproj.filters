@@ -97,6 +97,7 @@
     <ClCompile Include="src\display\ui\components\bottom\DebugInfo.cpp" />
     <ClCompile Include="src\display\ui\components\right\Preprocess.cpp" />
     <ClCompile Include="src\common\Texture.cpp" />
+    <ClCompile Include="src\preprocessing\HemicubeCorrector.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source">
@@ -221,6 +222,7 @@
     <ClInclude Include="src\display\ui\components\bottom\DebugInfo.h" />
     <ClInclude Include="src\display\ui\components\right\Preprocess.h" />
     <ClInclude Include="src\common\Texture.h" />
+    <ClInclude Include="src\preprocessing\HemicubeCorrector.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.ini">
