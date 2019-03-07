@@ -6,6 +6,7 @@
 
 int main(int argc, char *args[]) {
 	try {
+		Application::init();
 		Application::run();
 	}
 	catch (std::runtime_error &error) {
