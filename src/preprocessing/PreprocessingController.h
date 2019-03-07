@@ -14,7 +14,7 @@
 class PreprocessingController {
 public:
 	PreprocessingController(Scene* scene);
-	std::vector<float> computeRadiosity();
+	void computeRadiosity();
 	GLuint runStep();
 	virtual ~PreprocessingController();
 private:
@@ -35,7 +35,7 @@ private:
 	std::vector<std::thread> workers;
 	std::mutex tripletsLock;
 
-	std::vector<GLuint> getMatrixRow(GLuint face);
-	void processRow(std::vector<GLuint> faceFactors, GLuint faceIndex);
+	std::vector<GLfloat> getMatrixRow(GLuint face);
+	void processRow(std::vector<GLfloat> faceFactors, GLuint faceIndex);
 };
 

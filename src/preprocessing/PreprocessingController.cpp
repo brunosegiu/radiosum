@@ -8,6 +8,8 @@
 #include "common/Logger.h"
 #include "common/Timer.h"
 
+#define DEBUG_REFLACTANCE (iIndex < 980 - 13 ? 0.3f : 0.00001f) *
+
 PreprocessingController::PreprocessingController(Scene* scene) {
 	this->scene = scene;
 
@@ -21,6 +23,7 @@ PreprocessingController::PreprocessingController(Scene* scene) {
 	this->pixelCount = GLfloat((this->instances * this->instances) * 3);
 
 	this->iterator = new SceneIterator(scene);
+
 }
 
 GLuint PreprocessingController::runStep() {
@@ -48,32 +51,34 @@ GLuint PreprocessingController::runStep() {
 
 		// Process hemicube and compute row
 		{
-			std::vector<GLuint> faceFactors = this->getMatrixRow(iterator->faceIndex());
+			std::vector<GLfloat> faceFactors = this->getMatrixRow(iterator->faceIndex());
 			this->workers.push_back(std::thread(&PreprocessingController::processRow, this, faceFactors, iterator->faceIndex()));
 		}
-		Logger::log("RenderRow", std::to_string(stepTimer.get()) + "s");
+		Logger::log("RenderRow", stepTimer.get());
 		iterator->nextFace();
 	}
 	return index;
 }
 
-void PreprocessingController::processRow(std::vector<GLuint> faceFactors, GLuint faceIndex) {
+void PreprocessingController::processRow(std::vector<GLfloat> faceFactors, GLuint faceIndex) {
 	GLuint iIndex = faceIndex;
 	for (GLuint jIndex = 0; jIndex < faceFactors.size() - 1; jIndex++) {
-		float seenFaces = float(faceFactors[jIndex + 1]);
-		tripletsLock.lock();
-		if (seenFaces > 0.0f) {
-			GLfloat entry = -(seenFaces / this->pixelCount) * (scene->getReflactance(iIndex));
-			triplets.push_back(Eigen::Triplet<GLfloat>(iIndex, jIndex, entry));
-		}
-		else if (iIndex == jIndex) {
+		GLfloat ff = GLfloat(faceFactors[jIndex + 1]);
+		if (iIndex == jIndex) {
+			tripletsLock.lock();
 			triplets.push_back(Eigen::Triplet<GLfloat>(iIndex, jIndex, 1.0f));
+			tripletsLock.unlock();
 		}
-		tripletsLock.unlock();
+		else if (ff > 0.0f) {
+			tripletsLock.lock();
+			triplets.push_back(Eigen::Triplet<GLfloat>(iIndex, jIndex, DEBUG_REFLACTANCE(-ff / this->pixelCount)));
+			tripletsLock.unlock();
+		}
 	}
+
 }
 
-std::vector<GLfloat> PreprocessingController::computeRadiosity() {
+void PreprocessingController::computeRadiosity() {
 	Logger::log("Computing radiosity for " + std::to_string(int(scene->size())) + " faces");
 	for (GLuint i = 0; i < this->workers.size(); i++) {
 		workers[i].join();
@@ -100,14 +105,13 @@ std::vector<GLfloat> PreprocessingController::computeRadiosity() {
 		throw std::runtime_error("Cannot compute radiosity from form factor matrix");
 	}
 
-	std::vector<GLfloat> vectorizedRad;
-	vectorizedRad.reserve(radiosity.size());
+	std::vector<GLfloat> vectorizedRad(size_t(radiosity.size()), 0.0f);
 	Eigen::VectorXf::Map(&vectorizedRad[0], radiosity.size()) = radiosity;
 
-	return vectorizedRad;
+	this->scene->setRadiosity(vectorizedRad);
 }
 
-std::vector<GLuint> PreprocessingController::getMatrixRow(GLuint face) {
+std::vector<GLfloat> PreprocessingController::getMatrixRow(GLuint face) {
 	this->row->clean();
 	this->row->bind();
 	this->reducer->bind();
