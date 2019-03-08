@@ -92,20 +92,40 @@ Mesh::Mesh(GeometryBuffers geometry) {
 
 void Mesh::setRadiosity(std::vector<GLfloat> radiosity) {
 	this->radiosity = radiosity;
-	for (GLuint i = 0; i < radiosity.size(); i++) {
+	for (GLuint i = 0; i < tFaces; i++) {
 		GLfloat value = radiosity[i];
 		this->perVertexRadiosity[3 * i] = value;
 		this->perVertexRadiosity[3 * i + 1] = value;
 		this->perVertexRadiosity[3 * i + 2] = value;
 	}
+	for (GLuint i = tFaces; i < qFaces; i++) {
+		GLfloat value = radiosity[i];
+		this->perVertexRadiosity[3 * i] = value;
+		this->perVertexRadiosity[3 * i + 1] = value;
+		this->perVertexRadiosity[3 * i + 2] = value;
+		this->perVertexRadiosity[3 * i + 3] = value;
+		this->perVertexRadiosity[3 * i + 4] = value;
+		this->perVertexRadiosity[3 * i + 5] = value;
+	}
 	this->vao->updateAttribute(sizeof(GLfloat) * this->perVertexRadiosity.size(), &this->perVertexRadiosity[0], 1, GL_FLOAT, 3);
 }
 
 void Mesh::setEmission(GLuint faceIndex, GLfloat emission) {
-	GLuint firstVertex = faceIndex * 3;
-	this->perVertexEmission[firstVertex] = emission;
-	this->perVertexEmission[firstVertex + 1] = emission;
-	this->perVertexEmission[firstVertex + 2] = emission;
+	if (faceIndex < this->tFaces) {
+		GLuint firstVertex = faceIndex * 3;
+		this->perVertexEmission[firstVertex] = emission;
+		this->perVertexEmission[firstVertex + 1] = emission;
+		this->perVertexEmission[firstVertex + 2] = emission;
+	}
+	else if (faceIndex < this->qFaces) {
+		GLuint firstVertex = 6 * faceIndex - 3 * tFaces;
+		this->perVertexEmission[firstVertex] = emission;
+		this->perVertexEmission[firstVertex + 1] = emission;
+		this->perVertexEmission[firstVertex + 2] = emission;
+		this->perVertexEmission[firstVertex + 3] = emission;
+		this->perVertexEmission[firstVertex + 4] = emission;
+		this->perVertexEmission[firstVertex + 5] = emission;
+	}
 	this->emission[faceIndex] = emission;
 	this->vao->updateAttribute(sizeof(GLfloat) * this->perVertexEmission.size(), &this->perVertexEmission[0], 1, GL_FLOAT, 2);
 }
