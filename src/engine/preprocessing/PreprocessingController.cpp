@@ -63,7 +63,7 @@ GLuint PreprocessingController::runStep() {
 
 void PreprocessingController::processRow(std::vector<GLfloat> faceFactors, GLuint faceIndex) {
 	GLuint iIndex = faceIndex;
-	std::vector<GLfloat> reflactances = this->scene->getReflactances();
+	GLfloat reflactance = this->scene->getReflactance(faceIndex);
 	for (GLuint jIndex = 0; jIndex < faceFactors.size() - 1; jIndex++) {
 		GLfloat ff = GLfloat(faceFactors[jIndex + 1]);
 		if (iIndex == jIndex) {
@@ -73,7 +73,7 @@ void PreprocessingController::processRow(std::vector<GLfloat> faceFactors, GLuin
 		}
 		else if (ff > 0.0f) {
 			tripletsLock.lock();
-			triplets.push_back(Eigen::Triplet<GLfloat>(iIndex, jIndex, reflactances[jIndex] * -ff));
+			triplets.push_back(Eigen::Triplet<GLfloat>(iIndex, jIndex, -reflactance * ff));
 			tripletsLock.unlock();
 		}
 	}
