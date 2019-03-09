@@ -1,0 +1,3 @@
+#pragma once
+
+enum RenderMode { RADIOSITY, EMISSION, FACES, REFLACTANCE, PREPROCESS };

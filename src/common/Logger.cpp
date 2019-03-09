@@ -1,63 +1,47 @@
-#include "common/Logger.h"
-
-Logger* Logger::instance = nullptr;
-
-Logger* Logger::getInstance() {
-	if (Logger::instance == nullptr)
-		Logger::instance = new Logger();
-	return Logger::instance;
-}
-
-void Logger::log(std::string name, GLfloat value) {
-	Logger* inst = Logger::getInstance();
-	if (inst->floats.count(name) == 0)
-		inst->floats[name] = std::vector<GLfloat>();
-	else if (inst->floats[name].size() >= VAR_MAX_BUFFER_S)
-		inst->floats[name].erase(inst->floats[name].begin());
-	inst->floats[name].push_back(value);
-}
-
-void Logger::log(std::string name, GLint value) {
-	Logger* inst = Logger::getInstance();
-	if (inst->ints.count(name) == 0)
-		inst->ints[name] = std::vector<GLint>();
-	else if (inst->ints[name].size() >= VAR_MAX_BUFFER_S)
-		inst->ints[name].erase(inst->ints[name].begin());
-	inst->ints[name].push_back(value);
-}
-
-void Logger::log(std::string line) {
-	Logger* inst = Logger::getInstance();
-	if (inst->logs.size() == LOG_MAX_BUFFER_S)
-		inst->logs.erase(inst->logs.begin());
-	inst->logs.push_back(line);
-}
-
-void Logger::clean() {
-	Logger* inst = Logger::getInstance();
-	inst->logs.clear();
-	inst->floats.clear();
-	inst->ints.clear();
-}
-
-std::vector<std::string> Logger::getLog() {
-	Logger* inst = Logger::getInstance();
-	return inst->logs;
-}
-
-std::map<std::string, std::vector<GLfloat>> Logger::getFloats() {
-	Logger* inst = Logger::getInstance();
-	return inst->floats;
-}
-
-std::map<std::string, std::vector<GLint>> Logger::getInts() {
-	Logger* inst = Logger::getInstance();
-	return inst->ints;
-}
+#include "Logger.h"
 
 Logger::Logger() {
 }
 
+void Logger::log(std::string name, GLfloat value) {
+	if (this->floats.count(name) == 0)
+		this->floats[name] = std::vector<GLfloat>();
+	else if (this->floats[name].size() >= VAR_MAX_BUFFER_S)
+		this->floats[name].erase(this->floats[name].begin());
+	this->floats[name].push_back(value);
+}
+
+void Logger::log(std::string name, GLint value) {
+	if (this->ints.count(name) == 0)
+		this->ints[name] = std::vector<GLint>();
+	else if (this->ints[name].size() >= VAR_MAX_BUFFER_S)
+		this->ints[name].erase(this->ints[name].begin());
+	this->ints[name].push_back(value);
+}
+
+void Logger::log(std::string line) {
+	if (this->logs.size() == LOG_MAX_BUFFER_S)
+		this->logs.erase(this->logs.begin());
+	this->logs.push_back(line);
+}
+
+void Logger::clean() {
+	this->logs.clear();
+	this->floats.clear();
+	this->ints.clear();
+}
+
+std::vector<std::string> Logger::getLog() {
+	return this->logs;
+}
+
+std::map<std::string, std::vector<GLfloat>> Logger::getFloats() {
+	return this->floats;
+}
+
+std::map<std::string, std::vector<GLint>> Logger::getInts() {
+	return this->ints;
+}
 
 Logger::~Logger() {
 }

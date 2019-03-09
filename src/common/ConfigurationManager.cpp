@@ -1,9 +1,9 @@
-#include "common/ConfigurationManager.h"
+#include "ConfigurationManager.h"
 
 #include <fstream>
 #include <vector>
 
-#include "common/Utils.h"
+#include "Utils.h"
 
 ConfigurationManager* ConfigurationManager::config = nullptr;
 

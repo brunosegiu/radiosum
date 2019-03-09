@@ -19,85 +19,49 @@
     <ClCompile Include="lib\imgui-1.68\imgui_impl_sdl.cpp">
       <Filter>Source\Display\ImGUI</Filter>
     </ClCompile>
-    <ClCompile Include="src\common\buffers\Buffer.cpp">
-      <Filter>Source\Buffers</Filter>
-    </ClCompile>
-    <ClCompile Include="src\common\buffers\HemicubeBuffer.cpp">
-      <Filter>Source\Buffers</Filter>
-    </ClCompile>
-    <ClCompile Include="src\common\buffers\PickingBuffer.cpp" />
-    <ClCompile Include="src\common\buffers\RowBuffer.cpp">
-      <Filter>Source\Buffers</Filter>
-    </ClCompile>
-    <ClCompile Include="src\common\buffers\UIntBuffer.cpp">
-      <Filter>Source\Buffers</Filter>
-    </ClCompile>
-    <ClCompile Include="src\common\geometry\Face.cpp">
-      <Filter>Source\Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="src\common\geometry\Mesh.cpp">
-      <Filter>Source\Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="src\common\geometry\Scene.cpp">
-      <Filter>Source\Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="src\common\geometry\VAO.cpp">
-      <Filter>Source\Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="src\common\Application.cpp" />
-    <ClCompile Include="src\common\Camera.cpp">
-      <Filter>Source\Common</Filter>
-    </ClCompile>
-    <ClCompile Include="src\common\ConfigurationManager.cpp">
-      <Filter>Source\Common</Filter>
-    </ClCompile>
-    <ClCompile Include="src\common\Logger.cpp" />
-    <ClCompile Include="src\common\Renderer.cpp">
-      <Filter>Source\Common</Filter>
-    </ClCompile>
     <ClCompile Include="src\common\Timer.cpp" />
-    <ClCompile Include="src\display\ui\UI.cpp" />
-    <ClCompile Include="src\display\CameraController.cpp">
-      <Filter>Source\Display</Filter>
-    </ClCompile>
-    <ClCompile Include="src\display\DisplayController.cpp">
-      <Filter>Source\Display</Filter>
-    </ClCompile>
-    <ClCompile Include="src\display\SceneRenderer.cpp">
-      <Filter>Source\Display</Filter>
-    </ClCompile>
-    <ClCompile Include="src\display\TextureRenderer.cpp" />
-    <ClCompile Include="src\display\Window.cpp">
-      <Filter>Source\Display</Filter>
-    </ClCompile>
-    <ClCompile Include="src\preprocessing\IDRenderer.cpp">
-      <Filter>Source\Preprocessing</Filter>
-    </ClCompile>
-    <ClCompile Include="src\preprocessing\PreprocessingController.cpp">
-      <Filter>Source\Preprocessing</Filter>
-    </ClCompile>
-    <ClCompile Include="src\shaders\ComputeShader.cpp">
-      <Filter>Source\Shaders</Filter>
-    </ClCompile>
-    <ClCompile Include="src\shaders\Shader.cpp">
-      <Filter>Source\Shaders</Filter>
-    </ClCompile>
-    <ClCompile Include="src\main.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="src\display\ui\Component.cpp" />
-    <ClCompile Include="src\display\ui\components\MainMenu.cpp" />
-    <ClCompile Include="src\display\Picker.cpp" />
-    <ClCompile Include="src\common\buffers\ColorBuffer.cpp" />
-    <ClCompile Include="src\display\ui\components\RenderWindow.cpp" />
-    <ClCompile Include="src\display\ui\components\BottomPanel.cpp" />
-    <ClCompile Include="src\display\ui\components\LeftPanel.cpp" />
-    <ClCompile Include="src\display\ui\components\RightPanel.cpp" />
-    <ClCompile Include="src\display\ui\components\left\EmissionEditor.cpp" />
-    <ClCompile Include="src\display\ui\components\bottom\DebugInfo.cpp" />
-    <ClCompile Include="src\display\ui\components\right\Preprocess.cpp" />
-    <ClCompile Include="src\common\Texture.cpp" />
-    <ClCompile Include="src\preprocessing\HemicubeCorrector.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\ui\Application.cpp" />
+    <ClCompile Include="src\ui\Component.cpp" />
+    <ClCompile Include="src\ui\UI.cpp" />
+    <ClCompile Include="src\common\ConfigurationManager.cpp" />
+    <ClCompile Include="src\common\Logger.cpp" />
+    <ClCompile Include="src\engine\Camera.cpp" />
+    <ClCompile Include="src\engine\Renderer.cpp" />
+    <ClCompile Include="src\engine\Texture.cpp" />
+    <ClCompile Include="src\engine\shaders\ComputeShader.cpp" />
+    <ClCompile Include="src\engine\shaders\Shader.cpp" />
+    <ClCompile Include="src\engine\preprocessing\HemicubeCorrector.cpp" />
+    <ClCompile Include="src\engine\preprocessing\IDRenderer.cpp" />
+    <ClCompile Include="src\engine\preprocessing\PreprocessingController.cpp" />
+    <ClCompile Include="src\engine\geometry\Face.cpp" />
+    <ClCompile Include="src\engine\geometry\Mesh.cpp" />
+    <ClCompile Include="src\engine\geometry\Scene.cpp" />
+    <ClCompile Include="src\engine\geometry\VAO.cpp" />
+    <ClCompile Include="src\ui\CameraController.cpp" />
+    <ClCompile Include="src\engine\display\DisplayController.cpp" />
+    <ClCompile Include="src\engine\display\Picker.cpp" />
+    <ClCompile Include="src\engine\display\SceneRenderer.cpp" />
+    <ClCompile Include="src\engine\display\TextureRenderer.cpp" />
+    <ClCompile Include="src\engine\buffers\Buffer.cpp" />
+    <ClCompile Include="src\engine\buffers\ColorBuffer.cpp" />
+    <ClCompile Include="src\engine\buffers\HemicubeBuffer.cpp" />
+    <ClCompile Include="src\engine\buffers\PickingBuffer.cpp" />
+    <ClCompile Include="src\engine\buffers\RowBuffer.cpp" />
+    <ClCompile Include="src\engine\buffers\UIntBuffer.cpp" />
+    <ClCompile Include="src\engine\Engine.cpp" />
+    <ClCompile Include="src\ui\Window.cpp" />
+    <ClCompile Include="src\ui\components\BottomPanel.cpp" />
+    <ClCompile Include="src\ui\components\LeftPanel.cpp" />
+    <ClCompile Include="src\ui\components\MainMenu.cpp" />
+    <ClCompile Include="src\ui\components\RenderWindow.cpp" />
+    <ClCompile Include="src\ui\components\RightPanel.cpp" />
+    <ClCompile Include="src\ui\components\left\EmissionEditor.cpp" />
+    <ClCompile Include="src\ui\components\bottom\DebugInfo.cpp" />
+    <ClCompile Include="src\ui\components\right\Preprocess.cpp" />
+    <ClCompile Include="src\ui\UIStore.cpp" />
+    <ClCompile Include="src\ui\components\left\ReflactanceEditor.cpp" />
+    <ClCompile Include="src\engine\EngineStore.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source">
@@ -135,94 +99,54 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\common\buffers\Buffer.h">
-      <Filter>Source\Buffers</Filter>
-    </ClInclude>
-    <ClInclude Include="src\common\buffers\HemicubeBuffer.h">
-      <Filter>Source\Buffers</Filter>
-    </ClInclude>
-    <ClInclude Include="src\common\buffers\PickingBuffer.h" />
-    <ClInclude Include="src\common\buffers\RowBuffer.h">
-      <Filter>Source\Buffers</Filter>
-    </ClInclude>
-    <ClInclude Include="src\common\buffers\UIntBuffer.h">
-      <Filter>Source\Buffers</Filter>
-    </ClInclude>
-    <ClInclude Include="src\common\geometry\Face.h">
-      <Filter>Source\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="src\common\geometry\GeometryContainer.h" />
-    <ClInclude Include="src\common\geometry\Mesh.h">
-      <Filter>Source\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="src\common\geometry\ObjLoader.h">
-      <Filter>Source\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="src\common\geometry\Scene.h">
-      <Filter>Source\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="src\common\geometry\VAO.h">
-      <Filter>Source\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="src\common\Application.h" />
-    <ClInclude Include="src\common\AppTypes.h" />
-    <ClInclude Include="src\common\Camera.h">
-      <Filter>Source\Common</Filter>
-    </ClInclude>
-    <ClInclude Include="src\common\ConfigurationManager.h">
-      <Filter>Source\Common</Filter>
-    </ClInclude>
-    <ClInclude Include="src\common\Logger.h" />
-    <ClInclude Include="src\common\Renderer.h">
-      <Filter>Source\Common</Filter>
-    </ClInclude>
     <ClInclude Include="src\common\Timer.h" />
-    <ClInclude Include="src\display\ui\UI.h" />
-    <ClInclude Include="src\display\CameraController.h">
-      <Filter>Source\Display</Filter>
-    </ClInclude>
-    <ClInclude Include="src\display\DisplayController.h">
-      <Filter>Source\Display</Filter>
-    </ClInclude>
-    <ClInclude Include="src\display\EventListener.h">
-      <Filter>Source\Display</Filter>
-    </ClInclude>
-    <ClInclude Include="src\display\SceneRenderer.h">
-      <Filter>Source\Display</Filter>
-    </ClInclude>
-    <ClInclude Include="src\display\TextureRenderer.h" />
-    <ClInclude Include="src\display\Window.h">
-      <Filter>Source\Display</Filter>
-    </ClInclude>
-    <ClInclude Include="src\preprocessing\IDRenderer.h">
-      <Filter>Source\Preprocessing</Filter>
-    </ClInclude>
-    <ClInclude Include="src\preprocessing\PreprocessingController.h">
-      <Filter>Source\Preprocessing</Filter>
-    </ClInclude>
-    <ClInclude Include="src\shaders\ComputeShader.h">
-      <Filter>Source\Shaders</Filter>
-    </ClInclude>
-    <ClInclude Include="src\shaders\Shader.h">
-      <Filter>Source\Shaders</Filter>
-    </ClInclude>
-    <ClInclude Include="src\display\ui\Component.h" />
-    <ClInclude Include="src\display\ui\components\DebugInfo.h" />
-    <ClInclude Include="src\display\ui\components\MainMenu.h" />
     <ClInclude Include="res\shaders\hemicube.geom" />
     <ClInclude Include="src\common\Utils.h" />
-    <ClInclude Include="src\display\Picker.h" />
-    <ClInclude Include="src\display\ui\components\EmissionEditor.h" />
-    <ClInclude Include="src\common\buffers\ColorBuffer.h" />
-    <ClInclude Include="src\display\ui\components\RenderWindow.h" />
-    <ClInclude Include="src\display\ui\components\BottomPanel.h" />
-    <ClInclude Include="src\display\ui\components\LeftPanel.h" />
-    <ClInclude Include="src\display\ui\components\RightPanel.h" />
-    <ClInclude Include="src\display\ui\components\left\EmissionEditor.h" />
-    <ClInclude Include="src\display\ui\components\bottom\DebugInfo.h" />
-    <ClInclude Include="src\display\ui\components\right\Preprocess.h" />
-    <ClInclude Include="src\common\Texture.h" />
-    <ClInclude Include="src\preprocessing\HemicubeCorrector.h" />
+    <ClInclude Include="src\ui\Application.h" />
+    <ClInclude Include="src\ui\Component.h" />
+    <ClInclude Include="src\ui\UI.h" />
+    <ClInclude Include="src\common\ConfigurationManager.h" />
+    <ClInclude Include="src\common\Logger.h" />
+    <ClInclude Include="src\engine\Camera.h" />
+    <ClInclude Include="src\engine\Renderer.h" />
+    <ClInclude Include="src\engine\Texture.h" />
+    <ClInclude Include="src\engine\shaders\ComputeShader.h" />
+    <ClInclude Include="src\engine\shaders\Shader.h" />
+    <ClInclude Include="src\engine\preprocessing\HemicubeCorrector.h" />
+    <ClInclude Include="src\engine\preprocessing\IDRenderer.h" />
+    <ClInclude Include="src\engine\preprocessing\PreprocessingController.h" />
+    <ClInclude Include="src\engine\geometry\Face.h" />
+    <ClInclude Include="src\engine\geometry\GeometryContainer.h" />
+    <ClInclude Include="src\engine\geometry\Mesh.h" />
+    <ClInclude Include="src\engine\geometry\ObjLoader.h" />
+    <ClInclude Include="src\engine\geometry\Scene.h" />
+    <ClInclude Include="src\engine\geometry\VAO.h" />
+    <ClInclude Include="src\ui\CameraController.h" />
+    <ClInclude Include="src\engine\display\TextureRenderer.h" />
+    <ClInclude Include="src\engine\display\DisplayController.h" />
+    <ClInclude Include="src\engine\display\Picker.h" />
+    <ClInclude Include="src\engine\display\SceneRenderer.h" />
+    <ClInclude Include="src\engine\buffers\Buffer.h" />
+    <ClInclude Include="src\engine\buffers\ColorBuffer.h" />
+    <ClInclude Include="src\engine\buffers\HemicubeBuffer.h" />
+    <ClInclude Include="src\engine\buffers\PickingBuffer.h" />
+    <ClInclude Include="src\engine\buffers\RowBuffer.h" />
+    <ClInclude Include="src\engine\buffers\UIntBuffer.h" />
+    <ClInclude Include="src\engine\Engine.h" />
+    <ClInclude Include="src\ui\Window.h" />
+    <ClInclude Include="src\engine\EngineStore.h" />
+    <ClInclude Include="src\ui\UIStore.h" />
+    <ClInclude Include="src\ui\EventListener.h" />
+    <ClInclude Include="src\ui\components\BottomPanel.h" />
+    <ClInclude Include="src\ui\components\LeftPanel.h" />
+    <ClInclude Include="src\ui\components\MainMenu.h" />
+    <ClInclude Include="src\ui\components\RenderWindow.h" />
+    <ClInclude Include="src\ui\components\RightPanel.h" />
+    <ClInclude Include="src\ui\components\left\EmissionEditor.h" />
+    <ClInclude Include="src\ui\components\bottom\DebugInfo.h" />
+    <ClInclude Include="src\ui\components\right\Preprocess.h" />
+    <ClInclude Include="src\engine\EngineTypes.h" />
+    <ClInclude Include="src\ui\components\left\ReflactanceEditor.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.ini">
@@ -256,6 +180,7 @@
     <None Include="res\shaders\renderSceneEmissions.frag" />
     <None Include="res\shaders\renderSceneFaces.frag" />
     <None Include="res\shaders\renderSceneRadiosity.frag" />
+    <None Include="res\shaders\renderSceneReflactances.frag" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resrource.rc" />
