@@ -23,6 +23,23 @@ PreprocessingController::PreprocessingController(Scene* scene) {
 
 	this->iterator = new SceneIterator(scene);
 	this->runStep();
+	this->shouldUpdateGeom = false;
+}
+
+void PreprocessingController::setUpRenderer() {
+	// Get camera configuration and prepare for render
+	{
+		Face face = this->iterator->get();
+		glm::vec3 origin, normal;
+		glm::vec4 plane = face.getPlane();
+		origin = face.getBarycenter();
+		normal = face.getNormal();
+		origin += normal * 0.01f;
+		delete this->renderer->getCamera();
+		Camera* faceCamera = new Camera(1.0f, 90.0f, 0.5f, 5000.0f, origin, normal);
+		this->renderer->setCamera(faceCamera);
+		this->renderer->setClipPlane(plane);
+	}
 }
 
 GLuint PreprocessingController::runStep() {
@@ -30,20 +47,9 @@ GLuint PreprocessingController::runStep() {
 	EngineStore::progress = index / GLfloat(this->scene->size());
 	if (!this->iterator->end()) {
 		Timer stepTimer = Timer();
-		// Get camera configuration and prepare for render
-		{
-			Face face = this->iterator->get();
-			glm::vec3 origin, normal;
-			glm::vec4 plane = face.getPlane();
-			origin = face.getBarycenter();
-			normal = face.getNormal();
-			origin += normal * 0.01f;
-			Camera faceCamera = Camera(1.0f, 90.0f, 0.5f, 5000.0f, origin, normal);
-			this->renderer->setCamera(&faceCamera);
-			this->renderer->setClipPlane(plane);
-		}
 
-
+		this->renderer->start();
+		this->setUpRenderer();
 		// Render hemicube and read results
 		{
 			this->renderer->render();
@@ -59,6 +65,29 @@ GLuint PreprocessingController::runStep() {
 		iterator->nextFace();
 	}
 	return index;
+}
+
+void PreprocessingController::runUnsafe(bool full) {
+	
+	while (!this->iterator->end()) {
+		this->renderer->start();
+
+		this->setUpRenderer();
+
+		{
+			this->renderer->render();
+			this->renderer->read();
+		}
+
+		{
+			std::vector<GLfloat> faceFactors = this->getMatrixRow(iterator->faceIndex());
+			this->workers.push_back(std::thread(&PreprocessingController::processRow, this, faceFactors, iterator->faceIndex()));
+		}
+		iterator->nextFace();
+	}
+	if (full) {
+		this->computeRadiosity();
+	}
 }
 
 void PreprocessingController::processRow(std::vector<GLfloat> faceFactors, GLuint faceIndex) {
@@ -80,21 +109,24 @@ void PreprocessingController::processRow(std::vector<GLfloat> faceFactors, GLuin
 
 }
 
-void PreprocessingController::computeRadiosity() {
+void PreprocessingController::crWrapped() {
 	EngineStore::logger.log("Computing radiosity for " + std::to_string(int(scene->size())) + " faces");
 	for (GLuint i = 0; i < this->workers.size(); i++) {
 		workers[i].join();
 	}
 	this->workers.clear();
+
 	Eigen::SparseMatrix<GLfloat> matrix = Eigen::SparseMatrix<GLfloat>(scene->size(), scene->size());
 	matrix.setFromTriplets(this->triplets.begin(), this->triplets.end());
 
 	if (!this->iterator->end()) {
 		throw std::runtime_error("Preprocessing not completed yet, radiosity computation called");
 	}
+	EngineStore::radiosityProgress += .2f;
 	Eigen::SparseLU<Eigen::SparseMatrix<GLfloat>> solver;
 	solver.analyzePattern(matrix);
 	solver.factorize(matrix);
+	EngineStore::radiosityProgress += .3f;
 	if (solver.info() != Eigen::Success) {
 		throw std::runtime_error("Cannot compute radiosity from form factor matrix");
 	}
@@ -107,17 +139,30 @@ void PreprocessingController::computeRadiosity() {
 	if (solver.info() != Eigen::Success) {
 		throw std::runtime_error("Cannot compute radiosity from form factor matrix");
 	}
-
-	std::vector<GLfloat> vectorizedRad(size_t(radiosity.size()), 0.0f);
+	EngineStore::radiosityProgress += .4f;
+	this->vectorizedRad = std::vector<GLfloat>(size_t(radiosity.size()), 0.0f);
 	Eigen::VectorXf::Map(&vectorizedRad[0], radiosity.size()) = radiosity;
+	this->shouldUpdateGeom = true;
+	EngineStore::radiosityProgress += .1f;
+}
 
-	this->scene->setRadiosity(vectorizedRad);
+void PreprocessingController::computeRadiosity() {
+	EngineStore::radiosityProgress = .0f;
+	if (this->radiosityThread.joinable())
+		this->radiosityThread.join();
+	this->radiosityThread = std::thread(&PreprocessingController::crWrapped, this);
+}
+
+void PreprocessingController::checkGeometry() {
+	if (this->shouldUpdateGeom)
+		this->scene->setRadiosity(vectorizedRad);
+	this->shouldUpdateGeom = false;
 }
 
 std::vector<GLfloat> PreprocessingController::getMatrixRow(GLuint face) {
-	this->row->clean();
-	this->row->bind();
 	this->reducer->bind();
+	this->row->bind();
+	this->row->clean();
 	this->corrector->read();
 	this->reducer->run(this->instances, this->instances, 1);
 	return this->row->getBuffer();
@@ -127,6 +172,7 @@ PreprocessingController::~PreprocessingController() {
 	for (GLuint i = 0; i < this->workers.size(); i++) {
 		workers[i].join();
 	}
+	this->radiosityThread.join();
 	delete this->iterator;
 	delete this->renderer;
 }

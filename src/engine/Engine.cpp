@@ -40,7 +40,8 @@ void Engine::preprocess(bool withOutput) {
 		delete this->preprocessor;
 	this->preprocessor = new PreprocessingController(this->scene);
 	this->setMode(PREPROCESS);
-	this->preprocessorOutput = withOutput;
+	if (!withOutput)
+		this->preprocessor->runUnsafe(false);
 }
 
 void Engine::computeRadiosity() {
@@ -59,6 +60,9 @@ Scene* Engine::getScene() {
 void Engine::loop() {
 	//this->frameLock.wait(lock);
 	while (true) {
+		if (this->preprocessor != nullptr) {
+			this->preprocessor->checkGeometry();
+		}
 		if (this->mode == PREPROCESS && this->preprocessor != nullptr) {
 			this->preprocessor->runStep();
 		}

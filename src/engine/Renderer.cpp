@@ -21,6 +21,16 @@ Buffer* Renderer::getBuffer() {
 	return this->buffer;
 }
 
+void Renderer::start() {
+	this->shader->bind();
+	this->buffer->bind();
+	this->buffer->clean();
+}
+
+Camera* Renderer::getCamera() {
+	return this->camera;
+}
+
 
 Renderer::~Renderer() {
 }

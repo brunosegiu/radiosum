@@ -95,7 +95,7 @@ void Mesh::setRadiosity(std::vector<GLfloat> radiosity) {
 		this->perVertexRadiosity[6 * i - 3 * tFaces + 4] = value;
 		this->perVertexRadiosity[6 * i - 3 * tFaces + 5] = value;
 	}
-	this->vao->updateAttribute(sizeof(GLfloat) * this->perVertexRadiosity.size(), &this->perVertexRadiosity[0], 1, GL_FLOAT, 3);
+	this->vao->updateAttribute(sizeof(GLfloat) * this->perVertexRadiosity.size(), &this->perVertexRadiosity[0], 1, GL_FLOAT, 2);
 }
 
 void Mesh::setEmission(GLuint faceIndex, GLfloat emission) {
@@ -135,7 +135,7 @@ void Mesh::setReflactance(GLuint faceIndex, GLfloat reflactance) {
 		this->perVertexReflactance[firstVertex + 5] = reflactance;
 	}
 	this->reflactance[faceIndex] = reflactance;
-	this->vao->updateAttribute(sizeof(GLfloat) * this->perVertexReflactance.size(), &this->perVertexReflactance[0], 1, GL_FLOAT, 2);
+	this->vao->updateAttribute(sizeof(GLfloat) * this->perVertexReflactance.size(), &this->perVertexReflactance[0], 1, GL_FLOAT, 3);
 }
 
 void Mesh::draw(GLuint shaderID) {

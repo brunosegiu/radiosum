@@ -16,6 +16,8 @@ public:
 	void setScene(Scene* scene);
 	GLuint read();
 	Buffer* getBuffer();
+	void start();
+	Camera* getCamera();
 
 	virtual ~Renderer();
 protected:
