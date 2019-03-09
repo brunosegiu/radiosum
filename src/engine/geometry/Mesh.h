@@ -16,7 +16,7 @@ public:
 
 	Mesh(GeometryBuffers geometry);
 
-	void draw();
+	void draw(GLuint shaderID);
 
 	void setEmission(GLuint faceIndex, GLfloat emission);
 	void setReflactance(GLuint faceIndex, GLfloat reflactance);

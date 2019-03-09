@@ -5,13 +5,8 @@ layout(triangle_strip, max_vertices = 15) out;
 
 #define FACES 5
 
-flat in uint idToGeom[];
-
-flat out uint idToFrag;
-
 uniform mat4 worldTransform[FACES];
 uniform vec4 clipPlane;
-
 
 void main() {
 	for (int face = 0; face < FACES; face++) {
@@ -21,7 +16,7 @@ void main() {
 			gl_Layer = face;
 			gl_Position = transform * position;
 			gl_ClipDistance[0] = dot(position, clipPlane);
-			idToFrag = idToGeom[vertex];
+			gl_PrimitiveID = gl_PrimitiveIDIn;
 			EmitVertex();
 		}
 		EndPrimitive();

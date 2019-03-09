@@ -73,7 +73,7 @@ void PreprocessingController::processRow(std::vector<GLfloat> faceFactors, GLuin
 		}
 		else if (ff > 0.0f) {
 			tripletsLock.lock();
-			triplets.push_back(Eigen::Triplet<GLfloat>(iIndex, jIndex, -reflactance * ff));
+			triplets.push_back(Eigen::Triplet<GLfloat>(iIndex, jIndex, - ff));
 			tripletsLock.unlock();
 		}
 	}

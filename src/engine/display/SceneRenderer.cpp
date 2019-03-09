@@ -21,7 +21,7 @@ void SceneRenderer::render() {
 		GLuint worldTransformID = glGetUniformLocation(shader->getID(), "worldTransform");
 		glm::mat4 toWorldCoords = this->camera->getMVPMatrix();
 		glUniformMatrix4fv(worldTransformID, 1, GL_FALSE, &toWorldCoords[0][0]);
-		this->scene->draw();
+		this->scene->draw(this->shader->getID());
 	}
 }
 
