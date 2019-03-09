@@ -7,7 +7,7 @@
 #include "ConfigurationManager.h"
 
 RenderWindow::RenderWindow() : Component() {
-
+	
 }
 
 void RenderWindow::setTexture(GLuint texture) {

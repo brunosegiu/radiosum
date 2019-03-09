@@ -12,5 +12,6 @@ public:
 	virtual ~RenderWindow();
 private:
 	GLuint texture;
+	GLfloat scale;
 };
 

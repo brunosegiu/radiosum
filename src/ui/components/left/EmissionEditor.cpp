@@ -11,7 +11,7 @@ EmissionEditor::EmissionEditor() : Component() {
 
 void EmissionEditor::render() {
 	mousePos = ImGui::GetMousePos();
-	mousePos = ImVec2(mousePos.x - (this->appWidth - this->width) / 2.0f, mousePos.y - 20.0f);
+	mousePos = ImVec2((1.0f / GLfloat(this->scale)) * (mousePos.x - (this->appWidth - this->width) / 2.0f), (1.0f / GLfloat(this->scale)) *  (mousePos.y - 20.0f));
 	this->update();
 	if (enabled && ImGui::BeginTabItem("Emissions")) {
 		if (ImGui::BeginChild("EmissionsWin", ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetWindowHeight()))) {

@@ -8,6 +8,9 @@ Component::Component() {
 	this->height = std::stoi(ConfigurationManager::get("APP_WINDOW_HEIGHT"));
 	this->appWidth = std::stoi(ConfigurationManager::get("APP_RES_WIDTH"));
 	this->appHeight = std::stoi(ConfigurationManager::get("APP_RES_HEIGHT"));
+	this->scale = std::stof(ConfigurationManager::get("APP_SCALE"));
+	this->width = this->width * scale;
+	this->height = this->height * scale;
 }
 
 void Component::enable() {

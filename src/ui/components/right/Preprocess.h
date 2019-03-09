@@ -9,4 +9,6 @@ public:
 	Preprocess();
 	void render();
 	virtual ~Preprocess();
+private:
+	bool withOutput;
 };

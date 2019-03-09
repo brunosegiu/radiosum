@@ -14,7 +14,7 @@ public:
 	virtual ~Component();
 protected:
 	bool enabled;
-	GLuint width, height, appWidth, appHeight;
+	GLuint width, height, scale, appWidth, appHeight;
 	std::map<std::string, Component*> children;
 };
 
