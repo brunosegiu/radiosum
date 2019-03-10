@@ -62,12 +62,12 @@ Mesh::Mesh(GeometryBuffers geometry) {
 
 	if (geometry.triangles.reflactance.size() == 0 && geometry.quads.reflactance.size() == 0) {
 		for (GLuint i = 0; i < this->faces; i++) {
-			this->reflactance.push_back(0.0f);
+			this->reflactance.push_back(1.0f);
 		}
 		for (GLuint i = 0; i < this->vertices.size() / 3; i++) {
-			this->perVertexReflactance.push_back(0.0f);
-			this->perVertexReflactance.push_back(0.0f);
-			this->perVertexReflactance.push_back(0.0f);
+			this->perVertexReflactance.push_back(1.0f);
+			this->perVertexReflactance.push_back(1.0f);
+			this->perVertexReflactance.push_back(1.0f);
 		}
 	}
 

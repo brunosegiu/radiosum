@@ -41,7 +41,7 @@ HemicubeBuffer::HemicubeBuffer(GLuint width) : Buffer(width, width) {
 GLuint HemicubeBuffer::read() {
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D_ARRAY, this->GLTextureId);
-	glBindImageTexture(1, this->GLTextureId, 0, GL_FALSE, 0, GL_READ_ONLY, GL_R32UI);
+	glBindImageTexture(1, this->GLTextureId, 0, GL_TRUE, 0, GL_READ_ONLY, GL_R32UI);
 	return GLTextureId;
 }
 
