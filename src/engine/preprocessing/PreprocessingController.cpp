@@ -102,7 +102,7 @@ void PreprocessingController::processRow(std::vector<GLfloat> faceFactors, GLuin
 		}
 		else if (ff > 0.0f) {
 			tripletsLock.lock();
-			triplets.push_back(Eigen::Triplet<GLfloat>(iIndex, jIndex, - ff));
+			triplets.push_back(Eigen::Triplet<GLfloat>(iIndex, jIndex, - reflactance * ff));
 			tripletsLock.unlock();
 		}
 	}
@@ -160,9 +160,9 @@ void PreprocessingController::checkGeometry() {
 }
 
 std::vector<GLfloat> PreprocessingController::getMatrixRow(GLuint face) {
-	this->reducer->bind();
 	this->row->bind();
 	this->row->clean();
+	this->reducer->bind();
 	this->corrector->read();
 	this->reducer->run(this->instances, this->instances, 1);
 	return this->row->getBuffer();
