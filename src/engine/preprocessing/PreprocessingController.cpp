@@ -34,9 +34,10 @@ void PreprocessingController::setUpRenderer() {
 		glm::vec4 plane = face.getPlane();
 		origin = face.getBarycenter();
 		normal = face.getNormal();
+		glm::vec3 perp = glm::normalize(face.getVertex(1) - face.getVertex(0));
 		origin += normal * 0.01f;
 		delete this->renderer->getCamera();
-		Camera* faceCamera = new Camera(1.0f, 90.0f, 0.5f, 5000.0f, origin, normal);
+		Camera* faceCamera = new Camera(1.0f, 90.0f, 0.005f, 5000.0f, origin, normal, perp);
 		this->renderer->setCamera(faceCamera);
 		this->renderer->setClipPlane(plane);
 	}
