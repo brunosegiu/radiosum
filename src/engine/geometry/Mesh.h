@@ -28,7 +28,7 @@ public:
 
 	void setEmission(GLuint faceIndex, GLfloat emission);
 	void setReflactance(GLuint faceIndex, GLfloat reflactance);
-	void setRadiosity(std::vector<GLfloat> radiosity, bool smooth = false);
+	void setRadiosity(std::vector<GLfloat> radiosity, bool smooth = true);
 
 	std::vector<glm::vec3> getVertices();
 	std::vector<GLfloat> getEmissions();

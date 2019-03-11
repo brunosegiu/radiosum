@@ -104,26 +104,24 @@ GLfloat interpolate(glm::vec3 &vertex, std::vector<GLfloat> &radiosities, std::v
 	for (GLuint face : adjacencies) {
 		radiosity += radiosities[face - 1];
 	}
-	return radiosity / (GLfloat)adjacencies.size();
+	return radiosity / GLfloat(adjacencies.size());
 }
 
 void Mesh::setRadiosity(std::vector<GLfloat> radiosity, bool smooth) {
 	this->radiosity = radiosity;
 	if (smooth) {
 		for (GLuint i = 0; i < tFaces; i++) {
-			GLfloat value = radiosity[i];
 			this->perVertexRadiosity[3 * i] = interpolate(this->vertices[3 * i], radiosity, this->adjacencies[wvec3(this->vertices[3 * i])]);
-			this->perVertexRadiosity[3 * i + 1] = interpolate(this->vertices[3 * i + 1], radiosity, this->adjacencies[this->vertices[3 * i]]);
-			this->perVertexRadiosity[3 * i + 2] = interpolate(this->vertices[3 * i + 2], radiosity, this->adjacencies[this->vertices[3 * i]]);
+			this->perVertexRadiosity[3 * i + 1] = interpolate(this->vertices[3 * i + 1], radiosity, this->adjacencies[this->vertices[3 * i + 1]]);
+			this->perVertexRadiosity[3 * i + 2] = interpolate(this->vertices[3 * i + 2], radiosity, this->adjacencies[this->vertices[3 * i + 2]]);
 		}
 		for (GLuint i = tFaces; i < faces; i++) {
-			GLfloat value = radiosity[i];
 			this->perVertexRadiosity[6 * i - 3 * tFaces] = interpolate(this->vertices[6 * i - 3 * tFaces], radiosity, this->adjacencies[this->vertices[6 * i - 3 * tFaces]]);
-			this->perVertexRadiosity[6 * i - 3 * tFaces + 1] = interpolate(this->vertices[6 * i - 3 * tFaces + 1], radiosity, this->adjacencies[this->vertices[6 * i - 3 * tFaces]]);
-			this->perVertexRadiosity[6 * i - 3 * tFaces + 2] = interpolate(this->vertices[6 * i - 3 * tFaces + 2], radiosity, this->adjacencies[this->vertices[6 * i - 3 * tFaces + 1]]);
-			this->perVertexRadiosity[6 * i - 3 * tFaces + 3] = interpolate(this->vertices[6 * i - 3 * tFaces + 3], radiosity, this->adjacencies[this->vertices[6 * i - 3 * tFaces + 2]]);
-			this->perVertexRadiosity[6 * i - 3 * tFaces + 4] = interpolate(this->vertices[6 * i - 3 * tFaces + 4], radiosity, this->adjacencies[this->vertices[6 * i - 3 * tFaces + 3]]);
-			this->perVertexRadiosity[6 * i - 3 * tFaces + 5] = interpolate(this->vertices[6 * i - 3 * tFaces + 5], radiosity, this->adjacencies[this->vertices[6 * i - 3 * tFaces + 4]]);
+			this->perVertexRadiosity[6 * i - 3 * tFaces + 1] = interpolate(this->vertices[6 * i - 3 * tFaces + 1], radiosity, this->adjacencies[this->vertices[6 * i - 3 * tFaces + 1]]);
+			this->perVertexRadiosity[6 * i - 3 * tFaces + 2] = interpolate(this->vertices[6 * i - 3 * tFaces + 2], radiosity, this->adjacencies[this->vertices[6 * i - 3 * tFaces + 2]]);
+			this->perVertexRadiosity[6 * i - 3 * tFaces + 3] = interpolate(this->vertices[6 * i - 3 * tFaces + 3], radiosity, this->adjacencies[this->vertices[6 * i - 3 * tFaces + 3]]);
+			this->perVertexRadiosity[6 * i - 3 * tFaces + 4] = interpolate(this->vertices[6 * i - 3 * tFaces + 4], radiosity, this->adjacencies[this->vertices[6 * i - 3 * tFaces + 4]]);
+			this->perVertexRadiosity[6 * i - 3 * tFaces + 5] = interpolate(this->vertices[6 * i - 3 * tFaces + 5], radiosity, this->adjacencies[this->vertices[6 * i - 3 * tFaces + 5]]);
 		}
 	}
 	else {
