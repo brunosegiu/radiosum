@@ -93,6 +93,7 @@ void PreprocessingController::runUnsafe(bool full) {
 
 void PreprocessingController::processRow(std::vector<GLfloat> faceFactors, GLuint faceIndex) {
 	GLuint iIndex = faceIndex;
+	GLfloat control = 0;
 	GLfloat reflactance = this->scene->getReflactance(faceIndex);
 	for (GLuint jIndex = 0; jIndex < faceFactors.size() - 1; jIndex++) {
 		GLfloat ff = GLfloat(faceFactors[jIndex + 1]);
@@ -102,12 +103,13 @@ void PreprocessingController::processRow(std::vector<GLfloat> faceFactors, GLuin
 			tripletsLock.unlock();
 		}
 		else if (ff > 0.0f) {
+			control += (1.0f / this->pixelCount) * ff;
 			tripletsLock.lock();
 			triplets.push_back(Eigen::Triplet<GLfloat>(iIndex, jIndex, -reflactance * (1.0f / this->pixelCount) * ff));
 			tripletsLock.unlock();
 		}
 	}
-
+	EngineStore::logger.log(std::to_string(control));
 }
 
 void PreprocessingController::crWrapped() {
@@ -161,9 +163,9 @@ void PreprocessingController::checkGeometry() {
 }
 
 std::vector<GLfloat> PreprocessingController::getMatrixRow(GLuint face) {
+	this->reducer->bind();
 	this->row->bind();
 	this->row->clean();
-	this->reducer->bind();
 	this->corrector->read();
 	this->reducer->run(this->instances, this->instances, 1);
 	return this->row->getBuffer();

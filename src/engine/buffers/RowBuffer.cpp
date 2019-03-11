@@ -20,13 +20,11 @@ void RowBuffer::bind() {
 }
 
 void RowBuffer::clean() {
-	this->bind();
 	GLuint* data = (GLuint*)glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_WRITE_ONLY);
 	for (int i = 0; i < this->content.size(); i++) {
 		data[i] = .0f;
 	}
 	glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
-	glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 }
 
 std::vector<GLfloat> RowBuffer::getBuffer() {

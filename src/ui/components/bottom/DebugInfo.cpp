@@ -3,6 +3,7 @@
 #include "imgui.h"
 
 #include "UIStore.h"
+#include "EngineStore.h"
 #include "ConfigurationManager.h"
 
 
@@ -13,7 +14,7 @@ DebugInfo::DebugInfo() {
 void DebugInfo::render() {
 	if (ImGui::BeginTabItem("Log")) {
 		if (ImGui::BeginChild("LogWin", ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetWindowHeight()))) {
-			std::vector<std::string> log = UIStore::logger.getLog();
+			std::vector<std::string> log = EngineStore::logger.getLog();
 			for (std::string line : log) {
 				ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "> ");
 				ImGui::SameLine();

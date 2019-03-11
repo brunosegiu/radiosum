@@ -109,7 +109,7 @@ GLfloat interpolate(glm::vec3 &vertex, std::vector<GLfloat> &radiosities, std::v
 
 void Mesh::setRadiosity(std::vector<GLfloat> radiosity, bool smooth) {
 	this->radiosity = radiosity;
-	/*if (smooth) {
+	if (smooth) {
 		for (GLuint i = 0; i < tFaces; i++) {
 			GLfloat value = radiosity[i];
 			this->perVertexRadiosity[3 * i] = interpolate(this->vertices[3 * i], radiosity, this->adjacencies[wvec3(this->vertices[3 * i])]);
@@ -142,23 +142,6 @@ void Mesh::setRadiosity(std::vector<GLfloat> radiosity, bool smooth) {
 			this->perVertexRadiosity[6 * i - 3 * tFaces + 4] = value;
 			this->perVertexRadiosity[6 * i - 3 * tFaces + 5] = value;
 		}
-	}
-	this->vao->updateAttribute(sizeof(GLfloat) * this->perVertexRadiosity.size(), &this->perVertexRadiosity[0], 1, GL_FLOAT, 2);*/
-	this->radiosity = radiosity;
-	for (GLuint i = 0; i < tFaces; i++) {
-		GLfloat value = radiosity[i];
-		this->perVertexRadiosity[3 * i] = value;
-		this->perVertexRadiosity[3 * i + 1] = value;
-		this->perVertexRadiosity[3 * i + 2] = value;
-	}
-	for (GLuint i = tFaces; i < faces; i++) {
-		GLfloat value = radiosity[i];
-		this->perVertexRadiosity[6 * i - 3 * tFaces] = value;
-		this->perVertexRadiosity[6 * i - 3 * tFaces + 1] = value;
-		this->perVertexRadiosity[6 * i - 3 * tFaces + 2] = value;
-		this->perVertexRadiosity[6 * i - 3 * tFaces + 3] = value;
-		this->perVertexRadiosity[6 * i - 3 * tFaces + 4] = value;
-		this->perVertexRadiosity[6 * i - 3 * tFaces + 5] = value;
 	}
 	this->vao->updateAttribute(sizeof(GLfloat) * this->perVertexRadiosity.size(), &this->perVertexRadiosity[0], 1, GL_FLOAT, 2);
 }
