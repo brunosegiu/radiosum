@@ -20,7 +20,7 @@ HemicubeBuffer::HemicubeBuffer(GLuint width) : Buffer(width, width) {
 	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
 	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-	glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_R32UI, width, width, FACES, 0, GL_RED_INTEGER, GL_UNSIGNED_BYTE, 0);
+	glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_R32UI, width, width, FACES, 0, GL_RED_INTEGER, GL_UNSIGNED_INT, 0);
 
 	// Generate depth buffer (so that depth test works)
 	glGenTextures(1, &this->GLDepthId);

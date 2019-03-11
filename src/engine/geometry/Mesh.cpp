@@ -36,6 +36,17 @@ Mesh::Mesh(GeometryBuffers geometry) {
 		this->vertices.push_back(geometry.quads.vertices[i + 1]);
 		this->vertices.push_back(geometry.quads.vertices[i + 2]);
 		this->vertices.push_back(geometry.quads.vertices[i + 3]);
+
+		adjacencies[geometry.quads.vertices[i]].push_back(tFaces + i / 4);
+		adjacencies[geometry.quads.vertices[i+1]].push_back(tFaces + i / 4);
+		adjacencies[geometry.quads.vertices[i+2]].push_back(tFaces + i / 4);
+		adjacencies[geometry.quads.vertices[i+3]].push_back(tFaces + i / 4);
+	}
+
+	for (GLuint i = 0; i < tFaces; i++) {
+		adjacencies[this->vertices[3 * i]].push_back(i);
+		adjacencies[this->vertices[3 * i + 1]].push_back(i);
+		adjacencies[this->vertices[3 * i + 2]].push_back(i);
 	}
 
 	if (geometry.triangles.emission.size() == 0 && geometry.quads.emission.size() == 0) {
@@ -78,22 +89,30 @@ Mesh::Mesh(GeometryBuffers geometry) {
 	this->vao->addAttribute(sizeof(GLfloat) * perVertexRadiosity.size(), &perVertexReflactance[0], 1, GL_FLOAT, 3, GL_DYNAMIC_DRAW);
 }
 
+GLfloat interpolate(glm::vec3 &vertex, std::vector<GLfloat> &radiosities, std::map < glm::vec3, std::vector<GLuint>> &adjacencies) {
+	GLfloat radiosity = 0;
+	for (GLuint face : adjacencies[vertex]) {
+		radiosity += radiosities[face];
+	}
+	return radiosity / (GLfloat)adjacencies[vertex].size();
+}
+
 void Mesh::setRadiosity(std::vector<GLfloat> radiosity) {
 	this->radiosity = radiosity;
 	for (GLuint i = 0; i < tFaces; i++) {
 		GLfloat value = radiosity[i];
-		this->perVertexRadiosity[3 * i] = value;
-		this->perVertexRadiosity[3 * i + 1] = value;
-		this->perVertexRadiosity[3 * i + 2] = value;
+		this->perVertexRadiosity[3 * i] = interpolate(this->vertices[3*i],radiosity, this->adjacencies);
+		this->perVertexRadiosity[3 * i + 1] = interpolate(this->vertices[3 * i + 1], radiosity, this->adjacencies);
+		this->perVertexRadiosity[3 * i + 2] = interpolate(this->vertices[3 * i + 2], radiosity, this->adjacencies);
 	}
 	for (GLuint i = tFaces; i < faces; i++) {
 		GLfloat value = radiosity[i];
-		this->perVertexRadiosity[6 * i - 3 * tFaces] = value;
-		this->perVertexRadiosity[6 * i - 3 * tFaces + 1] = value;
-		this->perVertexRadiosity[6 * i - 3 * tFaces + 2] = value;
-		this->perVertexRadiosity[6 * i - 3 * tFaces + 3] = value;
-		this->perVertexRadiosity[6 * i - 3 * tFaces + 4] = value;
-		this->perVertexRadiosity[6 * i - 3 * tFaces + 5] = value;
+		this->perVertexRadiosity[6 * i - 3 * tFaces] = interpolate(this->vertices[6 * i - 3 * tFaces], radiosity, this->adjacencies);
+		this->perVertexRadiosity[6 * i - 3 * tFaces + 1] = interpolate(this->vertices[6 * i - 3 * tFaces + 1], radiosity, this->adjacencies);
+		this->perVertexRadiosity[6 * i - 3 * tFaces + 2] = interpolate(this->vertices[6 * i - 3 * tFaces + 2], radiosity, this->adjacencies);
+		this->perVertexRadiosity[6 * i - 3 * tFaces + 3] = interpolate(this->vertices[6 * i - 3 * tFaces + 3], radiosity, this->adjacencies);
+		this->perVertexRadiosity[6 * i - 3 * tFaces + 4] = interpolate(this->vertices[6 * i - 3 * tFaces + 4], radiosity, this->adjacencies);
+		this->perVertexRadiosity[6 * i - 3 * tFaces + 5] = interpolate(this->vertices[6 * i - 3 * tFaces + 5], radiosity, this->adjacencies);
 	}
 	this->vao->updateAttribute(sizeof(GLfloat) * this->perVertexRadiosity.size(), &this->perVertexRadiosity[0], 1, GL_FLOAT, 2);
 }

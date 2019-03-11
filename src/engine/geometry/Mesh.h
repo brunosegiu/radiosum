@@ -43,6 +43,7 @@ private:
 	std::vector<GLfloat> perVertexEmission;
 	std::vector<GLfloat> perVertexRadiosity;
 	std::vector<GLfloat> perVertexReflactance;
+	std::map<glm::vec3, std::vector<GLuint>> adjacencies;
 
 	VAO* vao;
 	GLuint faces, tFaces, qFaces;
