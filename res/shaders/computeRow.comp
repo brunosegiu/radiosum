@@ -24,5 +24,6 @@ void main() {
 	} else {
 		addition = imageLoad(sideCorrector, coords).r;
 	}
+	addition = 1.0f;
 	atomicAdd(row[face],addition);
 }

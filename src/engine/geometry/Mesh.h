@@ -10,6 +10,14 @@
 #include "geometry/VAO.h"
 #include "geometry/GeometryContainer.h"
 
+
+
+class wvec3 : public glm::vec3 {
+public:
+	wvec3(glm::vec3 &v);
+	bool operator< (const glm::vec3 &v1) const;
+};
+
 class Mesh {
 public:
 	static Mesh* load(std::string path);
@@ -20,7 +28,7 @@ public:
 
 	void setEmission(GLuint faceIndex, GLfloat emission);
 	void setReflactance(GLuint faceIndex, GLfloat reflactance);
-	void setRadiosity(std::vector<GLfloat> radiosity);
+	void setRadiosity(std::vector<GLfloat> radiosity, bool smooth = false);
 
 	std::vector<glm::vec3> getVertices();
 	std::vector<GLfloat> getEmissions();
@@ -43,7 +51,7 @@ private:
 	std::vector<GLfloat> perVertexEmission;
 	std::vector<GLfloat> perVertexRadiosity;
 	std::vector<GLfloat> perVertexReflactance;
-	std::map<glm::vec3, std::vector<GLuint>> adjacencies;
+	std::map<wvec3, std::vector<GLuint>> adjacencies;
 
 	VAO* vao;
 	GLuint faces, tFaces, qFaces;

@@ -13,9 +13,8 @@ public:
 	glm::vec3 getBarycenter();
 	glm::vec4 getPlane();
 	GLfloat area();
-	glm::vec3 getVertex(GLuint index);
 	virtual ~Face();
-private:
+public:
 	glm::vec3 v0, v1, v2, v3;
 	FaceMode mode;
 };

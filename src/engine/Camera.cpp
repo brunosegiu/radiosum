@@ -13,7 +13,7 @@ Camera::Camera(float aspectRatio, float fov, float near, float far, glm::vec3 or
 	this->up = glm::cross(glm::cross(this->direction, up), this->direction);
 
 	this->projectionMatrix = glm::perspective(glm::radians(fov), aspectRatio, near, far);
-	this->viewMatrix = glm::lookAt(origin, origin + this->direction, up);
+	this->viewMatrix = glm::lookAt(origin, origin + this->direction, this->up);
 	this->MVPMatrix = this->projectionMatrix * this->viewMatrix;
 }
 

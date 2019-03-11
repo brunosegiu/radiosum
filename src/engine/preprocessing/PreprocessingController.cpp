@@ -30,14 +30,14 @@ void PreprocessingController::setUpRenderer() {
 	// Get camera configuration and prepare for render
 	{
 		Face face = this->iterator->get();
-		glm::vec3 origin, normal;
+		glm::vec3 origin, normal, up;
 		glm::vec4 plane = face.getPlane();
 		origin = face.getBarycenter();
 		normal = face.getNormal();
-		glm::vec3 perp = glm::normalize(face.getVertex(1) - face.getVertex(0));
+		up = glm::normalize(face.v1 - face.v0);
 		origin += normal * 0.01f;
 		delete this->renderer->getCamera();
-		Camera* faceCamera = new Camera(1.0f, 90.0f, 0.005f, 5000.0f, origin, normal, perp);
+		Camera* faceCamera = new Camera(1.0f, 90.0f, 0.005f, 5000.0f, origin, normal, up);
 		this->renderer->setCamera(faceCamera);
 		this->renderer->setClipPlane(plane);
 	}
@@ -69,7 +69,7 @@ GLuint PreprocessingController::runStep() {
 }
 
 void PreprocessingController::runUnsafe(bool full) {
-	
+
 	while (!this->iterator->end()) {
 		this->renderer->start();
 
@@ -103,7 +103,7 @@ void PreprocessingController::processRow(std::vector<GLfloat> faceFactors, GLuin
 		}
 		else if (ff > 0.0f) {
 			tripletsLock.lock();
-			triplets.push_back(Eigen::Triplet<GLfloat>(iIndex, jIndex, - reflactance * ff));
+			triplets.push_back(Eigen::Triplet<GLfloat>(iIndex, jIndex, -reflactance * (1.0f / this->pixelCount) * ff));
 			tripletsLock.unlock();
 		}
 	}
