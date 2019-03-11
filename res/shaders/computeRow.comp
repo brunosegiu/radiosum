@@ -18,12 +18,7 @@ uint getFaceId(ivec2 coord, uint face){
 void main() {
 	ivec2 coords = ivec2(gl_WorkGroupID.xy);
 	uint face = getFaceId(coords,gl_LocalInvocationID.x);
-	float addition;
-	if (gl_LocalInvocationID.x == 0){
-		addition = imageLoad(topCorrector, coords).r;
-	} else {
-		addition = imageLoad(sideCorrector, coords).r;
-	}
+	float addition = gl_LocalInvocationID.x == 0 ? imageLoad(topCorrector, coords).r : imageLoad(sideCorrector, coords).r;
 	addition = 1.0f;
 	atomicAdd(row[face],addition);
 }

@@ -37,7 +37,7 @@ void PreprocessingController::setUpRenderer() {
 		up = glm::normalize(face.v1 - face.v0);
 		origin += normal * 0.01f;
 		delete this->renderer->getCamera();
-		Camera* faceCamera = new Camera(1.0f, 90.0f, 0.005f, 5000.0f, origin, normal, up);
+		Camera* faceCamera = new Camera(1.0f, 90.0f, 0.2f, 500.0f, origin, normal, up);
 		this->renderer->setCamera(faceCamera);
 		this->renderer->setClipPlane(plane);
 	}
@@ -45,6 +45,7 @@ void PreprocessingController::setUpRenderer() {
 
 GLuint PreprocessingController::runStep() {
 	GLuint index = this->iterator->faceIndex();
+
 	EngineStore::progress = index / GLfloat(this->scene->size());
 	if (!this->iterator->end()) {
 		Timer stepTimer = Timer();
@@ -93,7 +94,6 @@ void PreprocessingController::runUnsafe(bool full) {
 
 void PreprocessingController::processRow(std::vector<GLfloat> faceFactors, GLuint faceIndex) {
 	GLuint iIndex = faceIndex;
-	GLfloat control = 0;
 	GLfloat reflactance = this->scene->getReflactance(faceIndex);
 	for (GLuint jIndex = 0; jIndex < faceFactors.size() - 1; jIndex++) {
 		GLfloat ff = GLfloat(faceFactors[jIndex + 1]);
@@ -103,13 +103,11 @@ void PreprocessingController::processRow(std::vector<GLfloat> faceFactors, GLuin
 			tripletsLock.unlock();
 		}
 		else if (ff > 0.0f) {
-			control += (1.0f / this->pixelCount) * ff;
 			tripletsLock.lock();
 			triplets.push_back(Eigen::Triplet<GLfloat>(iIndex, jIndex, -reflactance * (1.0f / this->pixelCount) * ff));
 			tripletsLock.unlock();
 		}
 	}
-	EngineStore::logger.log(std::to_string(control));
 }
 
 void PreprocessingController::crWrapped() {

@@ -7,7 +7,7 @@ Scene::Scene() {
 }
 
 void Scene::draw(GLuint shaderID) {
-	GLuint offset = 1;
+	GLuint offset = 0;
 	for (auto &mesh : meshes) {
 		GLuint offestLoc = glGetUniformLocation(shaderID, "offset");
 		glUniform1ui(offestLoc, offset);
