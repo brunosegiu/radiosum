@@ -31,7 +31,8 @@ void Preprocess::render() {
 		}
 		ImGui::Checkbox("Interpolate", &this->smooth);
 		if (ImGui::Button("Compute radiosity")) {
-			UIStore::engine->computeRadiosity(this->smooth);
+			std::vector<Channel> channels = { RED, GREEN, BLUE };
+			UIStore::engine->computeRadiosity(channels, this->smooth);
 		}
 		ImGui::Text("Progress");
 		ImGui::ProgressBar(radProgress);

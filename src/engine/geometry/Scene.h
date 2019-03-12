@@ -2,6 +2,7 @@
 
 #include "geometry/Mesh.h"
 #include "geometry/Face.h"
+#include "EngineTypes.h"
 
 class Scene {
 public:
@@ -16,9 +17,9 @@ public:
 
 	// Lighting
 	std::vector<GLfloat> getEmissions();
-	std::vector<GLfloat> getReflactances();
+	std::vector<glm::vec3> getReflactances();
 	GLfloat getEmission(GLuint faceIndex);
-	GLfloat getReflactance(GLuint faceIndex);
+	glm::vec3 getReflactance(GLuint faceIndex);
 
 	// Setters
 	// Geometry
@@ -27,8 +28,8 @@ public:
 
 	// Lighting
 	void setEmission(GLuint faceIndex, GLfloat emission);
-	void setReflactance(GLuint faceIndex, GLfloat reflactance);
-	void setRadiosity(std::vector<GLfloat> &radiosity, bool smooth);
+	void setReflactance(GLuint faceIndex, glm::vec3 reflactance);
+	void setRadiosity(std::vector<glm::vec3> &radiosity, bool smooth);
 
 	virtual ~Scene();
 private:

@@ -1,13 +1,13 @@
 #version 450 core
 
-in smooth float radiosityToFrag;
 in smooth float emissionToFrag;
-in smooth float reflactanceToFrag;
+in smooth vec3 radiosityToFrag;
+in smooth vec3 reflactanceToFrag;
 
-layout(location = 0) out float radiosity;
+layout(location = 0) out vec3 radiosity;
 layout(location = 1) out uint id;
 layout(location = 2) out float emission;
-layout(location = 3) out float reflactance;
+layout(location = 3) out vec3 reflactance;
 
 uniform uint tFaces;
 uniform uint offset;

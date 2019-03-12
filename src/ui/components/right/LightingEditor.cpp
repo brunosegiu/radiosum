@@ -17,18 +17,24 @@ void EmissionEditor::render() {
 		if (ImGui::BeginChild("LightingWin", ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetWindowHeight()))) {
 			ImGui::Text(std::string("Face: " + std::to_string(int(current) - 1)).c_str());
 
-			ImGui::SliderFloat("Emission", &this->emission, 0.0f, 10.0f);
+			ImGui::Spacing();
+			ImGui::Spacing();
+			ImGui::Spacing();
+
+			ImGui::SliderFloat("Emission", &this->emission, 0.0f, 100.0f);
 			if (ImGui::Button("Save emission")) {
 				if (current > 0)
 					UIStore::engine->getScene()->setEmission(current - 1, this->emission);
 			}
 
 			ImGui::Spacing();
+			ImGui::Spacing();
+			ImGui::Spacing();
 
-			ImGui::SliderFloat("Reflactance", &this->reflactance, 0.0f, 1.0f);
+			ImGui::ColorPicker3("Reflactance", this->reflactance);
 			if (ImGui::Button("Save reflactance")) {
 				if (current > 0)
-					UIStore::engine->getScene()->setReflactance(current - 1, this->reflactance);
+					UIStore::engine->getScene()->setReflactance(current - 1, glm::vec3(this->reflactance[0], this->reflactance[1], this->reflactance[2]));
 			}
 
 			ImGui::Text(std::string("X: " + std::to_string(GLint(mousePos.x))).c_str());
@@ -48,7 +54,10 @@ void EmissionEditor::update() {
 			this->current = picked;
 			if (this->current > 0) {
 				this->emission = UIStore::engine->getScene()->getEmission(current - 1);
-				this->reflactance = UIStore::engine->getScene()->getReflactance(current - 1);
+				glm::vec3 ref = UIStore::engine->getScene()->getReflactance(current - 1);
+				this->reflactance[0] = ref.x;
+				this->reflactance[1] = ref.y;
+				this->reflactance[2] = ref.z;
 			}
 		}
 
