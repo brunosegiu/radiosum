@@ -17,7 +17,7 @@ void EmissionEditor::render() {
 		if (ImGui::BeginChild("LightingWin", ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetWindowHeight()))) {
 			ImGui::Text(std::string("Face: " + std::to_string(int(current) - 1)).c_str());
 
-			ImGui::SliderFloat("Emission", &this->emission, 0.0f, 10.0f);
+			ImGui::SliderFloat("Emission", &this->emission, 0.0f, 1.0f);
 			if (ImGui::Button("Save emission")) {
 				if (current > 0)
 					UIStore::engine->getScene()->setEmission(current - 1, this->emission);

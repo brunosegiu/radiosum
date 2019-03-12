@@ -8,7 +8,7 @@ layout(binding=3) uniform sampler2D screenSampler;
 uniform float maxEmission = 10.0f;
 
 void main() {
-	float emission = texture(screenSampler,uv).r / maxEmission;
+	float emission = texture(screenSampler,uv).r;
 	vec3 color;
 	color = vec3(emission);
 	outColor = vec4(color, 1.0f);
