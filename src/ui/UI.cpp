@@ -10,7 +10,6 @@
 #include "components/RightPanel.h"
 
 UI::UI(SDL_Window* window, SDL_GLContext &glContext) {
-	UIStore::logger.log("Setting up ImGui");
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGui::StyleColorsDark();

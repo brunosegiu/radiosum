@@ -5,7 +5,6 @@ Engine::Engine() {
 	this->mode = FACES;
 	this->camera = new Camera(1.0f, 90.0f, 0.5f, 5000.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	this->scene = new Scene();
-	this->preprocessorOutput = true;
 	this->lock = std::unique_lock<std::mutex>(mtx);
 
 	this->sceneRenderer = new SceneRenderer(this->camera);
@@ -44,8 +43,8 @@ void Engine::preprocess(bool withOutput) {
 		this->preprocessor->runUnsafe(false);
 }
 
-void Engine::computeRadiosity() {
-	this->preprocessor->computeRadiosity();
+void Engine::computeRadiosity(bool smooth) {
+	this->preprocessor->computeRadiosity(smooth);
 }
 
 // Main scene
@@ -61,7 +60,7 @@ void Engine::loop() {
 	//this->frameLock.wait(lock);
 	while (true) {
 		if (this->preprocessor != nullptr) {
-			this->preprocessor->checkGeometry();
+			this->preprocessor->checkFlags();
 		}
 		if (this->mode == PREPROCESS && this->preprocessor != nullptr) {
 			this->preprocessor->runStep();

@@ -28,7 +28,7 @@ public:
 	// Lighting
 	void setEmission(GLuint faceIndex, GLfloat emission);
 	void setReflactance(GLuint faceIndex, GLfloat reflactance);
-	void setRadiosity(std::vector<GLfloat> &radiosity);
+	void setRadiosity(std::vector<GLfloat> &radiosity, bool smooth);
 
 	virtual ~Scene();
 private:

@@ -27,7 +27,7 @@ void DebugInfo::render() {
 		}
 		ImGui::EndTabItem();
 	}
-	if (ImGui::BeginTabItem("Stats")) {
+	/*if (ImGui::BeginTabItem("Stats")) {
 		auto vars = UIStore::logger.getFloats();
 		for (auto var : vars) {
 			GLfloat max = FLT_MIN;
@@ -42,7 +42,7 @@ void DebugInfo::render() {
 			ImGui::PlotLines(var.first.c_str(), &var.second[0], var.second.size(), 0, std::string("avg " + std::to_string(avg) + "s").c_str(), min, max);
 		}
 		ImGui::EndTabItem();
-	}
+	}*/
 }
 
 

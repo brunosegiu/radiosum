@@ -3,10 +3,12 @@
 #include "imgui.h"
 
 #include "components/right/Preprocess.h"
+#include "components/right/LightingEditor.h"
 
 RightPanel::RightPanel() : Component() {
 	this->enable();
-	this->children["PREPROCESS"] = new Preprocess();
+	this->children["0PREPROCESS"] = new Preprocess();
+	this->children["1LIGHTING"] = new EmissionEditor();
 }
 
 void RightPanel::render() {

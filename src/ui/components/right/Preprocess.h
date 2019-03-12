@@ -10,5 +10,5 @@ public:
 	void render();
 	virtual ~Preprocess();
 private:
-	bool withOutput;
+	bool withOutput, smooth;
 };

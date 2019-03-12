@@ -20,7 +20,6 @@ Window::Window() {
 		SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
 		this->window = SDL_CreateWindow(name.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
 		if (window == NULL) throw std::runtime_error("Failed to initialize SDL");
-		UIStore::logger.log("Setting up OpenGL 4.5");
 		glContext = SDL_GL_CreateContext(window);
 		if (glContext == NULL)
 			throw std::runtime_error("Failed to initialize OpenGL");

@@ -5,6 +5,5 @@
 
 class UIStore {
 public:
-	static Logger logger;
 	static Engine* engine;
 };

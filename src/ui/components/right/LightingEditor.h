@@ -12,7 +12,7 @@ public:
 	void update();
 	virtual ~EmissionEditor();
 private:
-	GLfloat emission;
+	GLfloat emission, reflactance;
 	GLuint current;
 	ImVec2 mousePos;
 };

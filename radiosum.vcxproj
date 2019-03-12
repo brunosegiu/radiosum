@@ -147,6 +147,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\ui\components\left\SceneEditor.cpp" />
     <ClCompile Include="src\engine\Engine.cpp" />
     <ClCompile Include="src\common\ConfigurationManager.cpp" />
     <ClCompile Include="src\common\Logger.cpp" />
@@ -187,8 +188,7 @@
     <ClCompile Include="src\ui\components\BottomPanel.cpp" />
     <ClCompile Include="src\ui\components\bottom\DebugInfo.cpp" />
     <ClCompile Include="src\ui\components\LeftPanel.cpp" />
-    <ClCompile Include="src\ui\components\left\EmissionEditor.cpp" />
-    <ClCompile Include="src\ui\components\left\ReflactanceEditor.cpp" />
+    <ClCompile Include="src\ui\components\right\LightingEditor.cpp" />
     <ClCompile Include="src\ui\components\MainMenu.cpp" />
     <ClCompile Include="src\ui\components\RenderWindow.cpp" />
     <ClCompile Include="src\ui\components\RightPanel.cpp" />
@@ -198,6 +198,7 @@
     <ClCompile Include="src\ui\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\ui\components\left\SceneEditor.h" />
     <ClInclude Include="src\engine\Engine.h" />
     <ClInclude Include="src\common\ConfigurationManager.h" />
     <ClInclude Include="src\common\Logger.h" />
@@ -215,8 +216,7 @@
     <ClInclude Include="src\ui\components\BottomPanel.h" />
     <ClInclude Include="src\ui\components\bottom\DebugInfo.h" />
     <ClInclude Include="src\ui\components\LeftPanel.h" />
-    <ClInclude Include="src\ui\components\left\EmissionEditor.h" />
-    <ClInclude Include="src\ui\components\left\ReflactanceEditor.h" />
+    <ClInclude Include="src\ui\components\right\LightingEditor.h" />
     <ClInclude Include="src\ui\components\MainMenu.h" />
     <ClInclude Include="src\ui\components\RenderWindow.h" />
     <ClInclude Include="src\ui\components\RightPanel.h" />

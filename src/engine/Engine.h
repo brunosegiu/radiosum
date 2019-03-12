@@ -28,7 +28,7 @@ public:
 	void setMode(RenderMode mode);
 	RenderMode getMode();
 	void preprocess(bool withOutput = true); // if withOutput == false run preprocessor until it finishes, without rendering steps
-	void computeRadiosity();
+	void computeRadiosity(bool smooth = false);
 
 	// Main scene
 	Scene* getScene();
@@ -44,8 +44,6 @@ public:
 private:
 	Camera* camera;
 	Scene* scene;
-
-	bool preprocessorOutput;
 
 	RenderMode mode;
 	SceneRenderer* sceneRenderer;

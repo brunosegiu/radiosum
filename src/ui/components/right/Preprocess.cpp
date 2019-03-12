@@ -9,6 +9,7 @@
 Preprocess::Preprocess() : Component() {
 	this->enable();
 	this->withOutput = true;
+	this->smooth = false;
 }
 
 void Preprocess::render() {
@@ -23,12 +24,14 @@ void Preprocess::render() {
 		ImGui::Text("Progress");
 		ImGui::ProgressBar(progress);
 		ImGui::Spacing();
+		ImGui::Spacing();
 		if (progress != 1.0f) {
 			ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
 			ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f);
 		}
+		ImGui::Checkbox("Interpolate", &this->smooth);
 		if (ImGui::Button("Compute radiosity")) {
-			UIStore::engine->computeRadiosity();
+			UIStore::engine->computeRadiosity(this->smooth);
 		}
 		ImGui::Text("Progress");
 		ImGui::ProgressBar(radProgress);

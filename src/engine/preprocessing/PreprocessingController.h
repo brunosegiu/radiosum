@@ -15,8 +15,8 @@
 class PreprocessingController {
 public:
 	PreprocessingController(Scene* scene);
-	void computeRadiosity();
-	void checkGeometry();
+	void computeRadiosity(bool smooth = false);
+	void checkFlags();
 	GLuint runStep();
 	void runUnsafe(bool full = false);
 	virtual ~PreprocessingController();
@@ -30,7 +30,7 @@ private:
 	RowBuffer* row;
 	HemicubeCorrector* corrector;
 	GLuint instances;
-	bool shouldUpdateGeom;
+	bool shouldUpdateGeom, shouldInterpolate;
 
 	SceneIterator* iterator;
 
@@ -44,9 +44,9 @@ private:
 
 	void setUpRenderer();
 
+	void waitForWorkers();
 	std::vector<GLfloat> getMatrixRow(GLuint face);
 	void processRow(std::vector<GLfloat> faceFactors, GLuint faceIndex);
-
 	void crWrapped();
 };
 

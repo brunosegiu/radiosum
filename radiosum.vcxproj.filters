@@ -56,12 +56,12 @@
     <ClCompile Include="src\ui\components\MainMenu.cpp" />
     <ClCompile Include="src\ui\components\RenderWindow.cpp" />
     <ClCompile Include="src\ui\components\RightPanel.cpp" />
-    <ClCompile Include="src\ui\components\left\EmissionEditor.cpp" />
     <ClCompile Include="src\ui\components\bottom\DebugInfo.cpp" />
     <ClCompile Include="src\ui\components\right\Preprocess.cpp" />
     <ClCompile Include="src\ui\UIStore.cpp" />
-    <ClCompile Include="src\ui\components\left\ReflactanceEditor.cpp" />
     <ClCompile Include="src\engine\EngineStore.cpp" />
+    <ClCompile Include="src\ui\components\right\LightingEditor.cpp" />
+    <ClCompile Include="src\ui\components\left\SceneEditor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source">
@@ -142,11 +142,11 @@
     <ClInclude Include="src\ui\components\MainMenu.h" />
     <ClInclude Include="src\ui\components\RenderWindow.h" />
     <ClInclude Include="src\ui\components\RightPanel.h" />
-    <ClInclude Include="src\ui\components\left\EmissionEditor.h" />
     <ClInclude Include="src\ui\components\bottom\DebugInfo.h" />
     <ClInclude Include="src\ui\components\right\Preprocess.h" />
     <ClInclude Include="src\engine\EngineTypes.h" />
-    <ClInclude Include="src\ui\components\left\ReflactanceEditor.h" />
+    <ClInclude Include="src\ui\components\right\LightingEditor.h" />
+    <ClInclude Include="src\ui\components\left\SceneEditor.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.ini">

@@ -23,7 +23,9 @@ PreprocessingController::PreprocessingController(Scene* scene) {
 
 	this->iterator = new SceneIterator(scene);
 	this->runStep();
+
 	this->shouldUpdateGeom = false;
+	this->shouldInterpolate = false;
 }
 
 void PreprocessingController::setUpRenderer() {
@@ -45,7 +47,9 @@ void PreprocessingController::setUpRenderer() {
 
 GLuint PreprocessingController::runStep() {
 	GLuint index = this->iterator->faceIndex();
-
+	if (index == 0) {
+		this->waitForWorkers();
+	}
 	EngineStore::progress = index / GLfloat(this->scene->size());
 	if (!this->iterator->end()) {
 		Timer stepTimer = Timer();
@@ -70,7 +74,6 @@ GLuint PreprocessingController::runStep() {
 }
 
 void PreprocessingController::runUnsafe(bool full) {
-
 	while (!this->iterator->end()) {
 		this->renderer->start();
 
@@ -112,10 +115,6 @@ void PreprocessingController::processRow(std::vector<GLfloat> faceFactors, GLuin
 
 void PreprocessingController::crWrapped() {
 	EngineStore::logger.log("Computing radiosity for " + std::to_string(int(scene->size())) + " faces");
-	for (GLuint i = 0; i < this->workers.size(); i++) {
-		workers[i].join();
-	}
-	this->workers.clear();
 
 	Eigen::SparseMatrix<GLfloat> matrix = Eigen::SparseMatrix<GLfloat>(scene->size(), scene->size());
 	matrix.setFromTriplets(this->triplets.begin(), this->triplets.end());
@@ -147,17 +146,27 @@ void PreprocessingController::crWrapped() {
 	EngineStore::radiosityProgress += .1f;
 }
 
-void PreprocessingController::computeRadiosity() {
+void PreprocessingController::computeRadiosity(bool smooth) {
 	EngineStore::radiosityProgress = .0f;
-	if (this->radiosityThread.joinable())
-		this->radiosityThread.join();
+	this->waitForWorkers();
+	this->shouldInterpolate = smooth;
 	this->radiosityThread = std::thread(&PreprocessingController::crWrapped, this);
 }
 
-void PreprocessingController::checkGeometry() {
+void PreprocessingController::checkFlags() {
 	if (this->shouldUpdateGeom)
-		this->scene->setRadiosity(vectorizedRad);
+		this->scene->setRadiosity(vectorizedRad, this->shouldInterpolate);
 	this->shouldUpdateGeom = false;
+}
+
+void PreprocessingController::waitForWorkers() {
+	for (GLuint i = 0; i < this->workers.size(); i++) {
+		if (workers[i].joinable())
+			workers[i].join();
+	}
+	this->workers.clear();
+	if (this->radiosityThread.joinable())
+		this->radiosityThread.join();
 }
 
 std::vector<GLfloat> PreprocessingController::getMatrixRow(GLuint face) {
@@ -170,10 +179,7 @@ std::vector<GLfloat> PreprocessingController::getMatrixRow(GLuint face) {
 }
 
 PreprocessingController::~PreprocessingController() {
-	for (GLuint i = 0; i < this->workers.size(); i++) {
-		workers[i].join();
-	}
-	this->radiosityThread.join();
+	this->waitForWorkers();
 	delete this->iterator;
 	delete this->renderer;
 }

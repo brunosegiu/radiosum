@@ -2,13 +2,9 @@
 
 #include "imgui.h"
 
-#include "components/left/EmissionEditor.h"
-#include "components/left/ReflactanceEditor.h"
 
 LeftPanel::LeftPanel() : Component() {
 	this->enable();
-	this->children["EMISSION"] = new EmissionEditor();
-	this->children["REFLACTANCE"] = new ReflactanceEditor();
 }
 
 void LeftPanel::render() {

@@ -77,10 +77,10 @@ void Scene::addMesh(Mesh* mesh) {
 	this->meshes.push_back(mesh);
 }
 
-void Scene::setRadiosity(std::vector<GLfloat> &radiosity) {
+void Scene::setRadiosity(std::vector<GLfloat> &radiosity, bool smooth) {
 	GLuint currentIndex = 0;
 	for (auto &mesh : this->meshes) {
-		mesh->setRadiosity(std::vector<GLfloat>(radiosity.begin() + currentIndex, radiosity.begin() + currentIndex + mesh->size()));
+		mesh->setRadiosity(std::vector<GLfloat>(radiosity.begin() + currentIndex, radiosity.begin() + currentIndex + mesh->size()), smooth);
 	}
 }
 
