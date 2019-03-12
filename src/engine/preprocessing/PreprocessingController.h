@@ -30,7 +30,7 @@ private:
 	RowBuffer* row;
 	HemicubeCorrector* corrector;
 	GLuint instances;
-	bool shouldUpdateGeom, shouldInterpolate;
+	bool shouldUpdateGeom, shouldInterpolate, singleChannel;
 
 	SceneIterator* iterator;
 

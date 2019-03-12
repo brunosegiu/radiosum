@@ -31,34 +31,60 @@ Mesh* Mesh::load(std::string path) {
 	throw std::runtime_error("Unable to load mesh, format not supported");
 }
 
+std::vector<glm::vec3> triangulate(std::vector<glm::vec3> &quad) {
+	glm::vec3 v0 = quad[0];
+	glm::vec3 v1 = quad[1];
+	glm::vec3 v2 = quad[2];
+	glm::vec3 v3 = quad[3];
+
+	std::vector<glm::vec3> triangles;
+	triangles.reserve(6);
+
+	triangles.push_back(v0);
+	triangles.push_back(v1);
+	triangles.push_back(v3);
+
+	triangles.push_back(v1);
+	triangles.push_back(v2);
+	triangles.push_back(v3);
+
+	return triangles;
+}
+
 Mesh::Mesh(GeometryBuffers geometry) {
 	this->tFaces = geometry.triangles.vertices.size() / 3;
 	this->qFaces = geometry.quads.vertices.size() / 4;
 	this->faces = tFaces + qFaces;
 	Mesh::faceCount += this->faces;
 
+	// Attach triangles
 	this->vertices = geometry.triangles.vertices;
-	for (GLuint i = 0; i < geometry.quads.vertices.size(); i += 4) {
-		this->vertices.push_back(geometry.quads.vertices[i]);
-		this->vertices.push_back(geometry.quads.vertices[i + 1]);
-		this->vertices.push_back(geometry.quads.vertices[i + 3]);
-
-		this->vertices.push_back(geometry.quads.vertices[i + 1]);
-		this->vertices.push_back(geometry.quads.vertices[i + 2]);
-		this->vertices.push_back(geometry.quads.vertices[i + 3]);
-
-		adjacencies[geometry.quads.vertices[i]].push_back(tFaces + 1 + i / 4);
-		adjacencies[geometry.quads.vertices[i + 1]].push_back(tFaces + 1 + i / 4);
-		adjacencies[geometry.quads.vertices[i + 2]].push_back(tFaces + 1 + i / 4);
-		adjacencies[geometry.quads.vertices[i + 3]].push_back(tFaces + 1 + i / 4);
-	}
-
 	for (GLuint i = 0; i < tFaces; i++) {
 		adjacencies[this->vertices[3 * i]].push_back(i + 1);
 		adjacencies[this->vertices[3 * i + 1]].push_back(i + 1);
 		adjacencies[this->vertices[3 * i + 2]].push_back(i + 1);
 	}
 
+	// Attach quads
+	for (GLuint i = 0; i < geometry.quads.vertices.size(); i += 4) {
+
+		glm::vec3 v0 = geometry.quads.vertices[i + 0];
+		glm::vec3 v1 = geometry.quads.vertices[i + 1];
+		glm::vec3 v2 = geometry.quads.vertices[i + 2];
+		glm::vec3 v3 = geometry.quads.vertices[i + 3];
+
+		std::vector<glm::vec3> quad({ v0,v1,v2,v3 });
+		std::vector<glm::vec3> triangles = triangulate(quad);
+		this->vertices.insert(this->vertices.end(), triangles.begin(), triangles.end());
+
+		GLuint faceID = tFaces + 1 + i / 4;
+		adjacencies[v0].push_back(faceID);
+		adjacencies[v1].push_back(faceID);
+		adjacencies[v2].push_back(faceID);
+		adjacencies[v3].push_back(faceID);
+	}
+
+	// Init emmision
 	if (geometry.triangles.emission.size() == 0 && geometry.quads.emission.size() == 0) {
 		for (GLuint i = 0; i < this->faces; i++) {
 			this->emission.push_back(.0f);
@@ -70,6 +96,7 @@ Mesh::Mesh(GeometryBuffers geometry) {
 		}
 	}
 
+	// Init radiosity
 	if (geometry.triangles.radiosity.size() == 0 && geometry.quads.radiosity.size() == 0) {
 		for (GLuint i = 0; i < this->faces; i++) {
 			this->radiosity.push_back(1.0f);
@@ -81,6 +108,7 @@ Mesh::Mesh(GeometryBuffers geometry) {
 		}
 	}
 
+	// Init reflactance
 	if (geometry.triangles.reflactance.size() == 0 && geometry.quads.reflactance.size() == 0) {
 		for (GLuint i = 0; i < this->faces; i++) {
 			this->reflactance.push_back(1.0f);
@@ -111,34 +139,34 @@ void Mesh::setRadiosity(std::vector<GLfloat> radiosity, bool smooth) {
 	this->radiosity = radiosity;
 	if (smooth) {
 		for (GLuint i = 0; i < tFaces; i++) {
-			this->perVertexRadiosity[3 * i] = interpolate(this->vertices[3 * i], radiosity, this->adjacencies[wvec3(this->vertices[3 * i])]);
-			this->perVertexRadiosity[3 * i + 1] = interpolate(this->vertices[3 * i + 1], radiosity, this->adjacencies[this->vertices[3 * i + 1]]);
-			this->perVertexRadiosity[3 * i + 2] = interpolate(this->vertices[3 * i + 2], radiosity, this->adjacencies[this->vertices[3 * i + 2]]);
+			GLuint offset = 3 * i;
+			for (GLuint vertex = 0; vertex < 3; vertex++) {
+				glm::vec3 v = this->vertices[offset + vertex];
+				this->perVertexRadiosity[offset + vertex] = interpolate(v, radiosity, this->adjacencies[v]);
+			}
 		}
 		for (GLuint i = tFaces; i < faces; i++) {
-			this->perVertexRadiosity[6 * i - 3 * tFaces] = interpolate(this->vertices[6 * i - 3 * tFaces], radiosity, this->adjacencies[this->vertices[6 * i - 3 * tFaces]]);
-			this->perVertexRadiosity[6 * i - 3 * tFaces + 1] = interpolate(this->vertices[6 * i - 3 * tFaces + 1], radiosity, this->adjacencies[this->vertices[6 * i - 3 * tFaces + 1]]);
-			this->perVertexRadiosity[6 * i - 3 * tFaces + 2] = interpolate(this->vertices[6 * i - 3 * tFaces + 2], radiosity, this->adjacencies[this->vertices[6 * i - 3 * tFaces + 2]]);
-			this->perVertexRadiosity[6 * i - 3 * tFaces + 3] = interpolate(this->vertices[6 * i - 3 * tFaces + 3], radiosity, this->adjacencies[this->vertices[6 * i - 3 * tFaces + 3]]);
-			this->perVertexRadiosity[6 * i - 3 * tFaces + 4] = interpolate(this->vertices[6 * i - 3 * tFaces + 4], radiosity, this->adjacencies[this->vertices[6 * i - 3 * tFaces + 4]]);
-			this->perVertexRadiosity[6 * i - 3 * tFaces + 5] = interpolate(this->vertices[6 * i - 3 * tFaces + 5], radiosity, this->adjacencies[this->vertices[6 * i - 3 * tFaces + 5]]);
+			GLuint offset = 6 * i - 3 * tFaces;
+			for (GLuint vertex = 0; vertex < 6; vertex++) {
+				glm::vec3 v = this->vertices[offset + vertex];
+				this->perVertexRadiosity[offset + vertex] = interpolate(v, radiosity, this->adjacencies[v]);
+			}
 		}
 	}
 	else {
 		for (GLuint i = 0; i < tFaces; i++) {
+			GLuint offset = 3 * i;
 			GLfloat value = radiosity[i];
-			this->perVertexRadiosity[3 * i] = value;
-			this->perVertexRadiosity[3 * i + 1] = value;
-			this->perVertexRadiosity[3 * i + 2] = value;
+			for (GLuint vertex = 0; vertex < 3; vertex++) {
+				this->perVertexRadiosity[offset + vertex] = value;
+			}
 		}
 		for (GLuint i = tFaces; i < faces; i++) {
+			GLuint offset = 6 * i - 3 * tFaces;
 			GLfloat value = radiosity[i];
-			this->perVertexRadiosity[6 * i - 3 * tFaces] = value;
-			this->perVertexRadiosity[6 * i - 3 * tFaces + 1] = value;
-			this->perVertexRadiosity[6 * i - 3 * tFaces + 2] = value;
-			this->perVertexRadiosity[6 * i - 3 * tFaces + 3] = value;
-			this->perVertexRadiosity[6 * i - 3 * tFaces + 4] = value;
-			this->perVertexRadiosity[6 * i - 3 * tFaces + 5] = value;
+			for (GLuint vertex = 0; vertex < 6; vertex++) {
+				this->perVertexRadiosity[offset + vertex] = value;
+			}
 		}
 	}
 	this->vao->updateAttribute(sizeof(GLfloat) * this->perVertexRadiosity.size(), &this->perVertexRadiosity[0], 1, GL_FLOAT, 2);
