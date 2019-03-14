@@ -8,7 +8,7 @@ class Scene {
 public:
 	Scene();
 
-	void draw(GLuint shaderID);
+	void draw(GLuint shaderID, bool justGeometry = false);
 
 	// Getters
 	// Geometry

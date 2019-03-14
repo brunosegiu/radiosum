@@ -25,6 +25,7 @@ public:
 	Mesh(GeometryBuffers geometry);
 
 	void draw(GLuint shaderID);
+	void drawGeometry(GLuint shaderID);
 
 	void setEmission(GLuint faceIndex, GLfloat emission);
 	void setReflactance(GLuint faceIndex, glm::vec3 reflactance);
@@ -53,9 +54,11 @@ private:
 	std::vector<glm::vec3> perVertexReflactance;
 	std::map<wvec3, std::vector<GLuint>> adjacencies;
 
-	VAO* vao;
+	VAO* vao, *geometryVao;
 	GLuint faces, tFaces, qFaces;
 
 	static GLuint faceCount;
+
+	void drawVao(GLuint shader, VAO* vao);
 };
 

@@ -6,12 +6,15 @@ Scene::Scene() {
 	this->_size = 0;
 }
 
-void Scene::draw(GLuint shaderID) {
+void Scene::draw(GLuint shaderID, bool justGeometry) {
 	GLuint offset = 0;
 	for (auto &mesh : meshes) {
 		GLuint offestLoc = glGetUniformLocation(shaderID, "offset");
 		glUniform1ui(offestLoc, offset);
-		mesh->draw(shaderID);
+		if (justGeometry)
+			mesh->drawGeometry(shaderID);
+		else
+			mesh->draw(shaderID);
 		offset += mesh->size();
 	}
 }

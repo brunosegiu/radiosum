@@ -26,7 +26,7 @@ void IDRenderer::render() {
 	GLuint clipPlaneId = glGetUniformLocation(shader->getID(), "clipPlane");
 	glUniform4fv(clipPlaneId, 1, glm::value_ptr(this->clipPlane));
 
-	this->scene->draw(this->shader->getID());
+	this->scene->draw(this->shader->getID(), true);
 	glDisable(GL_CLIP_DISTANCE0);
 	this->buffer->unbind();
 }

@@ -130,27 +130,21 @@ void PreprocessingController::crWrapped(Channel channel) {
 	matrix.setFromTriplets(this->triplets.begin(), this->triplets.end());
 
 	// Multiply reflactance for channel
-	std::vector<glm::vec3> _reflactancesRGB = this->scene->getReflactances();
-	Eigen::VectorXf reflactance(_reflactancesRGB.size());
-	for (GLuint i = 0; i < scene->size(); i++) {
-		reflactance[i] = _reflactancesRGB[i][channel];
-	}
+	std::vector<glm::vec3> reflactance = this->scene->getReflactances();
 	for (int k = 0; k < matrix.outerSize(); ++k) {
 		for (Eigen::SparseMatrix<GLfloat>::InnerIterator it(matrix, k); it; ++it) {
-			it.valueRef() = it.row() == it.col() ? it.value() : -it.value() * reflactance[it.row()];
+			it.valueRef() = it.row() == it.col() ? it.value() : -it.value() * reflactance[it.row()][channel];
 		}
 	}
 
-	std::cout << matrix << std::endl;
-
-	EngineStore::radiosityProgress += .2f;
+	EngineStore::radiosityProgress += .1f / GLfloat(this->channelCount);
 
 	// Initialize solver
 	Eigen::SparseLU<Eigen::SparseMatrix<GLfloat>> solver;
 	solver.analyzePattern(matrix);
 	solver.factorize(matrix);
 
-	EngineStore::radiosityProgress += .3f;
+	EngineStore::radiosityProgress += .4f / GLfloat(this->channelCount);
 
 	if (solver.info() != Eigen::Success) {
 		throw std::runtime_error("Cannot compute radiosity from form factor matrix");
@@ -167,7 +161,7 @@ void PreprocessingController::crWrapped(Channel channel) {
 		throw std::runtime_error("Cannot compute radiosity from form factor matrix");
 	}
 
-	EngineStore::radiosityProgress += .4f;
+	EngineStore::radiosityProgress += .4f / GLfloat(this->channelCount);
 
 	// Update geometry
 	this->radiosity[channel] = std::vector<GLfloat>(size_t(_radiosity.size()), 0.0f);

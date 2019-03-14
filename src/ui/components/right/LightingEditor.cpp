@@ -21,7 +21,7 @@ void EmissionEditor::render() {
 			ImGui::Spacing();
 			ImGui::Spacing();
 
-			ImGui::SliderFloat("Emission", &this->emission, 0.0f, 100.0f);
+			ImGui::SliderFloat("Emission", &this->emission, 0.0f, 1.0f);
 			if (ImGui::Button("Save emission")) {
 				if (current > 0)
 					UIStore::engine->getScene()->setEmission(current - 1, this->emission);
