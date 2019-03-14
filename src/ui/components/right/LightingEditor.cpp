@@ -20,7 +20,7 @@ void EmissionEditor::render() {
 			ImGui::Spacing();
 			ImGui::Spacing();
 			ImGui::Spacing();
-
+      
 			ImGui::SliderFloat("Emission", &this->emission, 0.0f, 1.0f);
 			if (ImGui::Button("Save emission")) {
 				if (current > 0)
