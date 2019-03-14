@@ -11,4 +11,5 @@ public:
 	virtual ~Preprocess();
 private:
 	bool withOutput, smooth;
+	int channelCount;
 };

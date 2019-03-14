@@ -16,7 +16,7 @@ PickingBuffer::PickingBuffer(GLuint width, GLuint height) : Buffer(width, height
 	// Generate radiosity texture
 	glGenTextures(1, &this->GLTextureId);
 	glBindTexture(GL_TEXTURE_2D, this->GLTextureId);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_R32F, width, height, 0, GL_RED, GL_FLOAT, 0);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, width, height, 0, GL_RGB, GL_FLOAT, 0);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
@@ -43,7 +43,7 @@ PickingBuffer::PickingBuffer(GLuint width, GLuint height) : Buffer(width, height
 	// Generate reflactance texture
 	glGenTextures(1, &this->GLReflactanceId);
 	glBindTexture(GL_TEXTURE_2D, this->GLReflactanceId);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_R32F, width, height, 0, GL_RED, GL_FLOAT, 0);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, width, height, 0, GL_RGB, GL_FLOAT, 0);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);

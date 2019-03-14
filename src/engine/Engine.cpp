@@ -43,8 +43,8 @@ void Engine::preprocess(bool withOutput) {
 		this->preprocessor->runUnsafe(false);
 }
 
-void Engine::computeRadiosity(bool smooth) {
-	this->preprocessor->computeRadiosity(smooth);
+void Engine::computeRadiosity(std::vector<Channel> channels, bool smooth) {
+	this->preprocessor->computeRadiosity(channels, smooth);
 }
 
 // Main scene

@@ -6,12 +6,15 @@ Scene::Scene() {
 	this->_size = 0;
 }
 
-void Scene::draw(GLuint shaderID) {
+void Scene::draw(GLuint shaderID, bool justGeometry) {
 	GLuint offset = 0;
 	for (auto &mesh : meshes) {
 		GLuint offestLoc = glGetUniformLocation(shaderID, "offset");
 		glUniform1ui(offestLoc, offset);
-		mesh->draw(shaderID);
+		if (justGeometry)
+			mesh->drawGeometry(shaderID);
+		else
+			mesh->draw(shaderID);
 		offset += mesh->size();
 	}
 }
@@ -35,10 +38,10 @@ std::vector<GLfloat> Scene::getEmissions() {
 	return emissions;
 }
 
-std::vector<GLfloat> Scene::getReflactances() {
-	std::vector<GLfloat> reflactances;
+std::vector<glm::vec3> Scene::getReflactances() {
+	std::vector<glm::vec3> reflactances;
 	for (auto mesh : meshes) {
-		std::vector<GLfloat> meshReflactances = mesh->getReflactances();
+		std::vector<glm::vec3> meshReflactances = mesh->getReflactances();
 		reflactances.insert(reflactances.end(), meshReflactances.begin(), meshReflactances.end());
 	}
 	return reflactances;
@@ -55,14 +58,14 @@ GLfloat Scene::getEmission(GLuint faceIndex) {
 	}
 }
 
-GLfloat Scene::getReflactance(GLuint faceIndex) {
+glm::vec3 Scene::getReflactance(GLuint faceIndex) {
 	GLuint meshIndex = 0;
 	if (_size > 0) {
 		Mesh* mesh = this->getMeshWithIndex(faceIndex, meshIndex);
 		return mesh->getReflactance(meshIndex);
 	}
 	else {
-		return .0f;
+		return glm::vec3(.0f);
 	}
 }
 
@@ -77,10 +80,10 @@ void Scene::addMesh(Mesh* mesh) {
 	this->meshes.push_back(mesh);
 }
 
-void Scene::setRadiosity(std::vector<GLfloat> &radiosity, bool smooth) {
+void Scene::setRadiosity(std::vector<glm::vec3> &radiosity, bool smooth) {
 	GLuint currentIndex = 0;
 	for (auto &mesh : this->meshes) {
-		mesh->setRadiosity(std::vector<GLfloat>(radiosity.begin() + currentIndex, radiosity.begin() + currentIndex + mesh->size()), smooth);
+		mesh->setRadiosity(std::vector<glm::vec3>(radiosity.begin() + currentIndex, radiosity.begin() + currentIndex + mesh->size()), smooth);
 	}
 }
 
@@ -92,7 +95,7 @@ void Scene::setEmission(GLuint faceIndex, GLfloat emission) {
 	}
 }
 
-void Scene::setReflactance(GLuint faceIndex, GLfloat reflactance) {
+void Scene::setReflactance(GLuint faceIndex, glm::vec3 reflactance) {
 	if (_size > 0) {
 		GLuint meshIndex = 0;
 		Mesh* mesh = this->getMeshWithIndex(faceIndex, meshIndex);

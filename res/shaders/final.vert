@@ -2,13 +2,12 @@
 
 layout (location = 0) in vec3 position;
 layout (location = 1) in float emission;
-layout (location = 2) in float radiosity;
-layout (location = 3) in float reflactance;
+layout (location = 2) in vec3 radiosity;
+layout (location = 3) in vec3 reflactance;
 
-out smooth float radiosityToFrag;
 out smooth float emissionToFrag;
-out smooth float reflactanceToFrag;
-out flat uint idToFrag;
+out smooth vec3 radiosityToFrag;
+out smooth vec3 reflactanceToFrag;
 
 uniform mat4 worldTransform;
 

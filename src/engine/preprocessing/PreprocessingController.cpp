@@ -7,6 +7,8 @@
 #include "EngineStore.h"
 #include "Timer.h"
 
+#include <iostream>
+
 
 PreprocessingController::PreprocessingController(Scene* scene) {
 	this->scene = scene;
@@ -24,7 +26,11 @@ PreprocessingController::PreprocessingController(Scene* scene) {
 	this->iterator = new SceneIterator(scene);
 	this->runStep();
 
-	this->shouldUpdateGeom = false;
+	this->shouldUpdateGeom[RED] = false;
+	this->shouldUpdateGeom[GREEN] = false;
+	this->shouldUpdateGeom[BLUE] = false;
+	this->channelCount = 0;
+
 	this->shouldInterpolate = false;
 }
 
@@ -65,7 +71,7 @@ GLuint PreprocessingController::runStep() {
 		// Process hemicube and compute row
 		{
 			std::vector<GLfloat> faceFactors = this->getMatrixRow(iterator->faceIndex());
-			this->workers.push_back(std::thread(&PreprocessingController::processRow, this, faceFactors, iterator->faceIndex()));
+			this->formFactorWorkers.push_back(std::thread(&PreprocessingController::processRow, this, faceFactors, iterator->faceIndex()));
 		}
 		EngineStore::logger.log("RenderRow", stepTimer.get());
 		iterator->nextFace();
@@ -86,18 +92,17 @@ void PreprocessingController::runUnsafe(bool full) {
 
 		{
 			std::vector<GLfloat> faceFactors = this->getMatrixRow(iterator->faceIndex());
-			this->workers.push_back(std::thread(&PreprocessingController::processRow, this, faceFactors, iterator->faceIndex()));
+			this->formFactorWorkers.push_back(std::thread(&PreprocessingController::processRow, this, faceFactors, iterator->faceIndex()));
 		}
 		iterator->nextFace();
 	}
 	if (full) {
-		this->computeRadiosity();
+		//this->computeRadiosity();
 	}
 }
 
 void PreprocessingController::processRow(std::vector<GLfloat> faceFactors, GLuint faceIndex) {
 	GLuint iIndex = faceIndex;
-	GLfloat reflactance = this->scene->getReflactance(faceIndex);
 	for (GLuint jIndex = 0; jIndex < faceFactors.size() - 1; jIndex++) {
 		GLfloat ff = GLfloat(faceFactors[jIndex + 1]);
 		if (iIndex == jIndex) {
@@ -107,66 +112,112 @@ void PreprocessingController::processRow(std::vector<GLfloat> faceFactors, GLuin
 		}
 		else if (ff > 0.0f) {
 			tripletsLock.lock();
-			triplets.push_back(Eigen::Triplet<GLfloat>(iIndex, jIndex, -reflactance * (1.0f / this->pixelCount) * ff));
+			triplets.push_back(Eigen::Triplet<GLfloat>(iIndex, jIndex, (1.0f / this->pixelCount) * ff));
 			tripletsLock.unlock();
 		}
 	}
 }
 
-void PreprocessingController::crWrapped() {
+void PreprocessingController::crWrapped(Channel channel) {
 	EngineStore::logger.log("Computing radiosity for " + std::to_string(int(scene->size())) + " faces");
-
-	Eigen::SparseMatrix<GLfloat> matrix = Eigen::SparseMatrix<GLfloat>(scene->size(), scene->size());
-	matrix.setFromTriplets(this->triplets.begin(), this->triplets.end());
 
 	if (!this->iterator->end()) {
 		throw std::runtime_error("Preprocessing not completed yet, radiosity computation called");
 	}
-	EngineStore::radiosityProgress += .2f;
+
+	// Init Eigen Matrix
+	Eigen::SparseMatrix<GLfloat> matrix = Eigen::SparseMatrix<GLfloat>(scene->size(), scene->size());
+	matrix.setFromTriplets(this->triplets.begin(), this->triplets.end());
+
+	// Multiply reflactance for channel
+	std::vector<glm::vec3> reflactance = this->scene->getReflactances();
+	for (int k = 0; k < matrix.outerSize(); ++k) {
+		for (Eigen::SparseMatrix<GLfloat>::InnerIterator it(matrix, k); it; ++it) {
+			it.valueRef() = it.row() == it.col() ? it.value() : -it.value() * reflactance[it.row()][channel];
+		}
+	}
+
+	EngineStore::radiosityProgress += .1f / GLfloat(this->channelCount);
+
+	// Initialize solver
 	Eigen::SparseLU<Eigen::SparseMatrix<GLfloat>> solver;
 	solver.analyzePattern(matrix);
 	solver.factorize(matrix);
-	EngineStore::radiosityProgress += .3f;
+
+	EngineStore::radiosityProgress += .4f / GLfloat(this->channelCount);
+
 	if (solver.info() != Eigen::Success) {
 		throw std::runtime_error("Cannot compute radiosity from form factor matrix");
 	}
 
+	// Get emissions
 	std::vector<GLfloat> _emissions = this->scene->getEmissions();
 	Eigen::Map<Eigen::VectorXf, Eigen::Unaligned> emissions(_emissions.data(), _emissions.size());
-	Eigen::VectorXf radiosity(emissions.size());
+	Eigen::VectorXf _radiosity(emissions.size());
 
-	radiosity = solver.solve(emissions);
+	// Compute radiosity
+	_radiosity = solver.solve(emissions);
 	if (solver.info() != Eigen::Success) {
 		throw std::runtime_error("Cannot compute radiosity from form factor matrix");
 	}
-	EngineStore::radiosityProgress += .4f;
-	this->vectorizedRad = std::vector<GLfloat>(size_t(radiosity.size()), 0.0f);
-	Eigen::VectorXf::Map(&vectorizedRad[0], radiosity.size()) = radiosity;
-	this->shouldUpdateGeom = true;
+
+	EngineStore::radiosityProgress += .4f / GLfloat(this->channelCount);
+
+	// Update geometry
+	this->radiosity[channel] = std::vector<GLfloat>(size_t(_radiosity.size()), 0.0f);
+	Eigen::VectorXf::Map(&(this->radiosity[channel])[0], _radiosity.size()) = _radiosity;
+
+	this->shouldUpdateGeom[channel] = true;
+
 	EngineStore::radiosityProgress += .1f;
 }
 
-void PreprocessingController::computeRadiosity(bool smooth) {
+void PreprocessingController::computeRadiosity(std::vector<Channel> channels, bool smooth) {
 	EngineStore::radiosityProgress = .0f;
 	this->waitForWorkers();
 	this->shouldInterpolate = smooth;
-	this->radiosityThread = std::thread(&PreprocessingController::crWrapped, this);
+	this->channelCount = channels.size();
+	for (Channel channel : channels) {
+		this->radiosityWorkers.push_back(std::thread(&PreprocessingController::crWrapped, this, channel));
+	}
 }
 
 void PreprocessingController::checkFlags() {
-	if (this->shouldUpdateGeom)
-		this->scene->setRadiosity(vectorizedRad, this->shouldInterpolate);
-	this->shouldUpdateGeom = false;
+	if (this->channelCount > 0) {
+		bool finished = true;
+		for (GLuint i = 0; i < this->channelCount; i++) {
+			finished = finished && this->shouldUpdateGeom[i];
+		}
+		if (finished) {
+			std::vector<glm::vec3> radiosityVec3;
+			radiosityVec3.reserve(this->radiosity[RED].size());
+			for (GLuint i = 0; i < this->radiosity[RED].size(); i++) {
+				glm::vec3 rad(.0f);
+				for (GLuint channel = 0; channel < this->channelCount; channel++) {
+					rad[channel] = this->radiosity[channel][i];
+				}
+				radiosityVec3.push_back(rad);
+			}
+			this->scene->setRadiosity(radiosityVec3, this->shouldInterpolate);
+			this->shouldUpdateGeom[RED] = false;
+			this->shouldUpdateGeom[GREEN] = false;
+			this->shouldUpdateGeom[BLUE] = false;
+			this->channelCount = 0;
+		}
+	}
 }
 
 void PreprocessingController::waitForWorkers() {
-	for (GLuint i = 0; i < this->workers.size(); i++) {
-		if (workers[i].joinable())
-			workers[i].join();
+	for (auto &worker : formFactorWorkers) {
+		if (worker.joinable())
+			worker.join();
 	}
-	this->workers.clear();
-	if (this->radiosityThread.joinable())
-		this->radiosityThread.join();
+	for (auto &radiosityWorkers : radiosityWorkers) {
+		if (radiosityWorkers.joinable())
+			radiosityWorkers.join();
+	}
+	this->formFactorWorkers.clear();
+	this->radiosityWorkers.clear();
 }
 
 std::vector<GLfloat> PreprocessingController::getMatrixRow(GLuint face) {

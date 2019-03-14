@@ -7,8 +7,6 @@ in vec2 uv;
 layout(binding=4) uniform sampler2D screenSampler;
 
 void main() {
-	float reflactance = texture(screenSampler,uv).r;
-	vec3 color;
-	color = vec3(reflactance);
+	vec3 color = texture(screenSampler,uv).rgb;
 	outColor = vec4(color, 1.0f);
 }

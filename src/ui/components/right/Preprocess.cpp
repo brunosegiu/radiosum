@@ -10,6 +10,7 @@ Preprocess::Preprocess() : Component() {
 	this->enable();
 	this->withOutput = true;
 	this->smooth = false;
+	this->channelCount = 0;
 }
 
 void Preprocess::render() {
@@ -30,8 +31,10 @@ void Preprocess::render() {
 			ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f);
 		}
 		ImGui::Checkbox("Interpolate", &this->smooth);
+		ImGui::Combo("Channels", &this->channelCount, "Single\0Double\0Triple");
 		if (ImGui::Button("Compute radiosity")) {
-			UIStore::engine->computeRadiosity(this->smooth);
+			std::vector<Channel> channels = { RED, GREEN, BLUE };
+			UIStore::engine->computeRadiosity(std::vector<Channel>(channels.begin(), channels.begin() + this->channelCount + 1), this->smooth);
 		}
 		ImGui::Text("Progress");
 		ImGui::ProgressBar(radProgress);
