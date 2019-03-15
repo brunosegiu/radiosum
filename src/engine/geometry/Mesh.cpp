@@ -254,6 +254,7 @@ GLuint Mesh::size() {
 }
 
 Face Mesh::getFace(GLuint index) {
+	index = index % this->size();
 	if (index < tFaces)
 		return Face(this->vertices[3 * index], this->vertices[3 * index + 1], this->vertices[3 * index + 2]);
 	else {

@@ -80,14 +80,14 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)src\common;$(ProjectDir)src\engine;$(ProjectDir)src\ui;$(ProjectDir)lib\imgui-1.68;$(ProjectDir)lib\SDL2-2.0.8\include;$(ProjectDir)lib\glew-2.1.0\include;$(ProjectDir)lib\glm;$(ProjectDir)lib\Eigen;$(IncludePath)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src\common;$(ProjectDir)src\engine;$(ProjectDir)src\ui;$(ProjectDir)lib\embree-3.5.2\include;$(ProjectDir)lib\imgui-1.68;$(ProjectDir)lib\SDL2-2.0.8\include;$(ProjectDir)lib\glew-2.1.0\include;$(ProjectDir)lib\glm;$(ProjectDir)lib\Eigen;$(IncludePath)</AdditionalIncludeDirectories>
       <OpenMPSupport>true</OpenMPSupport>
       <AdditionalOptions> /Zc:twoPhase- %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;glew32.lib;OpenGL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;glew32.lib;OpenGL32.lib;embree3.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
-      <AdditionalLibraryDirectories>$(ProjectDir)lib\SDL2-2.0.8\lib\x64;$(ProjectDir)lib\glew-2.1.0\lib\Release\x64;$(ProjectDir)lib\glew-2.1.0\bin\Release\x64</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)lib\embree-3.5.2\lib;$(ProjectDir)lib\SDL2-2.0.8\lib\x64;$(ProjectDir)lib\glew-2.1.0\lib\Release\x64;$(ProjectDir)lib\glew-2.1.0\bin\Release\x64</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -96,14 +96,14 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)src\common;$(ProjectDir)src\engine;$(ProjectDir)src\ui;$(ProjectDir)lib\imgui-1.68;$(ProjectDir)lib\SDL2-2.0.8\include;$(ProjectDir)lib\glew-2.1.0\include;$(ProjectDir)lib\glm;$(ProjectDir)lib\Eigen;$(IncludePath)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src\common;$(ProjectDir)src\engine;$(ProjectDir)src\ui;$(ProjectDir)lib\embree-3.5.2\include;$(ProjectDir)lib\imgui-1.68;$(ProjectDir)lib\SDL2-2.0.8\include;$(ProjectDir)lib\glew-2.1.0\include;$(ProjectDir)lib\glm;$(ProjectDir)lib\Eigen;$(IncludePath)</AdditionalIncludeDirectories>
       <OpenMPSupport>true</OpenMPSupport>
       <AdditionalOptions> /Zc:twoPhase- %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;glew32.lib;OpenGL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;glew32.lib;OpenGL32.lib;embree3.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
-      <AdditionalLibraryDirectories>$(ProjectDir)lib\SDL2-2.0.8\lib\x64;$(ProjectDir)lib\glew-2.1.0\lib\Release\x64;$(ProjectDir)lib\glew-2.1.0\bin\Release\x64</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)lib\embree-3.5.2\lib;$(ProjectDir)lib\SDL2-2.0.8\lib\x64;$(ProjectDir)lib\glew-2.1.0\lib\Release\x64;$(ProjectDir)lib\glew-2.1.0\bin\Release\x64</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -114,16 +114,16 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)src\common;$(ProjectDir)src\engine;$(ProjectDir)src\ui;$(ProjectDir)lib\imgui-1.68;$(ProjectDir)lib\SDL2-2.0.8\include;$(ProjectDir)lib\glew-2.1.0\include;$(ProjectDir)lib\glm;$(ProjectDir)lib\Eigen;$(IncludePath)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src\common;$(ProjectDir)src\engine;$(ProjectDir)src\ui;$(ProjectDir)lib\embree-3.5.2\include;$(ProjectDir)lib\imgui-1.68;$(ProjectDir)lib\SDL2-2.0.8\include;$(ProjectDir)lib\glew-2.1.0\include;$(ProjectDir)lib\glm;$(ProjectDir)lib\Eigen;$(IncludePath)</AdditionalIncludeDirectories>
       <OpenMPSupport>true</OpenMPSupport>
       <AdditionalOptions> /Zc:twoPhase- %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;glew32.lib;OpenGL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;glew32.lib;OpenGL32.lib;embree3.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>$(ProjectDir)lib\SDL2-2.0.8\lib\x64;$(ProjectDir)lib\glew-2.1.0\lib\Release\x64;$(ProjectDir)lib\glew-2.1.0\bin\Release\x64</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)lib\embree-3.5.2\lib;$(ProjectDir)lib\SDL2-2.0.8\lib\x64;$(ProjectDir)lib\glew-2.1.0\lib\Release\x64;$(ProjectDir)lib\glew-2.1.0\bin\Release\x64</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -134,19 +134,21 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)src\common;$(ProjectDir)src\engine;$(ProjectDir)src\ui;$(ProjectDir)lib\imgui-1.68;$(ProjectDir)lib\SDL2-2.0.8\include;$(ProjectDir)lib\glew-2.1.0\include;$(ProjectDir)lib\glm;$(ProjectDir)lib\Eigen;$(IncludePath)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src\common;$(ProjectDir)src\engine;$(ProjectDir)src\ui;$(ProjectDir)lib\embree-3.5.2\include;$(ProjectDir)lib\imgui-1.68;$(ProjectDir)lib\SDL2-2.0.8\include;$(ProjectDir)lib\glew-2.1.0\include;$(ProjectDir)lib\glm;$(ProjectDir)lib\Eigen;$(IncludePath)</AdditionalIncludeDirectories>
       <OpenMPSupport>true</OpenMPSupport>
       <AdditionalOptions> /Zc:twoPhase- %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;glew32.lib;OpenGL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;glew32.lib;OpenGL32.lib;embree3.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>$(ProjectDir)lib\SDL2-2.0.8\lib\x64;$(ProjectDir)lib\glew-2.1.0\lib\Release\x64;$(ProjectDir)lib\glew-2.1.0\bin\Release\x64</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)lib\embree-3.5.2\lib;$(ProjectDir)lib\SDL2-2.0.8\lib\x64;$(ProjectDir)lib\glew-2.1.0\lib\Release\x64;$(ProjectDir)lib\glew-2.1.0\bin\Release\x64</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\engine\preprocessing\EigenSolver.cpp" />
+    <ClCompile Include="src\engine\preprocessing\Pipeline.cpp" />
     <ClCompile Include="src\ui\components\left\SceneEditor.cpp" />
     <ClCompile Include="src\engine\Engine.cpp" />
     <ClCompile Include="src\common\ConfigurationManager.cpp" />
@@ -198,6 +200,9 @@
     <ClCompile Include="src\ui\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\engine\preprocessing\EigenSolver.h" />
+    <ClInclude Include="src\engine\preprocessing\Solver.h" />
+    <ClInclude Include="src\engine\preprocessing\Pipeline.h" />
     <ClInclude Include="src\ui\components\left\SceneEditor.h" />
     <ClInclude Include="src\engine\Engine.h" />
     <ClInclude Include="src\common\ConfigurationManager.h" />

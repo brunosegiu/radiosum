@@ -37,8 +37,7 @@ void Application::attachListener(EventListener* listener) {
 void Application::loop() {
 	do {
 		this->update();
-		this->engine->startFrame();
-		this->engine->loop();
+		this->engine->step();
 		this->ui->setTexture(this->engine->outputTexture);
 		this->ui->render();
 		SDL_GL_SwapWindow(this->sdlWin);

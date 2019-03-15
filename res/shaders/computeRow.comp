@@ -19,6 +19,6 @@ void main() {
 	ivec2 coords = ivec2(gl_WorkGroupID.xy);
 	uint face = getFaceId(coords,gl_LocalInvocationID.x);
 	float addition = gl_LocalInvocationID.x == 0 ? imageLoad(topCorrector, coords).r : imageLoad(sideCorrector, coords).r;
-	addition = 1.0f;
+	addition = 1.0f / float(3f * 100f * 100f);
 	atomicAdd(row[face],addition);
 }

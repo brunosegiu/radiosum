@@ -1,8 +1,5 @@
 #pragma once
 
-#include <mutex>
-#include <condition_variable>
-
 #include "EngineTypes.h"
 
 #include "Camera.h"
@@ -35,8 +32,7 @@ public:
 	void addMesh(std::string path);
 	GLuint pick(GLint x, GLint y);
 
-	void startFrame();
-	void loop();
+	void step();
 
 	virtual ~Engine();
 public:
@@ -49,9 +45,5 @@ private:
 	SceneRenderer* sceneRenderer;
 	PreprocessingController* preprocessor;
 	DisplayController* displayer;
-
-	std::mutex mtx;
-	std::unique_lock<std::mutex> lock;
-	std::condition_variable frameLock;
 };
 

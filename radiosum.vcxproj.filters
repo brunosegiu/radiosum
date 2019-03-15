@@ -62,6 +62,8 @@
     <ClCompile Include="src\engine\EngineStore.cpp" />
     <ClCompile Include="src\ui\components\right\LightingEditor.cpp" />
     <ClCompile Include="src\ui\components\left\SceneEditor.cpp" />
+    <ClCompile Include="src\engine\preprocessing\Pipeline.cpp" />
+    <ClCompile Include="src\engine\preprocessing\EigenSolver.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source">
@@ -147,6 +149,9 @@
     <ClInclude Include="src\engine\EngineTypes.h" />
     <ClInclude Include="src\ui\components\right\LightingEditor.h" />
     <ClInclude Include="src\ui\components\left\SceneEditor.h" />
+    <ClInclude Include="src\engine\preprocessing\Pipeline.h" />
+    <ClInclude Include="src\engine\preprocessing\Solver.h" />
+    <ClInclude Include="src\engine\preprocessing\EigenSolver.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.ini">
