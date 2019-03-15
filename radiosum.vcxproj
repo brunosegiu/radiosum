@@ -147,6 +147,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\engine\preprocessing\RTReflections.cpp" />
     <ClCompile Include="src\engine\preprocessing\EigenSolver.cpp" />
     <ClCompile Include="src\engine\preprocessing\Pipeline.cpp" />
     <ClCompile Include="src\ui\components\left\SceneEditor.cpp" />
@@ -200,6 +201,8 @@
     <ClCompile Include="src\ui\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\engine\preprocessing\RTReflections.h" />
+    <ClInclude Include="src\engine\preprocessing\ReflectionsPipeline.h" />
     <ClInclude Include="src\engine\preprocessing\EigenSolver.h" />
     <ClInclude Include="src\engine\preprocessing\Solver.h" />
     <ClInclude Include="src\engine\preprocessing\Pipeline.h" />

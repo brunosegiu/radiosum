@@ -67,6 +67,7 @@ private:
 	std::vector<std::thread> radiosityWorkers;
 	std::vector<GLfloat> radiosity[N_CHANNELS];
 	bool radiosityReady[N_CHANNELS];
+	Solver * solver;
 
 	// Internal functions for steps
 

@@ -44,6 +44,7 @@ void Preprocess::render() {
 		}
 		ImGui::Checkbox("Interpolate", &this->smooth);
 		ImGui::Combo("Channels", &this->channelCount, "Single\0Double\0Triple");
+		ImGui::Combo("Solver", &this->channelCount, "Eigen: SparseLU\0Eigen: Cholesky\0Other");
 		ImGui::Text("Progress");
 		ImGui::ProgressBar(radProgress);
 		if (ImGui::Button("Compute radiosity")) {
