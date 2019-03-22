@@ -1,10 +1,12 @@
 #include "components/LeftPanel.h"
+#include "components/left/SceneEditor.h"
 
 #include "imgui.h"
 
 
 LeftPanel::LeftPanel() : Component() {
 	this->enable();
+	this->children["EDITOR"] = new SceneEditor();
 }
 
 void LeftPanel::render() {

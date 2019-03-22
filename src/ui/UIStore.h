@@ -6,4 +6,5 @@
 class UIStore {
 public:
 	static Engine* engine;
+	static bool selectFace;
 };

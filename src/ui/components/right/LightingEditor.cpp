@@ -1,13 +1,11 @@
 #include "components/right/LightingEditor.h"
 
-#include "Application.h"
 #include "UIStore.h"
 
 EmissionEditor::EmissionEditor() : Component() {
 	this->emission = .0f;
 	this->current = 0;
 	this->enable();
-	this->object = false;
 }
 
 void EmissionEditor::render() {
@@ -17,7 +15,6 @@ void EmissionEditor::render() {
 	if (enabled && ImGui::BeginTabItem("Lighting")) {
 		if (ImGui::BeginChild("LightingWin", ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetWindowHeight()))) {
 			ImGui::Text(std::string("Face: " + std::to_string(int(current) - 1)).c_str());
-			ImGui::Checkbox("Object", &this->object);
 			ImGui::Spacing();
 			ImGui::Spacing();
 			ImGui::Spacing();
@@ -25,7 +22,7 @@ void EmissionEditor::render() {
 			ImGui::SliderFloat("Emission", &this->emission, 0.0f, 1.0f);
 			if (ImGui::Button("Save emission")) {
 				if (current > 0)
-					UIStore::engine->getScene()->setEmission(current - 1, this->emission, this->object);
+					UIStore::engine->getScene()->setEmission(current - 1, this->emission, !UIStore::selectFace);
 			}
 
 			ImGui::Spacing();
@@ -35,7 +32,7 @@ void EmissionEditor::render() {
 			ImGui::ColorPicker3("Reflactance", this->reflactance);
 			if (ImGui::Button("Save reflactance")) {
 				if (current > 0)
-					UIStore::engine->getScene()->setReflactance(current - 1, glm::vec3(this->reflactance[0], this->reflactance[1], this->reflactance[2]), this->object);
+					UIStore::engine->getScene()->setReflactance(current - 1, glm::vec3(this->reflactance[0], this->reflactance[1], this->reflactance[2]), !UIStore::selectFace);
 			}
 
 			ImGui::Text(std::string("X: " + std::to_string(GLint(mousePos.x))).c_str());

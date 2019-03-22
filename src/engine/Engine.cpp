@@ -1,5 +1,7 @@
 #include "Engine.h"
+
 #include "display/Picker.h"
+#include "EngineStore.h"
 
 Engine::Engine() {
 	this->mode = FACES;
@@ -10,6 +12,7 @@ Engine::Engine() {
 	this->displayer = new DisplayController(this->mode);
 
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
 }
 
 // Main camera
@@ -21,8 +24,11 @@ Camera* Engine::getCamera() {
 // Engine output
 
 void Engine::setMode(RenderMode mode) {
-	this->mode = mode;
-	this->displayer->setMode(mode);
+	if (EngineStore::pipelineStage != FF_LOADING) {
+		this->mode = mode;
+		this->displayer->setMode(mode);
+	}
+
 }
 
 RenderMode Engine::getMode() {

@@ -8,7 +8,6 @@ class SceneEditor : public Component {
 public:
 	SceneEditor();
 	void render();
-	void update();
 	virtual ~SceneEditor();
 };
 
