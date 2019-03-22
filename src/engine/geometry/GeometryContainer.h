@@ -1,7 +1,9 @@
 #pragma once
 
 #include <vector>
+#include <map>
 
+#include <GL/glew.h>
 #include <glm.hpp>
 
 typedef struct AttributesBuffers {

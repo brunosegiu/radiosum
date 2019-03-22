@@ -27,8 +27,8 @@ public:
 	void addMesh(Mesh* mesh);
 
 	// Lighting
-	void setEmission(GLuint faceIndex, GLfloat emission);
-	void setReflactance(GLuint faceIndex, glm::vec3 reflactance);
+	void setEmission(GLuint faceIndex, GLfloat emission, bool full = false);
+	void setReflactance(GLuint faceIndex, glm::vec3 reflactance, bool full = false);
 	void setRadiosity(std::vector<glm::vec3> &radiosity, bool smooth);
 
 	virtual ~Scene();

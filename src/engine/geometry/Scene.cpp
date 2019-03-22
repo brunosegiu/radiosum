@@ -71,8 +71,9 @@ glm::vec3 Scene::getReflactance(GLuint faceIndex) {
 
 void Scene::addMesh(std::string path) {
 	EngineStore::logger.log("Adding mesh from path: " + path);
-	Mesh* toAdd = Mesh::load(path);
-	this->addMesh(toAdd);
+	std::vector<Mesh*> toAdd = Mesh::load(path);
+	for (auto &mesh : toAdd)
+		this->addMesh(mesh);
 }
 
 void Scene::addMesh(Mesh* mesh) {
@@ -84,22 +85,23 @@ void Scene::setRadiosity(std::vector<glm::vec3> &radiosity, bool smooth) {
 	GLuint currentIndex = 0;
 	for (auto &mesh : this->meshes) {
 		mesh->setRadiosity(std::vector<glm::vec3>(radiosity.begin() + currentIndex, radiosity.begin() + currentIndex + mesh->size()), smooth);
+		currentIndex += mesh->size();
 	}
 }
 
-void Scene::setEmission(GLuint faceIndex, GLfloat emission) {
+void Scene::setEmission(GLuint faceIndex, GLfloat emission, bool full) {
 	if (_size > 0) {
 		GLuint meshIndex = 0;
 		Mesh* mesh = this->getMeshWithIndex(faceIndex, meshIndex);
-		mesh->setEmission(meshIndex, emission);
+		full ? mesh->setEmission(emission) : mesh->setEmission(meshIndex, emission);
 	}
 }
 
-void Scene::setReflactance(GLuint faceIndex, glm::vec3 reflactance) {
+void Scene::setReflactance(GLuint faceIndex, glm::vec3 reflactance, bool full) {
 	if (_size > 0) {
 		GLuint meshIndex = 0;
 		Mesh* mesh = this->getMeshWithIndex(faceIndex, meshIndex);
-		mesh->setReflactance(meshIndex, reflactance);
+		full ? mesh->setReflactance(reflactance) : mesh->setReflactance(meshIndex, reflactance);
 	}
 }
 
@@ -107,7 +109,7 @@ Mesh* Scene::getMeshWithIndex(GLuint faceIndex, GLuint &meshIndex) {
 	GLuint iterator = faceIndex;
 	meshIndex = faceIndex;
 	for (auto &mesh : this->meshes) {
-		if (iterator > mesh->size()) {
+		if (iterator >= mesh->size()) {
 			iterator -= mesh->size();
 			meshIndex = iterator;
 		}

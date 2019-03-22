@@ -28,7 +28,6 @@ Window::Window() {
 
 		// Load OpenGL settings
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		glEnable(GL_CULL_FACE);
 	}
 	else {
 		throw std::runtime_error("Failed to initialize SDL");

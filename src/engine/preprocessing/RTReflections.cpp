@@ -4,26 +4,37 @@
 #include <math.h>
 #include <map>
 
-#include <embree3/rtcore.h>
-#include <embree3/rtcore_geometry.h>
-
 #include <gtx/rotate_vector.hpp>
 
 #define MAX_SAMPLES 10000
 #define ADDITION 1.0f / MAX_SAMPLES
 
-RTReflections::RTReflections(std::vector<GeometryBuffers> geometry) : ReflectionsPipeline(geometry) {
+RTReflections::RTReflections(std::vector<GeometryBuffers> geometry, std::vector<GLfloat> reflactances) : ReflectionsPipeline(geometry, reflactances) {
 	this->device = rtcNewDevice("threads=0");
 	this->scene = rtcNewScene(this->device);
-
+	this->reflactances = reflactances;
 	for (auto &mesh : geometry) {
 		RTCGeometry triGeom = rtcNewGeometry(this->device, RTC_GEOMETRY_TYPE_TRIANGLE);
-		rtcSetNewGeometryBuffer(handler, RTC_BUFFER_TYPE_VERTEX, 0, RTC_FORMAT_FLOAT3, sizeof(glm::vec3), mesh.triangles.vertices.size());
+		glm::vec3* geomT = (glm::vec3*)rtcSetNewGeometryBuffer(triGeom, RTC_BUFFER_TYPE_VERTEX, 0, RTC_FORMAT_FLOAT3, sizeof(glm::vec3), mesh.triangles.vertices.size());
+		for (GLuint i = 0; i < mesh.triangles.vertices.size(); i++) {
+			geomT[i] = mesh.triangles.vertices[i];
+		}
+		GLuint* indexT = (GLuint*)rtcSetNewGeometryBuffer(triGeom, RTC_BUFFER_TYPE_INDEX, 0, RTC_FORMAT_UINT3, sizeof(GLuint), mesh.triangles.vertices.size());
+		for (GLuint i = 0; i < mesh.triangles.vertices.size(); i++) {
+			indexT[i] = i;
+		}
 		rtcCommitGeometry(triGeom);
 		rtcAttachGeometry(this->scene, triGeom);
 
 		RTCGeometry quadGeom = rtcNewGeometry(this->device, RTC_GEOMETRY_TYPE_TRIANGLE);
-		rtcSetNewGeometryBuffer();
+		glm::vec3* geomQ = (glm::vec3*)rtcSetNewGeometryBuffer(triGeom, RTC_BUFFER_TYPE_VERTEX, 0, RTC_FORMAT_FLOAT3, sizeof(glm::vec3), mesh.quads.vertices.size());
+		for (GLuint i = 0; i < mesh.triangles.vertices.size(); i++) {
+			geomQ[i] = mesh.quads.vertices[i];
+		}
+		GLuint* indexQ = (GLuint*)rtcSetNewGeometryBuffer(triGeom, RTC_BUFFER_TYPE_INDEX, 0, RTC_FORMAT_UINT4, sizeof(GLuint), mesh.quads.vertices.size());
+		for (GLuint i = 0; i < mesh.quads.vertices.size(); i++) {
+			indexQ[i] = i;
+		}
 		rtcCommitGeometry(quadGeom);
 		rtcAttachGeometry(this->scene, quadGeom);
 	}
@@ -45,13 +56,19 @@ GLuint RTReflections::renderRay(RTCRay ray) {
 	hit.ray = ray;
 	rtcIntersect1(this->scene, &context, &hit);
 	if (hit.hit.geomID != RTC_INVALID_GEOMETRY_ID) {
-		if (hit.hit.reflection) { // pseudocode
-			glm::vec3 orig = hit.hit;
-			glm::vec3 dir = 2 * glm::dot(normal, -ray.dir) * normal + ray.dir;
+		GLuint face = hit.hit.geomID;
+		if (this->reflactances[face] > 0) { // pseudocode
+			glm::vec3 rayDir = glm::vec3(hit.ray.dir_x, hit.ray.dir_y, hit.ray.dir_z);
+			glm::vec3 orig = glm::vec3(hit.ray.org_x, hit.ray.org_y, hit.ray.org_z) + hit.ray.tfar * rayDir;
+			glm::vec3 hitNormal = glm::normalize(glm::vec3(hit.hit.Ng_x, hit.hit.Ng_y, hit.hit.Ng_z));
+			glm::vec3 dir = 2 * glm::dot(hitNormal, -rayDir) * hitNormal + rayDir;
 			RTCRay reflected = RTCRay();
 			reflected.org_x = orig.x;	reflected.org_y = orig.y;	reflected.org_z = orig.z;
 			reflected.dir_x = dir.x;	reflected.dir_y = dir.y;	reflected.dir_z = dir.z;
 			return renderRay(reflected);
+		}
+		else {
+			return face;
 		}
 	}
 }
@@ -96,6 +113,7 @@ std::vector<std::tuple<GLuint, GLfloat>> RTReflections::compute(Face* face) {
 	for (auto &pair : tempFF) {
 		ff.push_back(std::tuple<GLuint, GLfloat>(pair.first, pair.second));
 	}
+	return ff;
 }
 
 RTReflections::~RTReflections() {

@@ -16,16 +16,19 @@ bool wvec3::operator< (const glm::vec3 &v1) const {
 	return (this->x < v1.x) || (this->x == v1.x && this->y < v1.y) || (this->x == v1.x && this->y == v1.y && this->z < v1.z);
 }
 
-Mesh* Mesh::load(std::string path) {
+std::vector<Mesh*> Mesh::load(std::string path) {
 	std::string fileExt = path.substr(path.find_last_of(".") + 1);
 	std::ifstream input(path);
 
 	std::vector<glm::vec3> vertices;
 
-	if (fileExt == "obj") {
-		GeometryBuffers buffers = loadOBJ(&input);
-		return new Mesh(buffers);
 
+	if (fileExt == "obj") {
+		std::vector<GeometryBuffers> buffers = loadOBJ(&input);
+		std::vector<Mesh*> meshes;
+		for (auto &buffer : buffers)
+			meshes.push_back(new Mesh(buffer));
+		return meshes;
 	}
 
 	throw std::runtime_error("Unable to load mesh, format not supported");
@@ -175,24 +178,42 @@ void Mesh::setRadiosity(std::vector<glm::vec3> radiosity, bool smooth) {
 	this->vao->updateAttribute(sizeof(glm::vec3) * this->perVertexRadiosity.size(), &this->perVertexRadiosity[0], 3, GL_FLOAT, 2);
 }
 
-void Mesh::setEmission(GLuint faceIndex, GLfloat emission) {
+std::pair<GLuint, GLuint> findMesh(std::map <std::string, std::pair<GLuint, GLuint>> &names, GLuint faceIndex) {
+	for (auto &limits : names) {
+		if (faceIndex >= limits.second.first && faceIndex < limits.second.second)
+			return limits.second;
+	}
+}
+
+void Mesh::updateEmissionValues(GLuint faceIndex, GLfloat value) {
 	if (faceIndex < this->tFaces) {
 		GLuint startsAt = faceIndex * 3;
 		for (GLuint i = 0; i < 3; i++) {
-			this->perVertexEmission[startsAt + i] = emission;
+			this->perVertexEmission[startsAt + i] = value;
 		}
 	}
 	else if (faceIndex < this->faces) {
 		GLuint startsAt = 6 * faceIndex - 3 * tFaces;
 		for (GLuint i = 0; i < 6; i++) {
-			this->perVertexEmission[startsAt + i] = emission;
+			this->perVertexEmission[startsAt + i] = value;
 		}
 	}
-	this->emission[faceIndex] = emission;
+	this->emission[faceIndex] = value;
+}
+
+void Mesh::setEmission(GLuint faceIndex, GLfloat emission) {
+	this->updateEmissionValues(faceIndex, emission);
 	this->vao->updateAttribute(sizeof(GLfloat) * this->perVertexEmission.size(), &this->perVertexEmission[0], 1, GL_FLOAT, 1);
 }
 
-void Mesh::setReflactance(GLuint faceIndex, glm::vec3 reflactance) {
+void Mesh::setEmission(GLfloat emission) {
+	for (GLuint i = 0; i < this->emission.size(); i++) {
+		this->updateEmissionValues(i, emission);
+	}
+	this->vao->updateAttribute(sizeof(GLfloat) * this->perVertexEmission.size(), &this->perVertexEmission[0], 1, GL_FLOAT, 1);
+}
+
+void Mesh::updateReflactanceValues(GLuint faceIndex, glm::vec3 reflactance) {
 	if (faceIndex < this->tFaces) {
 		GLuint startsAt = faceIndex * 3;
 		for (GLuint i = 0; i < 3; i++) {
@@ -206,6 +227,17 @@ void Mesh::setReflactance(GLuint faceIndex, glm::vec3 reflactance) {
 		}
 	}
 	this->reflactance[faceIndex] = reflactance;
+}
+
+void Mesh::setReflactance(GLuint faceIndex, glm::vec3 reflactance) {
+	this->updateReflactanceValues(faceIndex, reflactance);
+	this->vao->updateAttribute(sizeof(glm::vec3) * this->perVertexReflactance.size(), &this->perVertexReflactance[0], 3, GL_FLOAT, 3);
+}
+
+void Mesh::setReflactance(glm::vec3 reflactance) {
+	for (GLuint i = 0; i < this->reflactance.size(); i++) {
+		this->updateReflactanceValues(i, reflactance);
+	}
 	this->vao->updateAttribute(sizeof(glm::vec3) * this->perVertexReflactance.size(), &this->perVertexReflactance[0], 3, GL_FLOAT, 3);
 }
 

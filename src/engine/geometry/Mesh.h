@@ -20,7 +20,7 @@ public:
 
 class Mesh {
 public:
-	static Mesh* load(std::string path);
+	static std::vector<Mesh*> load(std::string path);
 
 	Mesh(GeometryBuffers geometry);
 
@@ -29,6 +29,8 @@ public:
 
 	void setEmission(GLuint faceIndex, GLfloat emission);
 	void setReflactance(GLuint faceIndex, glm::vec3 reflactance);
+	void setEmission(GLfloat emission);
+	void setReflactance(glm::vec3 reflactance);
 	void setRadiosity(std::vector<glm::vec3> radiosity, bool smooth = true);
 
 	std::vector<glm::vec3> getVertices();
@@ -60,5 +62,7 @@ private:
 	static GLuint faceCount;
 
 	void drawVao(GLuint shader, VAO* vao);
+	void updateEmissionValues(GLuint faceIndex, GLfloat value);
+	void updateReflactanceValues(GLuint faceIndex, glm::vec3 reflactance);
 };
 

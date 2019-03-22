@@ -16,5 +16,6 @@ private:
 	GLfloat reflactance[3];
 	GLuint current;
 	ImVec2 mousePos;
+	bool object;
 };
 
