@@ -1,10 +1,10 @@
-#include "preprocessing/Pipeline.h"
+#include "preprocessing/DiffusePipeline.h"
 
 #include "EngineStore.h"
 #include "preprocessing/EigenSolver.h"
 
 
-Pipeline::Pipeline(Scene* scene, GLuint resolution) {
+DiffusePipeline::DiffusePipeline(Scene* scene, GLuint resolution) {
 	this->enableReflections = false;
 	this->enableInterpolation = false;
 
@@ -24,25 +24,25 @@ Pipeline::Pipeline(Scene* scene, GLuint resolution) {
 	threadsReady = 0;
 }
 
-void Pipeline::configureFace(Face* face) {
+void DiffusePipeline::configureFace(Face* face) {
 	this->face = face;
 }
-void Pipeline::configureFaceIndex(GLuint index) {
+void DiffusePipeline::configureFaceIndex(GLuint index) {
 	this->index = index;
 }
-void Pipeline::configureReflections(bool enable) {
+void DiffusePipeline::configureReflections(bool enable) {
 	this->enableReflections = enable;
 }
-void Pipeline::configureChannels(std::set<Channel> channels) {
+void DiffusePipeline::configureChannels(std::set<Channel> channels) {
 	this->channels = channels;
 }
-void Pipeline::configureInterpolation(bool enable) {
+void DiffusePipeline::configureInterpolation(bool enable) {
 	this->enableInterpolation = enable;
 }
-void Pipeline::configureSolver(Solver* solver) {
+void DiffusePipeline::configureSolver(Solver* solver) {
 }
 
-PipelineStage Pipeline::checkPipelineStage() {
+PipelineStage DiffusePipeline::checkPipelineStage() {
 	if (this->currentStage == INIT) {
 
 	}
@@ -90,7 +90,7 @@ PipelineStage Pipeline::checkPipelineStage() {
 }
 
 // Form factor
-void Pipeline::setUpRenderer() {
+void DiffusePipeline::setUpRenderer() {
 	// Get camera configuration and prepare for render
 	{
 		Face face = *this->face;
@@ -107,7 +107,7 @@ void Pipeline::setUpRenderer() {
 	}
 }
 
-std::vector<GLfloat> Pipeline::getMatrixRow(GLuint face) {
+std::vector<GLfloat> DiffusePipeline::getMatrixRow(GLuint face) {
 	this->reducer->bind();
 	this->row->bind();
 	this->row->clean();
@@ -116,7 +116,7 @@ std::vector<GLfloat> Pipeline::getMatrixRow(GLuint face) {
 	return this->row->getBuffer();
 }
 
-void Pipeline::processRow(std::vector<GLfloat> faceFactors, GLuint faceIndex) {
+void DiffusePipeline::processRow(std::vector<GLfloat> faceFactors, GLuint faceIndex) {
 	GLuint iIndex = faceIndex;
 	for (GLuint jIndex = 0; jIndex < faceFactors.size() - 1; jIndex++) {
 		GLfloat ff = GLfloat(faceFactors[jIndex + 1]);
@@ -136,7 +136,7 @@ void Pipeline::processRow(std::vector<GLfloat> faceFactors, GLuint faceIndex) {
 	ffLock.unlock();
 }
 
-void Pipeline::computeFormFactors() {
+void DiffusePipeline::computeFormFactors() {
 	if (this->index < this->scene->size()) {
 		this->currentStage = FF_LOADING;
 		EngineStore::ffProgress = this->index / GLfloat(this->scene->size());
@@ -151,7 +151,7 @@ void Pipeline::computeFormFactors() {
 		// Process hemicube and compute row
 		{
 			std::vector<GLfloat> faceFactors = this->getMatrixRow(index);
-			this->formFactorWorkers.push_back(std::thread(&Pipeline::processRow, this, faceFactors, index));
+			this->formFactorWorkers.push_back(std::thread(&DiffusePipeline::processRow, this, faceFactors, index));
 		}
 	}
 	else {
@@ -160,7 +160,7 @@ void Pipeline::computeFormFactors() {
 	}
 }
 
-void Pipeline::crWrapped(Channel channel) {
+void DiffusePipeline::crWrapped(Channel channel) {
 	Solver* solver = new EigenSolver();
 	solver->init(this->scene->size(), this->triplets);
 
@@ -178,18 +178,18 @@ void Pipeline::crWrapped(Channel channel) {
 	this->radiosityReady[channel] = true;
 }
 
-void Pipeline::computeRadiosity() {
+void DiffusePipeline::computeRadiosity() {
 	this->waitForWorkers();
 	this->currentStage = RADIOSITY_LOADING;
 	radiosityReady[RED] = false;
 	radiosityReady[GREEN] = false;
 	radiosityReady[BLUE] = false;
 	for (Channel channel : channels) {
-		this->radiosityWorkers.push_back(std::thread(&Pipeline::crWrapped, this, channel));
+		this->radiosityWorkers.push_back(std::thread(&DiffusePipeline::crWrapped, this, channel));
 	}
 }
 
-void Pipeline::waitForWorkers() {
+void DiffusePipeline::waitForWorkers() {
 	for (auto &worker : formFactorWorkers) {
 		if (worker.joinable())
 			worker.join();
@@ -203,5 +203,5 @@ void Pipeline::waitForWorkers() {
 }
 
 
-Pipeline::~Pipeline() {
+DiffusePipeline::~DiffusePipeline() {
 }

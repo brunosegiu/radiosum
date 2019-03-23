@@ -14,9 +14,9 @@
 #include "preprocessing/HemicubeCorrector.h"
 #include "preprocessing/Solver.h"
 
-class Pipeline {
+class DiffusePipeline {
 public:
-	Pipeline(Scene* scene, GLuint resolution);
+	DiffusePipeline(Scene* scene, GLuint resolution);
 
 	void computeFormFactors();
 	void computeRadiosity();
@@ -30,7 +30,7 @@ public:
 
 	PipelineStage checkPipelineStage();
 
-	virtual ~Pipeline();
+	virtual ~DiffusePipeline();
 private:
 	// Config
 

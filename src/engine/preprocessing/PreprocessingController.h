@@ -4,7 +4,8 @@
 
 #include "EngineTypes.h"
 #include "geometry/Scene.h"
-#include "preprocessing/Pipeline.h"
+#include "preprocessing/DiffusePipeline.h"
+#include "preprocessing/RTReflections.h"
 
 class PreprocessingController {
 public:
@@ -16,6 +17,7 @@ public:
 	virtual ~PreprocessingController();
 private:
 	SceneIterator* iterator;
-	Pipeline* pipeline;
+	DiffusePipeline* dPipeline;
+	RTReflections* rPipeline;
 };
 
