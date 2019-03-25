@@ -30,6 +30,7 @@ public:
 
 	// Main scene
 	Scene* getScene();
+	void resetScene();
 	void addMesh(std::string path);
 	GLuint pick(GLint x, GLint y);
 

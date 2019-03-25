@@ -88,6 +88,12 @@ GLuint Engine::pick(GLint x, GLint y) {
 	return picker.getSelected(x, y);
 }
 
+void Engine::resetScene() {
+	Scene* old = this->scene;
+	this->scene = new Scene();
+	delete old;
+}
+
 Engine::~Engine() {
 	delete this->scene;
 	delete this->camera;

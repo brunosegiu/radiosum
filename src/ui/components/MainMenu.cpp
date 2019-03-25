@@ -11,13 +11,30 @@ MainMenu::MainMenu() {
 void MainMenu::render() {
 	if (ImGui::BeginMainMenuBar()) {
 		if (ImGui::BeginMenu("File")) {
-			if (ImGui::BeginMenu("Scene")) {
-				if (ImGui::MenuItem("Load mesh")) {
+			if (ImGui::MenuItem("New")) {
+				UIStore::engine->resetScene();
+			}
+			if (ImGui::BeginMenu("Load")) {
+				if (ImGui::MenuItem("Objects")) {
 					std::string pathToObj = selectFile();
 					if (pathToObj != "")
 						UIStore::engine->addMesh(pathToObj);
 				}
-				ImGui::MenuItem("Export");
+				ImGui::EndMenu();
+			}
+			if (ImGui::BeginMenu("Export")) {
+				if (ImGui::MenuItem("Geometry")) {
+				}
+				if (ImGui::MenuItem("Form factor matrix")) {
+
+				}
+				if (ImGui::IsItemHovered()) {
+					ImGui::BeginTooltip();
+					ImGui::Text("Outputs a text file, format is: Row Col FF eol");
+					ImGui::EndTooltip();
+				}
+				if (ImGui::MenuItem("Radiosity")) {
+				}
 				ImGui::EndMenu();
 			}
 			ImGui::EndMenu();
