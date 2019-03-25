@@ -39,7 +39,6 @@ void UI::render() {
 	for (auto &component : components) {
 		component.second->render();
 	}
-
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }

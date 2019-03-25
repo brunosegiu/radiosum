@@ -14,7 +14,6 @@ public:
 private:
 	GLfloat emission;
 	GLfloat reflactance[3];
-	GLuint current;
 	ImVec2 mousePos;
 };
 

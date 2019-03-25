@@ -4,7 +4,6 @@
 
 EmissionEditor::EmissionEditor() : Component() {
 	this->emission = .0f;
-	this->current = 0;
 	this->enable();
 }
 
@@ -14,15 +13,14 @@ void EmissionEditor::render() {
 	this->update();
 	if (enabled && ImGui::BeginTabItem("Lighting")) {
 		if (ImGui::BeginChild("LightingWin", ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetWindowHeight()))) {
-			ImGui::Text(std::string("Face: " + std::to_string(int(current) - 1)).c_str());
 			ImGui::Spacing();
 			ImGui::Spacing();
 			ImGui::Spacing();
 
 			ImGui::SliderFloat("Emission", &this->emission, 0.0f, 100.0f);
 			if (ImGui::Button("Save emission")) {
-				if (current > 0)
-					UIStore::engine->getScene()->setEmission(current - 1, this->emission, !UIStore::selectFace);
+				if (UIStore::selectedFace >= 0)
+					UIStore::engine->getScene()->setEmission(UIStore::selectedFace, this->emission, !UIStore::selectFace);
 			}
 
 			ImGui::Spacing();
@@ -31,8 +29,8 @@ void EmissionEditor::render() {
 
 			ImGui::ColorPicker3("Reflactance", this->reflactance);
 			if (ImGui::Button("Save reflactance")) {
-				if (current > 0)
-					UIStore::engine->getScene()->setReflactance(current - 1, glm::vec3(this->reflactance[0], this->reflactance[1], this->reflactance[2]), !UIStore::selectFace);
+				if (UIStore::selectedFace >= 0)
+					UIStore::engine->getScene()->setReflactance(UIStore::selectedFace, glm::vec3(this->reflactance[0], this->reflactance[1], this->reflactance[2]), !UIStore::selectFace);
 			}
 
 			ImGui::Text(std::string("X: " + std::to_string(GLint(mousePos.x))).c_str());
@@ -49,10 +47,10 @@ void EmissionEditor::update() {
 	if (ImGui::IsMouseDoubleClicked(0)) {
 		GLuint picked = UIStore::engine->pick(mousePos.x, mousePos.y);
 		if (picked > 0) {
-			this->current = picked;
-			if (this->current > 0) {
-				this->emission = UIStore::engine->getScene()->getEmission(current - 1);
-				glm::vec3 ref = UIStore::engine->getScene()->getReflactance(current - 1);
+			UIStore::selectedFace = GLint(picked) - 1;
+			if (UIStore::selectedFace > 0) {
+				this->emission = UIStore::engine->getScene()->getEmission(UIStore::selectedFace);
+				glm::vec3 ref = UIStore::engine->getScene()->getReflactance(UIStore::selectedFace);
 				this->reflactance[0] = ref.x;
 				this->reflactance[1] = ref.y;
 				this->reflactance[2] = ref.z;

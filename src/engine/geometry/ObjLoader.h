@@ -27,7 +27,7 @@ inline 	std::vector<GeometryBuffers> loadOBJ(std::ifstream* input) {
 			line.erase(0, 2);
 			objects.push_back(IndexBuffers());
 		}
-		if (line[0] == 'v' && line[1] == ' ') {
+		else if (line[0] == 'v' && line[1] == ' ') {
 			line.erase(0, 2);
 
 			glm::vec3 vertex;
@@ -72,7 +72,7 @@ inline 	std::vector<GeometryBuffers> loadOBJ(std::ifstream* input) {
 			for (std::string vertexAttrs : verticesRaw) {
 				std::vector<std::string> attributesRaw = split(vertexAttrs, "/");
 				for (unsigned int it = 0; it < attributesRaw.size(); it++) {
-					GLuint index;
+					GLuint index = 0;
 					std::string value = attributesRaw[it];
 					if (value != "") {
 						sscanf_s(value.c_str(), "%i", &index);

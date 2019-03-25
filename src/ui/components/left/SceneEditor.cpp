@@ -12,6 +12,9 @@ void SceneEditor::render() {
 			if (ImGui::RadioButton("Face", UIStore::selectFace)) {
 				UIStore::selectFace = true;
 			}
+			ImGui::SameLine();
+			ImGui::Text(std::to_string(int(UIStore::selectedFace)).c_str());
+
 			if (ImGui::RadioButton("Object", !UIStore::selectFace)) {
 				UIStore::selectFace = false;
 			}
