@@ -49,8 +49,5 @@ private:
 	VAO* vao;
 	VBO* simpleGeometry; // Hanzo
 	GLuint faces, tFaces, qFaces;
-
-	// Internal methods
-	void drawVao(GLuint shader, VAO* vao);
 };
 

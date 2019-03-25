@@ -212,16 +212,13 @@ void Mesh::setReflactance(glm::vec3 reflactance) {
 	this->vao->updateAttribute(0, sizeof(glm::vec3) * perVertex.size(), &perVertex[0].x, REFLACTANCE_ID);
 }
 
-void Mesh::drawVao(GLuint shaderID, VAO* vao) {
+
+void Mesh::draw(GLuint shaderID) {
 	GLuint tFacesLoc = glGetUniformLocation(shaderID, "tFaces");
 	glUniform1ui(tFacesLoc, this->tFaces);
 	vao->bind();
 	glDrawArrays(GL_TRIANGLES, 0, GLsizei(3 * this->tFaces + 6 * qFaces));
 	vao->unbind();
-}
-
-void Mesh::draw(GLuint shaderID) {
-	this->drawVao(shaderID, this->vao);
 }
 
 void Mesh::drawGeometry(GLuint shaderID) {
