@@ -8,7 +8,6 @@
 
 Preprocess::Preprocess() : Component() {
 	this->enable();
-	this->withOutput = true;
 	this->smooth = false;
 	this->channelCount = 0;
 }
@@ -23,11 +22,10 @@ void Preprocess::render() {
 		float progress = EngineStore::ffProgress;
 		float radProgress = EngineStore::radiosityProgress;
 		ImGui::Spacing();
-		ImGui::Checkbox("Show output", &this->withOutput);
 		ImGui::Text("Progress");
 		ImGui::ProgressBar(progress);
 		if (ImGui::Button("Compute form factors")) {
-			UIStore::engine->preprocess(this->withOutput);
+			UIStore::engine->preprocess(UIStore::enablePreprocessRendering);
 		}
 
 		ImGui::Spacing();
@@ -42,7 +40,19 @@ void Preprocess::render() {
 			ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
 			ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f);
 		}
-		ImGui::Checkbox("Interpolate", &this->smooth);
+		if (ImGui::RadioButton("Interpolate", this->smooth)) {
+			if (!this->smooth && EngineStore::pipelineStage == RADIOSITY_READY) {
+				UIStore::engine->setRadiosity(!smooth);
+			}
+			this->smooth = true;
+		}
+		ImGui::SameLine();
+		if (ImGui::RadioButton("Flatten", !this->smooth)) {
+			if (this->smooth && EngineStore::pipelineStage == RADIOSITY_READY) {
+				UIStore::engine->setRadiosity(!smooth);
+			}
+			this->smooth = false;
+		}
 		ImGui::Combo("Channels", &this->channelCount, "Single\0Double\0Triple");
 		ImGui::Combo("Solver", &this->channelCount, "Eigen: SparseLU\0Eigen: Cholesky\0Other");
 		ImGui::Text("Progress");

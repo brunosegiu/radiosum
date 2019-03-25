@@ -18,6 +18,7 @@ public:
 	// Lighting
 	std::vector<GLfloat> getEmissions();
 	std::vector<glm::vec3> getReflactances();
+	std::vector<glm::vec3> getRadiosity();
 	GLfloat getEmission(GLuint faceIndex);
 	glm::vec3 getReflactance(GLuint faceIndex);
 

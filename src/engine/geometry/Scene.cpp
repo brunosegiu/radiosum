@@ -47,6 +47,15 @@ std::vector<glm::vec3> Scene::getReflactances() {
 	return reflactances;
 }
 
+std::vector<glm::vec3> Scene::getRadiosity() {
+	std::vector<glm::vec3> radiosities;
+	for (auto mesh : meshes) {
+		std::vector<glm::vec3> meshRadiosity = mesh->getRadiosity();
+		radiosities.insert(radiosities.end(), meshRadiosity.begin(), meshRadiosity.end());
+	}
+	return radiosities;
+}
+
 GLfloat Scene::getEmission(GLuint faceIndex) {
 	GLuint meshIndex = 0;
 	if (_size > 0) {

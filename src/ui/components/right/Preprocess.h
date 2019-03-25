@@ -10,6 +10,6 @@ public:
 	void render();
 	virtual ~Preprocess();
 private:
-	bool withOutput, smooth;
+	bool smooth;
 	int channelCount;
 };

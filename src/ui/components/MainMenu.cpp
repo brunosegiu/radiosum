@@ -23,11 +23,6 @@ void MainMenu::render() {
 			ImGui::EndMenu();
 		}
 		if (ImGui::BeginMenu("Settings")) {
-			if (ImGui::BeginMenu("Debug")) {
-				ImGui::MenuItem("Render preprocess pass", nullptr, true);
-				ImGui::MenuItem("Logging", nullptr, true);
-				ImGui::EndMenu();
-			}
 			if (ImGui::BeginMenu("Render")) {
 				if (ImGui::MenuItem("Radiosity", nullptr, UIStore::engine->getMode() == RADIOSITY)) {
 					UIStore::engine->setMode(RADIOSITY);
@@ -42,6 +37,12 @@ void MainMenu::render() {
 					UIStore::engine->setMode(FACES);
 				}
 
+				ImGui::EndMenu();
+			}
+			if (ImGui::BeginMenu("Debug")) {
+				if (ImGui::MenuItem("Render preprocess pass", nullptr, UIStore::enablePreprocessRendering)) {
+					UIStore::enablePreprocessRendering = !UIStore::enablePreprocessRendering;
+				}
 				ImGui::EndMenu();
 			}
 			ImGui::EndMenu();

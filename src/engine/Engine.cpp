@@ -52,6 +52,11 @@ void Engine::computeRadiosity(std::vector<Channel> channels, bool smooth) {
 	this->preprocessor->computeRadiosity(sChannels, smooth);
 }
 
+void Engine::setRadiosity(bool smooth) {
+	auto rads = this->scene->getRadiosity();
+	this->scene->setRadiosity(rads, smooth);
+}
+
 // Main scene
 void Engine::addMesh(std::string path) {
 	this->scene->addMesh(path);

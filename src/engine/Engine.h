@@ -26,6 +26,7 @@ public:
 	RenderMode getMode();
 	void preprocess(bool withOutput = true); // if withOutput == false run preprocessor until it finishes, without rendering steps
 	void computeRadiosity(std::vector<Channel> channels, bool smooth = false);
+	void setRadiosity(bool smooth);
 
 	// Main scene
 	Scene* getScene();
