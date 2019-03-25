@@ -9,18 +9,6 @@
 #define REFLACTANCE_ID 2
 #define RADIOSITY_ID 3
 
-GLuint Mesh::faceCount = 1;
-
-wvec3::wvec3(glm::vec3 &v) {
-	this->x = v.x;
-	this->y = v.y;
-	this->z = v.z;
-}
-
-bool wvec3::operator< (const glm::vec3 &v1) const {
-	return (this->x < v1.x) || (this->x == v1.x && this->y < v1.y) || (this->x == v1.x && this->y == v1.y && this->z < v1.z);
-}
-
 std::vector<Mesh*> Mesh::load(std::string path) {
 	std::string fileExt = path.substr(path.find_last_of(".") + 1);
 	std::ifstream input(path);
@@ -65,7 +53,6 @@ Mesh::Mesh(IndexedBuffers geometry) {
 	this->tFaces = geometry.triangles.size() / 3;
 	this->qFaces = geometry.quads.size() / 4;
 	this->faces = tFaces + qFaces;
-	Mesh::faceCount += this->faces;
 
 	// Compute adjacencies
 	adjacencies = std::vector<std::vector<GLuint>>(geometry.vertices.size(), std::vector<GLuint>());
@@ -79,7 +66,6 @@ Mesh::Mesh(IndexedBuffers geometry) {
 				adjacencies[vertexIndex].push_back(i/4);
 		}
 	}
-	
 
 	// Triangulate quads
 	FlattenedBuffers flattened = deIndex(geometry);

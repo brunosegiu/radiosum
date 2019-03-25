@@ -56,8 +56,6 @@ private:
 	VAO* vao, *geometryVao;
 	GLuint faces, tFaces, qFaces;
 
-	static GLuint faceCount;
-
 	// Internal methods
 	void drawVao(GLuint shader, VAO* vao);
 };
