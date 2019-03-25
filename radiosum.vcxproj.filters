@@ -65,6 +65,7 @@
     <ClCompile Include="src\engine\preprocessing\EigenSolver.cpp" />
     <ClCompile Include="src\engine\preprocessing\RTReflections.cpp" />
     <ClCompile Include="src\engine\preprocessing\DiffusePipeline.cpp" />
+    <ClCompile Include="src\engine\geometry\VBO.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source">
@@ -155,6 +156,7 @@
     <ClInclude Include="src\engine\preprocessing\RTReflections.h" />
     <ClInclude Include="src\engine\preprocessing\DiffusePipeline.h" />
     <ClInclude Include="src\engine\geometry\GeometryUtils.h" />
+    <ClInclude Include="src\engine\geometry\VBO.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.ini">

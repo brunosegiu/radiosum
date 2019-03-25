@@ -8,15 +8,8 @@
 
 #include "geometry/Face.h"
 #include "geometry/VAO.h"
+#include "geometry/VBO.h" 
 #include "geometry/GeometryContainer.h"
-
-
-
-class wvec3 : public glm::vec3 {
-public:
-	wvec3(glm::vec3 &v);
-	bool operator< (const glm::vec3 &v1) const;
-};
 
 class Mesh {
 public:
@@ -53,7 +46,8 @@ private:
 
 	std::vector<std::vector<GLuint>> adjacencies;
 
-	VAO* vao, *geometryVao;
+	VAO* vao;
+	VBO* simpleGeometry; // Hanzo
 	GLuint faces, tFaces, qFaces;
 
 	// Internal methods

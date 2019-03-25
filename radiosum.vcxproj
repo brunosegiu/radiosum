@@ -199,6 +199,7 @@
     <ClCompile Include="src\ui\UI.cpp" />
     <ClCompile Include="src\ui\UIStore.cpp" />
     <ClCompile Include="src\ui\Window.cpp" />
+    <ClCompile Include="src\engine\geometry\VBO.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\engine\preprocessing\RTReflections.h" />
@@ -254,6 +255,7 @@
     <ClInclude Include="src\ui\UIStore.h" />
     <ClInclude Include="src\ui\UI.h" />
     <ClInclude Include="src\ui\Window.h" />
+    <ClInclude Include="src\engine\geometry\VBO.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.ini" />

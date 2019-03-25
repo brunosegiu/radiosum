@@ -108,8 +108,18 @@ Mesh::Mesh(IndexedBuffers geometry) {
 	this->vao->addAttribute(sizeof(glm::vec3) * perVertexReflactance.size(), &perVertexReflactance[0], 3, GL_FLOAT, REFLACTANCE_ID, GL_DYNAMIC_DRAW);
 	this->vao->addAttribute(sizeof(glm::vec3) * perVertexReflactance.size(), &perVertexReflactance[0], 3, GL_FLOAT, RADIOSITY_ID, GL_DYNAMIC_DRAW);
 
-	this->geometryVao = new VAO();
-	this->geometryVao->addAttribute(sizeof(glm::vec3) * triangles.size(), &triangles[0].x, 3, GL_FLOAT, VERTICES_ID);
+	this->simpleGeometry = new VBO();
+	this->simpleGeometry->addVertices(geometry.vertices);
+	std::vector<GLuint> indices = geometry.triangles;
+	for (GLuint i = 0; i < geometry.quads.size(); i += 4) {
+		indices.push_back(geometry.quads[i + 0]);
+		indices.push_back(geometry.quads[i + 1]);
+		indices.push_back(geometry.quads[i + 3]);
+		indices.push_back(geometry.quads[i + 1]);
+		indices.push_back(geometry.quads[i + 2]);
+		indices.push_back(geometry.quads[i + 3]);
+	}
+	this->simpleGeometry->addIndices(indices);
 }
 
 glm::vec3 interpolate(std::vector<glm::vec3> &radiosities, std::vector<GLuint> &adjacencies) {
@@ -215,7 +225,11 @@ void Mesh::draw(GLuint shaderID) {
 }
 
 void Mesh::drawGeometry(GLuint shaderID) {
-	this->drawVao(shaderID, this->geometryVao);
+	GLuint tFacesLoc = glGetUniformLocation(shaderID, "tFaces");
+	glUniform1ui(tFacesLoc, this->tFaces);
+	this->simpleGeometry->bind();
+	glDrawElements(GL_TRIANGLES, GLsizei(3 * this->tFaces + 6 * qFaces), GL_UNSIGNED_INT, (void*)(0));
+	this->simpleGeometry->unbind();
 }
 
 IndexedBuffers Mesh::getGeometry() {
@@ -268,5 +282,5 @@ Face Mesh::getFace(GLuint index) {
 
 Mesh::~Mesh() {
 	delete this->vao;
-	delete this->geometryVao;
+	delete this->simpleGeometry;
 }
