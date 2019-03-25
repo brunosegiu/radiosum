@@ -9,7 +9,7 @@
 
 class ReflectionsPipeline {
 public:
-	inline ReflectionsPipeline(std::vector<GeometryBuffers> geometry, std::vector<GLfloat> reflactances) {};
+	inline ReflectionsPipeline(std::vector<IndexedBuffers> geometry, std::vector<GLfloat> reflactances) {};
 	virtual std::vector<std::tuple<GLuint, GLfloat>> compute(Face* face) = 0;
 	inline virtual ~ReflectionsPipeline() {};
 };

@@ -9,31 +9,27 @@
 #define MAX_SAMPLES 10000
 #define ADDITION 1.0f / MAX_SAMPLES
 
-RTReflections::RTReflections(std::vector<GeometryBuffers> geometry, std::vector<GLfloat> reflactances) : ReflectionsPipeline(geometry, reflactances) {
+RTReflections::RTReflections(std::vector<IndexedBuffers> geometry, std::vector<GLfloat> reflactances) : ReflectionsPipeline(geometry, reflactances) {
 	this->device = rtcNewDevice("threads=0");
 	this->scene = rtcNewScene(this->device);
 	this->reflactances = reflactances;
 	for (auto &mesh : geometry) {
+		RTCBuffer vertices = rtcNewSharedBuffer(device, mesh.vertices.data(), sizeof(glm::vec3) * mesh.vertices.size());
+
 		RTCGeometry triGeom = rtcNewGeometry(this->device, RTC_GEOMETRY_TYPE_TRIANGLE);
-		glm::vec3* geomT = (glm::vec3*)rtcSetNewGeometryBuffer(triGeom, RTC_BUFFER_TYPE_VERTEX, 0, RTC_FORMAT_FLOAT3, sizeof(glm::vec3), mesh.triangles.vertices.size());
-		for (GLuint i = 0; i < mesh.triangles.vertices.size(); i++) {
-			geomT[i] = mesh.triangles.vertices[i];
-		}
-		GLuint* indexT = (GLuint*)rtcSetNewGeometryBuffer(triGeom, RTC_BUFFER_TYPE_INDEX, 0, RTC_FORMAT_UINT3, sizeof(GLuint), mesh.triangles.vertices.size());
-		for (GLuint i = 0; i < mesh.triangles.vertices.size(); i++) {
-			indexT[i] = i;
+		rtcSetGeometryBuffer(triGeom, RTC_BUFFER_TYPE_VERTEX, 0, RTC_FORMAT_FLOAT3, vertices, 0, 0, mesh.vertices.size());
+		GLuint* indexT = (GLuint*)rtcSetNewGeometryBuffer(triGeom, RTC_BUFFER_TYPE_INDEX, 0, RTC_FORMAT_UINT3, sizeof(GLuint), mesh.triangles.size());
+		for (GLuint i = 0; i < mesh.triangles.size(); i++) {
+			indexT[i] = mesh.triangles[i];
 		}
 		rtcCommitGeometry(triGeom);
 		rtcAttachGeometry(this->scene, triGeom);
 
 		RTCGeometry quadGeom = rtcNewGeometry(this->device, RTC_GEOMETRY_TYPE_TRIANGLE);
-		glm::vec3* geomQ = (glm::vec3*)rtcSetNewGeometryBuffer(triGeom, RTC_BUFFER_TYPE_VERTEX, 0, RTC_FORMAT_FLOAT3, sizeof(glm::vec3), mesh.quads.vertices.size());
-		for (GLuint i = 0; i < mesh.triangles.vertices.size(); i++) {
-			geomQ[i] = mesh.quads.vertices[i];
-		}
-		GLuint* indexQ = (GLuint*)rtcSetNewGeometryBuffer(triGeom, RTC_BUFFER_TYPE_INDEX, 0, RTC_FORMAT_UINT4, sizeof(GLuint), mesh.quads.vertices.size());
-		for (GLuint i = 0; i < mesh.quads.vertices.size(); i++) {
-			indexQ[i] = i;
+		rtcSetGeometryBuffer(quadGeom, RTC_BUFFER_TYPE_VERTEX, 0, RTC_FORMAT_FLOAT3, vertices, 0, 0, mesh.vertices.size());
+		GLuint* indexQ = (GLuint*)rtcSetNewGeometryBuffer(triGeom, RTC_BUFFER_TYPE_INDEX, 0, RTC_FORMAT_UINT4, sizeof(GLuint), mesh.quads.size());
+		for (GLuint i = 0; i < mesh.quads.size(); i++) {
+			indexQ[i] = mesh.quads[i];
 		}
 		rtcCommitGeometry(quadGeom);
 		rtcAttachGeometry(this->scene, quadGeom);

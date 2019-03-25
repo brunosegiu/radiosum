@@ -121,7 +121,6 @@
     <ClInclude Include="src\engine\geometry\Face.h" />
     <ClInclude Include="src\engine\geometry\GeometryContainer.h" />
     <ClInclude Include="src\engine\geometry\Mesh.h" />
-    <ClInclude Include="src\engine\geometry\ObjLoader.h" />
     <ClInclude Include="src\engine\geometry\Scene.h" />
     <ClInclude Include="src\engine\geometry\VAO.h" />
     <ClInclude Include="src\ui\CameraController.h" />
@@ -155,6 +154,7 @@
     <ClInclude Include="src\engine\preprocessing\ReflectionsPipeline.h" />
     <ClInclude Include="src\engine\preprocessing\RTReflections.h" />
     <ClInclude Include="src\engine\preprocessing\DiffusePipeline.h" />
+    <ClInclude Include="src\engine\geometry\GeometryUtils.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.ini">

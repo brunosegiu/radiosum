@@ -237,7 +237,7 @@
     <ClInclude Include="src\engine\geometry\Face.h" />
     <ClInclude Include="src\engine\geometry\GeometryContainer.h" />
     <ClInclude Include="src\engine\geometry\Mesh.h" />
-    <ClInclude Include="src\engine\geometry\ObjLoader.h" />
+    <ClInclude Include="src\engine\geometry\GeometryUtils.h" />
     <ClInclude Include="src\engine\geometry\Scene.h" />
     <ClInclude Include="src\engine\geometry\VAO.h" />
     <ClInclude Include="src\engine\preprocessing\HemicubeCorrector.h" />

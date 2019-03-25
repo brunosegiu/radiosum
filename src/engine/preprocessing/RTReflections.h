@@ -11,7 +11,7 @@
 
 class RTReflections : public ReflectionsPipeline {
 public:
-	RTReflections(std::vector<GeometryBuffers> geometry, std::vector<GLfloat> reflactances);
+	RTReflections(std::vector<IndexedBuffers> geometry, std::vector<GLfloat> reflactances);
 	std::vector<std::tuple<GLuint, GLfloat>> compute(Face* face);
 	~RTReflections();
 private:

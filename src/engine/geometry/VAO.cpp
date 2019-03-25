@@ -27,11 +27,9 @@ void VAO::addAttribute(GLuint bufferId, GLuint unitsPerVertex, GLenum type, GLui
 	GLAttributesIds[id] = bufferId;
 }
 
-void VAO::updateAttribute(GLsizei size, void* data, GLuint unitsPerVertex, GLenum type, GLuint id) {
-	glBindVertexArray(GLVaoId);
+void VAO::updateAttribute(GLintptr offset, GLsizei size, void* data, GLuint id) {
 	glBindBuffer(GL_ARRAY_BUFFER, GLAttributesIds[id]);
-	glBufferData(GL_ARRAY_BUFFER, size, data, GL_DYNAMIC_DRAW);
-	glVertexAttribPointer(id, unitsPerVertex, type, GL_FALSE, 0, (void*)0);
+	glBufferSubData(GL_ARRAY_BUFFER, offset, size, data);
 }
 
 void VAO::bind() {

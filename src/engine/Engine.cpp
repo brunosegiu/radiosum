@@ -12,7 +12,7 @@ Engine::Engine() {
 	this->displayer = new DisplayController(this->mode);
 
 	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_CULL_FACE);
+	glDisable(GL_CULL_FACE);
 }
 
 // Main camera

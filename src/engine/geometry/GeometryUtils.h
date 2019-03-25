@@ -9,6 +9,8 @@
 #include "geometry/GeometryContainer.h"
 #include "Utils.h"
 
+
+#define MAXUINT32 4294967295
 #define VERTICES 0
 #define TEXTURES 1
 #define NORMALS 2
@@ -104,77 +106,42 @@ inline std::vector<IndexedBuffers> loadOBJ(std::ifstream* input) {
 			max = index > max ? index : max;
 		}
 
-		indObj.vertices = indexedVertices.
+		indObj.vertices = std::vector<glm::vec3>(indexedVertices.begin() + min, indexedVertices.begin() + max + 1);
+
+		for (auto &index : indObj.triangles) {
+			index = index - min;
+		}
+		for (auto &index : indObj.quads) {
+			index = index - min;
+		}
+		buffers.push_back(indObj);
 	}
+	return buffers;
+}
 
-	inline FlattenedBuffers deIndex(IndexedBuffers &buffers) {
-		FlattenedBuffers flattened;
-		for (unsigned int geom = 0; geom < 2; geom++) {
-			const auto vertices = buffers.vertices;
-			const auto indices = (geom == 0 ? buffers.triangles : buffers.quads);
-			for (unsigned int i = 0; i < indices.size(); i += (geom == 0 ? 3 : 4)) {
-				glm::vec3 v0 = vertices[indices[i]];
-				glm::vec3 v1 = vertices[indices[i + 1]];
-				glm::vec3 v2 = vertices[indices[i + 2]];
+inline FlattenedBuffers deIndex(IndexedBuffers &buffers) {
+	FlattenedBuffers flattened;
+	for (unsigned int geom = 0; geom < 2; geom++) {
+		const auto vertices = buffers.vertices;
+		const auto indices = (geom == 0 ? buffers.triangles : buffers.quads);
+		for (unsigned int i = 0; i < indices.size(); i += (geom == 0 ? 3 : 4)) {
+			glm::vec3 v0 = vertices[indices[i]];
+			glm::vec3 v1 = vertices[indices[i + 1]];
+			glm::vec3 v2 = vertices[indices[i + 2]];
 
-				if (geom == 0) {
-					flattened.triangles.push_back(v0);
-					flattened.triangles.push_back(v1);
-					flattened.triangles.push_back(v2);
-				}
-				else {
-					glm::vec3 v3 = vertices[indices[i + 1]];
-					flattened.quads.push_back(v0);
-					flattened.quads.push_back(v1);
-					flattened.quads.push_back(v2);
-					flattened.quads.push_back(v3);
-				}
-
-				// Textures - not used
-				/*
-				if ((geom == 0 ? tIndexBuffers : qIndexBuffers)[TEXTURES].size() > 0) {
-					glm::vec2 t0 = indexedTextures[(geom == 0 ? tIndexBuffers : qIndexBuffers)[TEXTURES][i]];
-					glm::vec2 t1 = indexedTextures[(geom == 0 ? tIndexBuffers : qIndexBuffers)[TEXTURES][i + 1]];
-					glm::vec2 t2 = indexedTextures[(geom == 0 ? tIndexBuffers : qIndexBuffers)[TEXTURES][i + 2]];
-
-					if (geom == 0) {
-						buffers.triangles.textures.push_back(t0);
-						buffers.triangles.textures.push_back(t1);
-						buffers.triangles.textures.push_back(t2);
-					}
-					else {
-						glm::vec2 t3 = indexedTextures[qIndexBuffers[TEXTURES][i + 3]];
-						buffers.quads.textures.push_back(t0);
-						buffers.quads.textures.push_back(t1);
-						buffers.quads.textures.push_back(t2);
-						buffers.quads.textures.push_back(t3);
-					}
-				}
-				*/
-
-				// Normals - not used
-				/*
-				if ((geom == 0 ? tIndexBuffers : qIndexBuffers)[NORMALS].size() > 0) {
-					glm::vec3 n0 = indexedNormals[(geom == 0 ? tIndexBuffers : qIndexBuffers)[NORMALS][i]];
-					glm::vec3 n1 = indexedNormals[(geom == 0 ? tIndexBuffers : qIndexBuffers)[NORMALS][i + 1]];
-					glm::vec3 n2 = indexedNormals[(geom == 0 ? tIndexBuffers : qIndexBuffers)[NORMALS][i + 2]];
-
-					if (geom == 0) {
-						buffers.triangles.normals.push_back(n0);
-						buffers.triangles.normals.push_back(n1);
-						buffers.triangles.normals.push_back(n2);
-					}
-					else {
-						glm::vec3 n3 = indexedNormals[qIndexBuffers[NORMALS][i + 3]];
-						buffers.quads.normals.push_back(n0);
-						buffers.quads.normals.push_back(n1);
-						buffers.quads.normals.push_back(n2);
-						buffers.quads.normals.push_back(n3);
-					}
-				}
-				*/
+			if (geom == 0) {
+				flattened.triangles.push_back(v0);
+				flattened.triangles.push_back(v1);
+				flattened.triangles.push_back(v2);
+			}
+			else {
+				glm::vec3 v3 = vertices[indices[i + 3]];
+				flattened.quads.push_back(v0);
+				flattened.quads.push_back(v1);
+				flattened.quads.push_back(v2);
+				flattened.quads.push_back(v3);
 			}
 		}
 	}
-	return buffers;
+	return flattened;
 }

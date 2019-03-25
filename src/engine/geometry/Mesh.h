@@ -22,7 +22,7 @@ class Mesh {
 public:
 	static std::vector<Mesh*> load(std::string path);
 
-	Mesh(GeometryBuffers geometry);
+	Mesh(IndexedBuffers geometry);
 
 	void draw(GLuint shaderID);
 	void drawGeometry(GLuint shaderID);
@@ -33,7 +33,7 @@ public:
 	void setReflactance(glm::vec3 reflactance);
 	void setRadiosity(std::vector<glm::vec3> radiosity, bool smooth = true);
 
-	std::vector<glm::vec3> getVertices();
+	IndexedBuffers getGeometry();
 	std::vector<GLfloat> getEmissions();
 	GLfloat getEmission(GLuint faceIndex);
 	std::vector<glm::vec3> getReflactances();
@@ -46,23 +46,19 @@ public:
 	virtual ~Mesh();
 
 private:
-	std::vector<glm::vec3> vertices;
+	IndexedBuffers geometry;
 	std::vector<GLfloat> emission;
 	std::vector<glm::vec3> radiosity;
 	std::vector<glm::vec3> reflactance;
 
-	std::vector<GLfloat> perVertexEmission;
-	std::vector<glm::vec3> perVertexRadiosity;
-	std::vector<glm::vec3> perVertexReflactance;
-	std::map<wvec3, std::vector<GLuint>> adjacencies;
+	std::vector<std::vector<GLuint>> adjacencies;
 
 	VAO* vao, *geometryVao;
 	GLuint faces, tFaces, qFaces;
 
 	static GLuint faceCount;
 
+	// Internal methods
 	void drawVao(GLuint shader, VAO* vao);
-	void updateEmissionValues(GLuint faceIndex, GLfloat value);
-	void updateReflactanceValues(GLuint faceIndex, glm::vec3 reflactance);
 };
 

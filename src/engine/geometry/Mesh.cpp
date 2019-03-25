@@ -2,7 +2,12 @@
 
 #include <fstream>
 
-#include "geometry/ObjLoader.h"
+#include "geometry/GeometryUtils.h"
+
+#define VERTICES_ID 0
+#define EMISSION_ID 1
+#define REFLACTANCE_ID 2
+#define RADIOSITY_ID 3
 
 GLuint Mesh::faceCount = 1;
 
@@ -24,7 +29,7 @@ std::vector<Mesh*> Mesh::load(std::string path) {
 
 
 	if (fileExt == "obj") {
-		std::vector<GeometryBuffers> buffers = loadOBJ(&input);
+		std::vector<IndexedBuffers> buffers = loadOBJ(&input);
 		std::vector<Mesh*> meshes;
 		for (auto &buffer : buffers)
 			meshes.push_back(new Mesh(buffer));
@@ -54,128 +59,113 @@ std::vector<glm::vec3> triangulate(std::vector<glm::vec3> &quad) {
 	return triangles;
 }
 
-Mesh::Mesh(GeometryBuffers geometry) {
-	this->tFaces = geometry.triangles.vertices.size() / 3;
-	this->qFaces = geometry.quads.vertices.size() / 4;
+Mesh::Mesh(IndexedBuffers geometry) {
+	this->geometry = geometry;
+
+	this->tFaces = geometry.triangles.size() / 3;
+	this->qFaces = geometry.quads.size() / 4;
 	this->faces = tFaces + qFaces;
 	Mesh::faceCount += this->faces;
 
-	// Attach triangles
-	this->vertices = geometry.triangles.vertices;
-	for (GLuint i = 0; i < tFaces; i++) {
-		adjacencies[this->vertices[3 * i]].push_back(i + 1);
-		adjacencies[this->vertices[3 * i + 1]].push_back(i + 1);
-		adjacencies[this->vertices[3 * i + 2]].push_back(i + 1);
+	// Compute adjacencies
+	adjacencies = std::vector<std::vector<GLuint>>(geometry.vertices.size(), std::vector<GLuint>());
+	for (GLuint vertexIndex = 0; vertexIndex < geometry.vertices.size(); vertexIndex++) {
+		for (GLuint i = 0; i < geometry.triangles.size(); i++) {
+			if (geometry.triangles[i] == vertexIndex)
+				adjacencies[vertexIndex].push_back(i/3);
+		}
+		for (GLuint i = 0; i < geometry.quads.size(); i++) {
+			if (geometry.quads[i] == vertexIndex)
+				adjacencies[vertexIndex].push_back(i/4);
+		}
 	}
+	
 
-	// Attach quads
-	for (GLuint i = 0; i < geometry.quads.vertices.size(); i += 4) {
-
-		glm::vec3 v0 = geometry.quads.vertices[i + 0];
-		glm::vec3 v1 = geometry.quads.vertices[i + 1];
-		glm::vec3 v2 = geometry.quads.vertices[i + 2];
-		glm::vec3 v3 = geometry.quads.vertices[i + 3];
+	// Triangulate quads
+	FlattenedBuffers flattened = deIndex(geometry);
+	std::vector<glm::vec3> triangles = flattened.triangles;
+	for (GLuint i = 0; i < flattened.quads.size(); i += 4) {
+		glm::vec3 v0 = flattened.quads[i + 0];
+		glm::vec3 v1 = flattened.quads[i + 1];
+		glm::vec3 v2 = flattened.quads[i + 2];
+		glm::vec3 v3 = flattened.quads[i + 3];
 
 		std::vector<glm::vec3> quad({ v0,v1,v2,v3 });
-		std::vector<glm::vec3> triangles = triangulate(quad);
-		this->vertices.insert(this->vertices.end(), triangles.begin(), triangles.end());
-
-		GLuint faceID = tFaces + 1 + i / 4;
-		adjacencies[v0].push_back(faceID);
-		adjacencies[v1].push_back(faceID);
-		adjacencies[v2].push_back(faceID);
-		adjacencies[v3].push_back(faceID);
+		std::vector<glm::vec3> triangulated = triangulate(quad);
+		triangles.insert(triangles.end(), triangulated.begin(), triangulated.end());
 	}
 
-	// Init emmision
-	if (geometry.triangles.emission.size() == 0 && geometry.quads.emission.size() == 0) {
-		for (GLuint i = 0; i < this->faces; i++) {
-			this->emission.push_back(.0f);
-		}
-		for (GLuint i = 0; i < this->vertices.size() / 3; i++) {
-			this->perVertexEmission.push_back(0.0f);
-			this->perVertexEmission.push_back(0.0f);
-			this->perVertexEmission.push_back(0.0f);
-		}
+	// Init aditional per-face attibutes
+	
+	this->emission.reserve(this->faces);
+	this->reflactance.reserve(this->faces);
+	this->radiosity.reserve(this->faces);
+
+	for (GLuint i = 0; i < this->faces; i++) {
+		this->emission.push_back(.0f);
+		this->reflactance.push_back(glm::vec3(1.0f));
+		this->radiosity.push_back(glm::vec3(0));
 	}
 
-	// Init radiosity
-	if (geometry.triangles.radiosity.size() == 0 && geometry.quads.radiosity.size() == 0) {
-		for (GLuint i = 0; i < this->faces; i++) {
-			this->radiosity.push_back(glm::vec3(1.0f));
-		}
-		for (GLuint i = 0; i < this->vertices.size() / 3; i++) {
-			this->perVertexRadiosity.push_back(glm::vec3(1.0f));
-			this->perVertexRadiosity.push_back(glm::vec3(1.0f));
-			this->perVertexRadiosity.push_back(glm::vec3(1.0f));
-		}
+	std::vector<GLfloat> perVertexEmission;
+	std::vector<glm::vec3> perVertexReflactance;
+	perVertexEmission.reserve(this->tFaces * 3 + this->qFaces * 6);
+	perVertexReflactance.reserve(this->tFaces * 3 + this->qFaces * 6);
+	for (GLuint i = 0; i < this->tFaces * 3 + this->qFaces * 6; i++) {
+		perVertexEmission.push_back(0.0f);
+		perVertexReflactance.push_back(glm::vec3(1.0f));
 	}
-
-	// Init reflactance
-	if (geometry.triangles.reflactance.size() == 0 && geometry.quads.reflactance.size() == 0) {
-		for (GLuint i = 0; i < this->faces; i++) {
-			this->reflactance.push_back(glm::vec3(1.0f));
-		}
-		for (GLuint i = 0; i < this->vertices.size() / 3; i++) {
-			this->perVertexReflactance.push_back(glm::vec3(glm::vec3(1.0f)));
-			this->perVertexReflactance.push_back(glm::vec3(glm::vec3(1.0f)));
-			this->perVertexReflactance.push_back(glm::vec3(glm::vec3(1.0f)));
-		}
-	}
-
+	
 	this->vao = new VAO();
-	this->vao->addAttribute(sizeof(glm::vec3) * vertices.size(), &vertices[0].x, 3, GL_FLOAT, 0);
-	this->vao->addAttribute(sizeof(GLfloat) * perVertexEmission.size(), &perVertexEmission[0], 1, GL_FLOAT, 1, GL_DYNAMIC_DRAW);
-	this->vao->addAttribute(sizeof(glm::vec3) * perVertexRadiosity.size(), &perVertexRadiosity[0], 3, GL_FLOAT, 2, GL_DYNAMIC_DRAW);
-	this->vao->addAttribute(sizeof(glm::vec3) * perVertexRadiosity.size(), &perVertexReflactance[0], 3, GL_FLOAT, 3, GL_DYNAMIC_DRAW);
+	this->vao->addAttribute(sizeof(glm::vec3) * triangles.size(), &triangles[0].x, 3, GL_FLOAT, VERTICES_ID);
+	this->vao->addAttribute(sizeof(GLfloat) * perVertexEmission.size(), &perVertexEmission[0], 1, GL_FLOAT, EMISSION_ID, GL_DYNAMIC_DRAW);
+	this->vao->addAttribute(sizeof(glm::vec3) * perVertexReflactance.size(), &perVertexReflactance[0], 3, GL_FLOAT, REFLACTANCE_ID, GL_DYNAMIC_DRAW);
+	this->vao->addAttribute(sizeof(glm::vec3) * perVertexReflactance.size(), &perVertexReflactance[0], 3, GL_FLOAT, RADIOSITY_ID, GL_DYNAMIC_DRAW);
 
 	this->geometryVao = new VAO();
-	this->geometryVao->addAttribute(sizeof(glm::vec3) * vertices.size(), &vertices[0].x, 3, GL_FLOAT, 0);
+	this->geometryVao->addAttribute(sizeof(glm::vec3) * triangles.size(), &triangles[0].x, 3, GL_FLOAT, VERTICES_ID);
 }
 
-glm::vec3 interpolate(glm::vec3 &vertex, std::vector<glm::vec3> &radiosities, std::vector<GLuint> &adjacencies) {
+glm::vec3 interpolate(std::vector<glm::vec3> &radiosities, std::vector<GLuint> &adjacencies) {
 	glm::vec3 radiosity = glm::vec3(.0f);
 	for (GLuint face : adjacencies) {
-		radiosity += radiosities[face - 1];
+		radiosity += radiosities[face];
 	}
 	return radiosity / GLfloat(adjacencies.size());
 }
 
 void Mesh::setRadiosity(std::vector<glm::vec3> radiosity, bool smooth) {
 	this->radiosity = radiosity;
+	std::vector<glm::vec3> perVertexRadiosity(6 * qFaces + tFaces * 3);
 	if (smooth) {
 		for (GLuint i = 0; i < tFaces; i++) {
-			GLuint offset = 3 * i;
+			glm::vec3 value = radiosity[i];
 			for (GLuint vertex = 0; vertex < 3; vertex++) {
-				glm::vec3 v = this->vertices[offset + vertex];
-				this->perVertexRadiosity[offset + vertex] = interpolate(v, radiosity, this->adjacencies[v]);
+				perVertexRadiosity[3 * i + vertex] = interpolate(this->radiosity, this->adjacencies[this->geometry.triangles[3 * i + vertex]]);
 			}
 		}
-		for (GLuint i = tFaces; i < faces; i++) {
-			GLuint offset = 6 * i - 3 * tFaces;
+		for (GLuint i = 0; i < qFaces; i++) {
+			glm::vec3 value = radiosity[tFaces + i];
 			for (GLuint vertex = 0; vertex < 6; vertex++) {
-				glm::vec3 v = this->vertices[offset + vertex];
-				this->perVertexRadiosity[offset + vertex] = interpolate(v, radiosity, this->adjacencies[v]);
+				perVertexRadiosity[3 * tFaces + 6 * i + vertex] = interpolate(this->radiosity, this->adjacencies[this->geometry.quads[4 * i + vertex % 4]]);
 			}
 		}
 	}
 	else {
 		for (GLuint i = 0; i < tFaces; i++) {
-			GLuint offset = 3 * i;
 			glm::vec3 value = radiosity[i];
 			for (GLuint vertex = 0; vertex < 3; vertex++) {
-				this->perVertexRadiosity[offset + vertex] = value;
+				perVertexRadiosity[3 * i + vertex] = value;
 			}
 		}
-		for (GLuint i = tFaces; i < faces; i++) {
-			GLuint offset = 6 * i - 3 * tFaces;
-			glm::vec3 value = radiosity[i];
+		for (GLuint i = 0; i < qFaces; i++) {
+			glm::vec3 value = radiosity[tFaces + i];
 			for (GLuint vertex = 0; vertex < 6; vertex++) {
-				this->perVertexRadiosity[offset + vertex] = value;
+				perVertexRadiosity[3 * tFaces + 6 * i + vertex] = value;
 			}
 		}
 	}
-	this->vao->updateAttribute(sizeof(glm::vec3) * this->perVertexRadiosity.size(), &this->perVertexRadiosity[0], 3, GL_FLOAT, 2);
+	this->vao->updateAttribute(0, sizeof(glm::vec3) * perVertexRadiosity.size(), &perVertexRadiosity[0].x, RADIOSITY_ID);
 }
 
 std::pair<GLuint, GLuint> findMesh(std::map <std::string, std::pair<GLuint, GLuint>> &names, GLuint faceIndex) {
@@ -185,67 +175,52 @@ std::pair<GLuint, GLuint> findMesh(std::map <std::string, std::pair<GLuint, GLui
 	}
 }
 
-void Mesh::updateEmissionValues(GLuint faceIndex, GLfloat value) {
-	if (faceIndex < this->tFaces) {
-		GLuint startsAt = faceIndex * 3;
-		for (GLuint i = 0; i < 3; i++) {
-			this->perVertexEmission[startsAt + i] = value;
-		}
-	}
-	else if (faceIndex < this->faces) {
-		GLuint startsAt = 6 * faceIndex - 3 * tFaces;
-		for (GLuint i = 0; i < 6; i++) {
-			this->perVertexEmission[startsAt + i] = value;
-		}
-	}
-	this->emission[faceIndex] = value;
-}
-
 void Mesh::setEmission(GLuint faceIndex, GLfloat emission) {
-	this->updateEmissionValues(faceIndex, emission);
-	this->vao->updateAttribute(sizeof(GLfloat) * this->perVertexEmission.size(), &this->perVertexEmission[0], 1, GL_FLOAT, 1);
+	this->emission[faceIndex] = emission;
+	std::vector<GLfloat> perVertex;
+	if (faceIndex < tFaces) {
+		perVertex = std::vector<GLfloat>(3, emission);
+	}
+	else {
+		perVertex = std::vector<GLfloat>(6, emission);
+	}
+	this->vao->updateAttribute(faceIndex < tFaces ? faceIndex * 3 : 6 * faceIndex - tFaces * 3, sizeof(GLfloat) * perVertex.size(), &perVertex[0], EMISSION_ID);
 }
 
 void Mesh::setEmission(GLfloat emission) {
-	for (GLuint i = 0; i < this->emission.size(); i++) {
-		this->updateEmissionValues(i, emission);
-	}
-	this->vao->updateAttribute(sizeof(GLfloat) * this->perVertexEmission.size(), &this->perVertexEmission[0], 1, GL_FLOAT, 1);
-}
-
-void Mesh::updateReflactanceValues(GLuint faceIndex, glm::vec3 reflactance) {
-	if (faceIndex < this->tFaces) {
-		GLuint startsAt = faceIndex * 3;
-		for (GLuint i = 0; i < 3; i++) {
-			this->perVertexReflactance[startsAt + i] = reflactance;
-		}
-	}
-	else if (faceIndex < this->faces) {
-		GLuint startsAt = 6 * faceIndex - 3 * tFaces;
-		for (GLuint i = 0; i < 6; i++) {
-			this->perVertexReflactance[startsAt + i] = reflactance;
-		}
-	}
-	this->reflactance[faceIndex] = reflactance;
+	std::vector<GLfloat> perVertex;
+	GLuint flattenedVCount = 3 * this->tFaces + 6 * this->qFaces;
+	perVertex.reserve(flattenedVCount);
+	this->emission = std::vector<GLfloat>(this->emission.size(), emission);
+	perVertex = std::vector<GLfloat>(flattenedVCount, emission);
+	this->vao->updateAttribute(0, sizeof(GLfloat) * perVertex.size(), &perVertex[0], EMISSION_ID);
 }
 
 void Mesh::setReflactance(GLuint faceIndex, glm::vec3 reflactance) {
-	this->updateReflactanceValues(faceIndex, reflactance);
-	this->vao->updateAttribute(sizeof(glm::vec3) * this->perVertexReflactance.size(), &this->perVertexReflactance[0], 3, GL_FLOAT, 3);
+	this->reflactance[faceIndex] = reflactance;
+	std::vector<glm::vec3> perVertex;
+	if (faceIndex < tFaces) {
+		perVertex = std::vector<glm::vec3>(3, reflactance);
+	}
+	else {
+		perVertex = std::vector<glm::vec3>(6, reflactance);
+	}
+	this->vao->updateAttribute(faceIndex < tFaces ? faceIndex * 3: 6 * faceIndex - tFaces * 3 , sizeof(glm::vec3) * perVertex.size(), &perVertex[0].x, REFLACTANCE_ID);
 }
 
 void Mesh::setReflactance(glm::vec3 reflactance) {
-	for (GLuint i = 0; i < this->reflactance.size(); i++) {
-		this->updateReflactanceValues(i, reflactance);
-	}
-	this->vao->updateAttribute(sizeof(glm::vec3) * this->perVertexReflactance.size(), &this->perVertexReflactance[0], 3, GL_FLOAT, 3);
+	std::vector < glm::vec3 > perVertex;
+	GLuint flattenedVCount = 3 * this->tFaces + 6 * this->qFaces;
+	this->reflactance = std::vector<glm::vec3>(this->reflactance.size(), reflactance);
+	perVertex = std::vector < glm::vec3 >(flattenedVCount,reflactance);
+	this->vao->updateAttribute(0, sizeof(glm::vec3) * perVertex.size(), &perVertex[0].x, REFLACTANCE_ID);
 }
 
 void Mesh::drawVao(GLuint shaderID, VAO* vao) {
 	GLuint tFacesLoc = glGetUniformLocation(shaderID, "tFaces");
 	glUniform1ui(tFacesLoc, this->tFaces);
 	vao->bind();
-	glDrawArrays(GL_TRIANGLES, 0, GLsizei(this->vertices.size()));
+	glDrawArrays(GL_TRIANGLES, 0, GLsizei(3 * this->tFaces + 6 * qFaces));
 	vao->unbind();
 }
 
@@ -257,8 +232,8 @@ void Mesh::drawGeometry(GLuint shaderID) {
 	this->drawVao(shaderID, this->geometryVao);
 }
 
-std::vector<glm::vec3> Mesh::getVertices() {
-	return this->vertices;
+IndexedBuffers Mesh::getGeometry() {
+	return this->geometry;
 }
 
 std::vector<GLfloat> Mesh::getEmissions() {
@@ -287,11 +262,21 @@ GLuint Mesh::size() {
 
 Face Mesh::getFace(GLuint index) {
 	index = index % this->size();
-	if (index < tFaces)
-		return Face(this->vertices[3 * index], this->vertices[3 * index + 1], this->vertices[3 * index + 2]);
+	if (index < tFaces) {
+		std::vector<GLuint> indices(3);
+		indices[0] = this->geometry.triangles[3 * index];
+		indices[1] = this->geometry.triangles[3 * index + 1];
+		indices[2] = this->geometry.triangles[3 * index + 2];
+		return Face(this->geometry.vertices[indices[0]], this->geometry.vertices[indices[1]], this->geometry.vertices[indices[2]]);
+	}
 	else {
-		GLuint startsAt = 6 * index - 3 * tFaces;
-		return Face(this->vertices[startsAt], this->vertices[startsAt + 1], this->vertices[startsAt + 4], this->vertices[startsAt + 2]);
+		GLuint inQuad = index - tFaces;
+		std::vector<GLuint> indices(4);
+		indices[0] = this->geometry.quads[4 * inQuad + 0];
+		indices[1] = this->geometry.quads[4 * inQuad + 1];
+		indices[2] = this->geometry.quads[4 * inQuad + 2];
+		indices[3] = this->geometry.quads[4 * inQuad + 3];
+		return Face(this->geometry.vertices[indices[0]], this->geometry.vertices[indices[1]], this->geometry.vertices[indices[2]], this->geometry.vertices[indices[3]]);
 	}
 }
 

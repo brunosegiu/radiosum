@@ -21,6 +21,6 @@ uint correrctID(uint vertexID){
 void main() {
 	id = correrctID(gl_PrimitiveID) + offset;
 	radiosity = max(radiosityToFrag, 0.0f);
-	emission = max(emissionToFrag, 0.01f);
+	emission = max(emissionToFrag, 0.0f);
 	reflactance = reflactanceToFrag;
 }
