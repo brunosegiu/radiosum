@@ -13,7 +13,7 @@
 #define TEXTURES 1
 #define NORMALS 2
 
-inline 	std::vector<GeometryBuffers> loadOBJ(std::ifstream* input) {
+inline std::vector<IndexedBuffers> loadOBJ(std::ifstream* input) {
 	std::vector<glm::vec3> indexedVertices, indexedNormals;
 	std::vector<glm::vec2> indexedTextures;
 
@@ -21,6 +21,8 @@ inline 	std::vector<GeometryBuffers> loadOBJ(std::ifstream* input) {
 	std::string line;
 	typedef  std::pair<std::vector<GLuint>[3], std::vector<GLuint>[3]> IndexBuffers;
 	std::vector< IndexBuffers > objects;
+
+	std::vector<IndexedBuffers> buffers;
 
 	while (getline(*input, line)) {
 		if (line[0] == 'o' && line[1] == ' ') {
@@ -86,29 +88,46 @@ inline 	std::vector<GeometryBuffers> loadOBJ(std::ifstream* input) {
 		}
 	}
 
+	for (auto &object : objects) {
+		IndexedBuffers indObj;
+		indObj.triangles = object.first[VERTICES];
+		indObj.quads = object.second[VERTICES];
 
-	std::vector<GeometryBuffers> buffers;
-	for (auto &indices : objects) {
-		//Per-face vertices
-		buffers.push_back(GeometryBuffers());
-		GLuint currentBuffer = buffers.size() - 1;
+		GLuint min = MAXUINT32;
+		GLuint max = 0;
+		for (auto index : indObj.triangles) {
+			min = index < min ? index : min;
+			max = index > max ? index : max;
+		}
+		for (auto index : indObj.quads) {
+			min = index < min ? index : min;
+			max = index > max ? index : max;
+		}
+
+		indObj.vertices = indexedVertices.
+	}
+
+	inline FlattenedBuffers deIndex(IndexedBuffers &buffers) {
+		FlattenedBuffers flattened;
 		for (unsigned int geom = 0; geom < 2; geom++) {
-			for (unsigned int i = 0; i < (geom == 0 ? indices.first : indices.second)[VERTICES].size(); i += (geom == 0 ? 3 : 4)) {
-				glm::vec3 v0 = indexedVertices[(geom == 0 ? indices.first : indices.second)[VERTICES][i]];
-				glm::vec3 v1 = indexedVertices[(geom == 0 ? indices.first : indices.second)[VERTICES][i + 1]];
-				glm::vec3 v2 = indexedVertices[(geom == 0 ? indices.first : indices.second)[VERTICES][i + 2]];
+			const auto vertices = buffers.vertices;
+			const auto indices = (geom == 0 ? buffers.triangles : buffers.quads);
+			for (unsigned int i = 0; i < indices.size(); i += (geom == 0 ? 3 : 4)) {
+				glm::vec3 v0 = vertices[indices[i]];
+				glm::vec3 v1 = vertices[indices[i + 1]];
+				glm::vec3 v2 = vertices[indices[i + 2]];
 
 				if (geom == 0) {
-					buffers[currentBuffer].triangles.vertices.push_back(v0);
-					buffers[currentBuffer].triangles.vertices.push_back(v1);
-					buffers[currentBuffer].triangles.vertices.push_back(v2);
+					flattened.triangles.push_back(v0);
+					flattened.triangles.push_back(v1);
+					flattened.triangles.push_back(v2);
 				}
 				else {
-					glm::vec3 v3 = indexedVertices[indices.second[VERTICES][i + 3]];
-					buffers[currentBuffer].quads.vertices.push_back(v0);
-					buffers[currentBuffer].quads.vertices.push_back(v1);
-					buffers[currentBuffer].quads.vertices.push_back(v2);
-					buffers[currentBuffer].quads.vertices.push_back(v3);
+					glm::vec3 v3 = vertices[indices[i + 1]];
+					flattened.quads.push_back(v0);
+					flattened.quads.push_back(v1);
+					flattened.quads.push_back(v2);
+					flattened.quads.push_back(v3);
 				}
 
 				// Textures - not used

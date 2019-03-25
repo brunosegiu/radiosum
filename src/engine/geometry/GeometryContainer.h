@@ -6,14 +6,13 @@
 #include <GL/glew.h>
 #include <glm.hpp>
 
-typedef struct AttributesBuffers {
+typedef struct IndexedBuffers {
 	std::vector<glm::vec3> vertices;
-	std::vector<GLfloat> emission;
-	std::vector<GLfloat> radiosity;
-	std::vector<GLfloat> reflactance;
-} AttributesBuffers;
+	std::vector<GLuint> triangles;
+	std::vector<GLuint> quads;
+} IndexedBuffers;
 
-typedef struct GeometryBuffers {
-	AttributesBuffers triangles;
-	AttributesBuffers quads;
-} GeometryBuffers;
+typedef struct FlattenedBuffers {
+	std::vector<glm::vec3> triangles;
+	std::vector<glm::vec3> quads;
+} FlattenedBuffers;
