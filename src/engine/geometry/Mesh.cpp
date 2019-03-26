@@ -59,11 +59,11 @@ Mesh::Mesh(IndexedBuffers geometry) {
 	for (GLuint vertexIndex = 0; vertexIndex < geometry.vertices.size(); vertexIndex++) {
 		for (GLuint i = 0; i < geometry.triangles.size(); i++) {
 			if (geometry.triangles[i] == vertexIndex)
-				adjacencies[vertexIndex].push_back(i/3);
+				adjacencies[vertexIndex].push_back(i / 3);
 		}
 		for (GLuint i = 0; i < geometry.quads.size(); i++) {
 			if (geometry.quads[i] == vertexIndex)
-				adjacencies[vertexIndex].push_back(i/4);
+				adjacencies[vertexIndex].push_back(i / 4);
 		}
 	}
 
@@ -82,7 +82,7 @@ Mesh::Mesh(IndexedBuffers geometry) {
 	}
 
 	// Init aditional per-face attibutes
-	
+
 	this->emission.reserve(this->faces);
 	this->reflactance.reserve(this->faces);
 	this->radiosity.reserve(this->faces);
@@ -101,7 +101,7 @@ Mesh::Mesh(IndexedBuffers geometry) {
 		perVertexEmission.push_back(0.0f);
 		perVertexReflactance.push_back(glm::vec3(1.0f));
 	}
-	
+
 	this->vao = new VAO();
 	this->vao->addAttribute(sizeof(glm::vec3) * triangles.size(), &triangles[0].x, 3, GL_FLOAT, VERTICES_ID);
 	this->vao->addAttribute(sizeof(GLfloat) * perVertexEmission.size(), &perVertexEmission[0], 1, GL_FLOAT, EMISSION_ID, GL_DYNAMIC_DRAW);
@@ -201,14 +201,14 @@ void Mesh::setReflactance(GLuint faceIndex, glm::vec3 reflactance) {
 	else {
 		perVertex = std::vector<glm::vec3>(6, reflactance);
 	}
-	this->vao->updateAttribute(faceIndex < tFaces ? faceIndex * 3: 6 * faceIndex - tFaces * 3 , sizeof(glm::vec3) * perVertex.size(), &perVertex[0].x, REFLACTANCE_ID);
+	this->vao->updateAttribute(faceIndex < tFaces ? faceIndex * 3 : 6 * faceIndex - tFaces * 3, sizeof(glm::vec3) * perVertex.size(), &perVertex[0].x, REFLACTANCE_ID);
 }
 
 void Mesh::setReflactance(glm::vec3 reflactance) {
 	std::vector < glm::vec3 > perVertex;
 	GLuint flattenedVCount = 3 * this->tFaces + 6 * this->qFaces;
 	this->reflactance = std::vector<glm::vec3>(this->reflactance.size(), reflactance);
-	perVertex = std::vector < glm::vec3 >(flattenedVCount,reflactance);
+	perVertex = std::vector < glm::vec3 >(flattenedVCount, reflactance);
 	this->vao->updateAttribute(0, sizeof(glm::vec3) * perVertex.size(), &perVertex[0].x, REFLACTANCE_ID);
 }
 

@@ -25,11 +25,13 @@ void VBO::addIndices(std::vector<GLuint> &indices) {
 
 void VBO::bind() {
 	glBindVertexArray(GLVAOId);
+	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, GLIndicesId);
 }
 
 void VBO::unbind() {
 	glBindVertexArray(0);
+	glDisableVertexAttribArray(0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
