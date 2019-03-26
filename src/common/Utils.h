@@ -16,7 +16,11 @@ inline std::vector<std::string> split(std::string input, std::string delimiter) 
 	return tokens;
 }
 
-inline std::string selectFile() {
+inline std::string getFileExtension(std::string path) {
+	return path.substr(path.find_last_of(".") + 1);
+}
+
+inline std::string selectFile(bool save = false) {
 	// From: https://www.daniweb.com/programming/software-development/code/217307/a-simple-getopenfilename-example
 	OPENFILENAME ofn;
 	char szFile[100];
@@ -31,7 +35,7 @@ inline std::string selectFile() {
 	ofn.lpstrFileTitle = NULL;
 	ofn.nMaxFileTitle = 0;
 	ofn.lpstrInitialDir = NULL;
-	ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
+	ofn.Flags = save ? OFN_NOCHANGEDIR : OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
 	GetOpenFileName(&ofn);
 	return ofn.lpstrFile;
 }

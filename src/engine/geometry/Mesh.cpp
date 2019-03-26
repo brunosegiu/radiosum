@@ -10,7 +10,7 @@
 #define RADIOSITY_ID 3
 
 std::vector<Mesh*> Mesh::load(std::string path) {
-	std::string fileExt = path.substr(path.find_last_of(".") + 1);
+	std::string fileExt = getFileExtension(path);
 	std::ifstream input(path);
 
 	std::vector<glm::vec3> vertices;

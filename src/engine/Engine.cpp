@@ -2,6 +2,9 @@
 
 #include "display/Picker.h"
 #include "EngineStore.h"
+#include <fstream>
+#include <sstream>
+#include <iostream>
 
 Engine::Engine() {
 	this->mode = FACES;
@@ -58,7 +61,7 @@ void Engine::setRadiosity(bool smooth) {
 }
 
 // Main scene
-void Engine::addMesh(std::string path) {
+void Engine::importGeometry(std::string path) {
 	this->scene->addMesh(path);
 }
 
@@ -92,6 +95,83 @@ void Engine::resetScene() {
 	Scene* old = this->scene;
 	this->scene = new Scene();
 	delete old;
+}
+
+void Engine::exportGeometry(std::string path) {
+
+}
+
+void Engine::exportFFMatrix(std::string path) {
+
+}
+
+void Engine::exportEmission(std::string path) {
+	std::ofstream file;
+	file.open(path.data());
+	auto emission = this->scene->getEmissions();
+	for (GLuint index = 0; index < emission.size(); i++) {
+		file << index << " " << emission[index] << std::endl;
+	}
+	file.close();
+}
+
+void Engine::exportReflactance(std::string path) {
+	std::ofstream file;
+	file.open(path.data());
+	auto reflactance = this->scene->getReflactances();
+	for (GLuint index = 0; index < reflactance.size(); i++) {
+		file << index << " " << reflactance[index].x << " " << reflactance[index].y << " " << reflactance[index].z << std::endl;
+	}
+	file.close();
+}
+
+void Engine::exportRadiosity(std::string path) {
+	std::ofstream file;
+	file.open(path.data());
+	auto radiosity = this->scene->getRadiosity();
+	for (GLuint index = 0; index < radiosity.size(); i++) {
+		file << index << " " << radiosity[index].x << " " << radiosity[index].y << " " << radiosity[index].z << std::endl;
+	}
+	file.close();
+}
+
+void Engine::importFFMatrix(std::string path) {
+}
+
+void Engine::importEmission(std::string path) {
+	std::ifstream input(path);
+	std::string line;
+	std::vector<GLfloat> emission(this->scene->size(), .0f);
+	while (getline(input, line)) {
+		GLuint index = 0;
+		GLfloat value = .0f;
+		sscanf_s(line.c_str(), "%d %f ", &index, &value);
+		if (index < this->scene->size())
+			emission[index] = value;
+		else
+			EngineStore::logger.log("Unable to add emission " + std::to_string(index) + ", out of range.");
+	}
+	this->scene->setEmission(emission);
+}
+
+void Engine::importReflactance(std::string path) {
+	std::ifstream input(path);
+	std::string line;
+	std::vector<glm::vec3> reflactance(this->scene->size(), glm::vec3(.0f));
+	while (getline(input, line)) {
+		GLuint index = 0;
+		glm::vec3 value(.0f);
+		sscanf_s(line.c_str(), "%d %f %f %f ", &index, &value.x, &value.y, &value.z);
+		if (index < this->scene->size())
+			reflactance[index] = value;
+		else
+			EngineStore::logger.log("Unable to add reflactance " + std::to_string(index) + ", out of range.");
+	}
+	this->scene->setReflactance(reflactance);
+}
+
+void Engine::importRadiosity(std::string path) {
+
 }
 
 Engine::~Engine() {
