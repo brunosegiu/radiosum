@@ -204,4 +204,5 @@ void DiffusePipeline::waitForWorkers() {
 
 
 DiffusePipeline::~DiffusePipeline() {
+	this->waitForWorkers();
 }

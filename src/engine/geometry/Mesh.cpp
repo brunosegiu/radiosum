@@ -56,16 +56,13 @@ Mesh::Mesh(IndexedBuffers geometry) {
 
 	// Compute adjacencies
 	adjacencies = std::vector<std::vector<GLuint>>(geometry.vertices.size(), std::vector<GLuint>());
-	for (GLuint vertexIndex = 0; vertexIndex < geometry.vertices.size(); vertexIndex++) {
-		for (GLuint i = 0; i < geometry.triangles.size(); i++) {
-			if (geometry.triangles[i] == vertexIndex)
-				adjacencies[vertexIndex].push_back(i / 3);
-		}
-		for (GLuint i = 0; i < geometry.quads.size(); i++) {
-			if (geometry.quads[i] == vertexIndex)
-				adjacencies[vertexIndex].push_back(i / 4);
-		}
+	for (GLuint i = 0; i < geometry.triangles.size(); i++) {
+		adjacencies[geometry.triangles[i]].push_back(i / 3);
 	}
+	for (GLuint i = 0; i < geometry.quads.size(); i++) {
+		adjacencies[geometry.quads[i]].push_back(i / 4);
+	}
+
 
 	// Triangulate quads
 	FlattenedBuffers flattened = deIndex(geometry);
@@ -142,9 +139,12 @@ void Mesh::setRadiosity(std::vector<glm::vec3> radiosity, bool smooth) {
 		}
 		for (GLuint i = 0; i < qFaces; i++) {
 			glm::vec3 value = radiosity[tFaces + i];
-			for (GLuint vertex = 0; vertex < 6; vertex++) {
-				perVertexRadiosity[3 * tFaces + 6 * i + vertex] = interpolate(this->radiosity, this->adjacencies[this->geometry.quads[4 * i + vertex % 4]]);
-			}
+			perVertexRadiosity[3 * tFaces + 6 * i + 0] = interpolate(this->radiosity, this->adjacencies[this->geometry.quads[4 * i + 0]]);
+			perVertexRadiosity[3 * tFaces + 6 * i + 1] = interpolate(this->radiosity, this->adjacencies[this->geometry.quads[4 * i + 1]]);
+			perVertexRadiosity[3 * tFaces + 6 * i + 2] = interpolate(this->radiosity, this->adjacencies[this->geometry.quads[4 * i + 3]]);
+			perVertexRadiosity[3 * tFaces + 6 * i + 3] = interpolate(this->radiosity, this->adjacencies[this->geometry.quads[4 * i + 1]]);
+			perVertexRadiosity[3 * tFaces + 6 * i + 4] = interpolate(this->radiosity, this->adjacencies[this->geometry.quads[4 * i + 2]]);
+			perVertexRadiosity[3 * tFaces + 6 * i + 5] = interpolate(this->radiosity, this->adjacencies[this->geometry.quads[4 * i + 3]]);
 		}
 	}
 	else {
