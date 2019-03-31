@@ -14,6 +14,8 @@ public:
 	void runUnsafe(bool full = false);
 	void computeRadiosity(std::set<Channel> channels, bool smooth = false);
 	void checkFlags();
+	std::vector<std::tuple<GLuint, GLuint, GLfloat>> getTriplets();
+	void setTriplets(std::vector<std::tuple<GLuint, GLuint, GLfloat>>);
 	virtual ~PreprocessingController();
 private:
 	SceneIterator* iterator;

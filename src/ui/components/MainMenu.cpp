@@ -14,19 +14,64 @@ void MainMenu::render() {
 			if (ImGui::MenuItem("New")) {
 				UIStore::engine->resetScene();
 			}
-			if (ImGui::BeginMenu("Load")) {
-				if (ImGui::MenuItem("Objects")) {
-					std::string pathToObj = selectFile();
-					if (pathToObj != "")
-						UIStore::engine->addMesh(pathToObj);
+			if (ImGui::BeginMenu("Import")) {
+				if (ImGui::MenuItem("Geometry")) {
+					std::string path = selectFile();
+					if (path != "")
+						UIStore::engine->importGeometry(path);
+				}
+				if (ImGui::MenuItem("Emission", nullptr, false, UIStore::engine->getScene()->size() > 0)) {
+					std::string path = selectFile();
+					if (path != "")
+						UIStore::engine->importEmission(path);
+				}
+				if (ImGui::MenuItem("Reflactance", nullptr, false, UIStore::engine->getScene()->size() > 0)) {
+					std::string path = selectFile();
+					if (path != "")
+						UIStore::engine->importReflactance(path);
+				}
+				if (ImGui::MenuItem("Radiosity", nullptr, false, UIStore::engine->getScene()->size() > 0)) {
+					std::string path = selectFile();
+					if (path != "")
+						UIStore::engine->importRadiosity(path);
 				}
 				ImGui::EndMenu();
 			}
 			if (ImGui::BeginMenu("Export")) {
 				if (ImGui::MenuItem("Geometry")) {
+					std::string path = selectFile(true);
+					if (path != "")
+						UIStore::engine->exportRadiosity(path);
+				}
+				if (ImGui::IsItemHovered()) {
+					ImGui::BeginTooltip();
+					ImGui::Text("Outputs a text file, format is obj");
+					ImGui::EndTooltip();
+				}
+				if (ImGui::MenuItem("Emission")) {
+					std::string path = selectFile(true);
+					if (path != "")
+						UIStore::engine->exportEmission(path);
+				}
+				if (ImGui::IsItemHovered()) {
+					ImGui::BeginTooltip();
+					ImGui::Text("Outputs a text file, format is: Row Col Emission eol");
+					ImGui::EndTooltip();
+				}
+				if (ImGui::MenuItem("Reflactance")) {
+					std::string path = selectFile(true);
+					if (path != "")
+						UIStore::engine->exportReflactance(path);
+				}
+				if (ImGui::IsItemHovered()) {
+					ImGui::BeginTooltip();
+					ImGui::Text("Outputs a text file, format is: Row Col RefR RefG RefB eol");
+					ImGui::EndTooltip();
 				}
 				if (ImGui::MenuItem("Form factor matrix")) {
-
+					std::string path = selectFile(true);
+					if (path != "")
+						UIStore::engine->exportFFMatrix(path);
 				}
 				if (ImGui::IsItemHovered()) {
 					ImGui::BeginTooltip();
@@ -34,6 +79,14 @@ void MainMenu::render() {
 					ImGui::EndTooltip();
 				}
 				if (ImGui::MenuItem("Radiosity")) {
+					std::string path = selectFile(true);
+					if (path != "")
+						UIStore::engine->exportRadiosity(path);
+				}
+				if (ImGui::IsItemHovered()) {
+					ImGui::BeginTooltip();
+					ImGui::Text("Outputs a text file, format is: Row Col RadR RadG RadB eol");
+					ImGui::EndTooltip();
 				}
 				ImGui::EndMenu();
 			}

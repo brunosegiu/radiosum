@@ -45,6 +45,14 @@ void PreprocessingController::computeRadiosity(std::set<Channel> channels, bool 
 	this->dPipeline->computeRadiosity();
 }
 
+std::vector<std::tuple<GLuint, GLuint, GLfloat>> PreprocessingController::getTriplets() {
+	return this->dPipeline->getTriplets();
+}
+
+void PreprocessingController::setTriplets(std::vector<std::tuple<GLuint, GLuint, GLfloat>> triplets) {
+	this->dPipeline->setTriplets(triplets);
+}
+
 PreprocessingController::~PreprocessingController() {
 	delete this->iterator;
 	delete this->dPipeline;

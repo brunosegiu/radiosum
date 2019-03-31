@@ -29,19 +29,19 @@ Face Scene::getFace(GLuint index) {
 	return mesh->getFace(meshIndex);
 }
 
-std::vector<GLfloat> Scene::getEmissions() {
+std::vector<GLfloat> Scene::getEmission() {
 	std::vector<GLfloat> emissions;
 	for (auto mesh : meshes) {
-		std::vector<GLfloat> meshEmissions = mesh->getEmissions();
+		std::vector<GLfloat> meshEmissions = mesh->getEmission();
 		emissions.insert(emissions.end(), meshEmissions.begin(), meshEmissions.end());
 	}
 	return emissions;
 }
 
-std::vector<glm::vec3> Scene::getReflactances() {
+std::vector<glm::vec3> Scene::getReflactance() {
 	std::vector<glm::vec3> reflactances;
 	for (auto mesh : meshes) {
-		std::vector<glm::vec3> meshReflactances = mesh->getReflactances();
+		std::vector<glm::vec3> meshReflactances = mesh->getReflactance();
 		reflactances.insert(reflactances.end(), meshReflactances.begin(), meshReflactances.end());
 	}
 	return reflactances;
@@ -111,6 +111,33 @@ void Scene::setReflactance(GLuint faceIndex, glm::vec3 reflactance, bool full) {
 		GLuint meshIndex = 0;
 		Mesh* mesh = this->getMeshWithIndex(faceIndex, meshIndex);
 		full ? mesh->setReflactance(reflactance) : mesh->setReflactance(meshIndex, reflactance);
+	}
+}
+
+void Scene::setEmission(std::vector<GLfloat> emission) {
+	GLuint offset = 0;
+	for (auto &mesh : meshes) {
+		std::vector<GLfloat> meshEm = std::vector<GLfloat>(emission.begin() + offset, emission.begin() + offset + mesh->size());
+		offset += mesh->size();
+		mesh->setEmission(meshEm);
+	}
+}
+
+void Scene::setReflactance(std::vector<glm::vec3> reflactance) {
+	GLuint offset = 0;
+	for (auto &mesh : meshes) {
+		std::vector<glm::vec3> meshRef = std::vector<glm::vec3>(reflactance.begin() + offset, reflactance.begin() + offset + mesh->size());
+		offset += mesh->size();
+		mesh->setReflactance(meshRef);
+	}
+}
+
+void Scene::setRadiosity(std::vector<glm::vec3> radiosity) {
+	GLuint offset = 0;
+	for (auto &mesh : meshes) {
+		std::vector<glm::vec3> meshRad = std::vector<glm::vec3>(radiosity.begin() + offset, radiosity.begin() + offset + mesh->size());
+		offset += mesh->size();
+		mesh->setRadiosity(meshRad);
 	}
 }
 

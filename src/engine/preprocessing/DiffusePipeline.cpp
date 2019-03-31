@@ -136,6 +136,16 @@ void DiffusePipeline::processRow(std::vector<GLfloat> faceFactors, GLuint faceIn
 	ffLock.unlock();
 }
 
+std::vector<std::tuple<GLuint, GLuint, GLfloat>> DiffusePipeline::getTriplets() {
+	return this->triplets;
+}
+
+void DiffusePipeline::setTriplets(std::vector<std::tuple<GLuint, GLuint, GLfloat>>) {
+	this->triplets = triplets;
+	this->threadsReady = 0;
+	this->currentStage = FF_READY;
+}
+
 void DiffusePipeline::computeFormFactors() {
 	if (this->index < this->scene->size()) {
 		this->currentStage = FF_LOADING;
@@ -164,7 +174,7 @@ void DiffusePipeline::crWrapped(Channel channel) {
 	Solver* solver = new EigenSolver();
 	solver->init(this->scene->size(), this->triplets);
 
-	std::vector<glm::vec3> reflactanceRGB = this->scene->getReflactances();
+	std::vector<glm::vec3> reflactanceRGB = this->scene->getReflactance();
 	std::vector<GLfloat> channelReflactance;
 	channelReflactance.reserve(reflactanceRGB.size());
 	for (glm::vec3 &reflactance : reflactanceRGB) {
@@ -172,7 +182,7 @@ void DiffusePipeline::crWrapped(Channel channel) {
 	}
 	solver->multiplyReflactance(channelReflactance);
 
-	std::vector<GLfloat> emissions = this->scene->getEmissions();
+	std::vector<GLfloat> emissions = this->scene->getEmission();
 
 	this->radiosity[channel] = solver->solve(emissions);
 	this->radiosityReady[channel] = true;

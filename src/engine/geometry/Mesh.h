@@ -20,18 +20,22 @@ public:
 	void draw(GLuint shaderID);
 	void drawGeometry(GLuint shaderID);
 
+	std::vector<GLfloat> getEmission();
+	GLfloat getEmission(GLuint faceIndex);
 	void setEmission(GLuint faceIndex, GLfloat emission);
-	void setReflactance(GLuint faceIndex, glm::vec3 reflactance);
 	void setEmission(GLfloat emission);
+	void setEmission(std::vector<GLfloat> emission);
+
+	std::vector<glm::vec3> getReflactance();
+	glm::vec3 getReflactance(GLuint faceIndex);
+	void setReflactance(GLuint faceIndex, glm::vec3 reflactance);
 	void setReflactance(glm::vec3 reflactance);
+	void setReflactance(std::vector<glm::vec3> reflactance);
+
+	std::vector<glm::vec3> getRadiosity();
 	void setRadiosity(std::vector<glm::vec3> radiosity, bool smooth = true);
 
 	IndexedBuffers getGeometry();
-	std::vector<GLfloat> getEmissions();
-	GLfloat getEmission(GLuint faceIndex);
-	std::vector<glm::vec3> getReflactances();
-	glm::vec3 getReflactance(GLuint faceIndex);
-	std::vector<glm::vec3> getRadiosity();
 
 	GLuint size();
 	Face getFace(GLuint index);

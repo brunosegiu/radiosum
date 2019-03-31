@@ -10,26 +10,25 @@ public:
 
 	void draw(GLuint shaderID, bool justGeometry = false);
 
-	// Getters
 	// Geometry
 	GLuint size();
 	Face getFace(GLuint index);
-
-	// Lighting
-	std::vector<GLfloat> getEmissions();
-	std::vector<glm::vec3> getReflactances();
-	std::vector<glm::vec3> getRadiosity();
-	GLfloat getEmission(GLuint faceIndex);
-	glm::vec3 getReflactance(GLuint faceIndex);
-
-	// Setters
-	// Geometry
 	void addMesh(std::string path);
 	void addMesh(Mesh* mesh);
 
 	// Lighting
+	GLfloat getEmission(GLuint faceIndex);
+	std::vector<GLfloat> getEmission();
+	void setEmission(std::vector<GLfloat> emission);
 	void setEmission(GLuint faceIndex, GLfloat emission, bool full = false);
+
+	glm::vec3 getReflactance(GLuint faceIndex);
+	std::vector<glm::vec3> getReflactance();
+	void setReflactance(std::vector<glm::vec3> reflactance);
 	void setReflactance(GLuint faceIndex, glm::vec3 reflactance, bool full = false);
+
+	std::vector<glm::vec3> getRadiosity();
+	void setRadiosity(std::vector<glm::vec3> radiosity);
 	void setRadiosity(std::vector<glm::vec3> &radiosity, bool smooth);
 
 	virtual ~Scene();

@@ -31,7 +31,6 @@ void Engine::setMode(RenderMode mode) {
 		this->mode = mode;
 		this->displayer->setMode(mode);
 	}
-
 }
 
 RenderMode Engine::getMode() {
@@ -102,14 +101,26 @@ void Engine::exportGeometry(std::string path) {
 }
 
 void Engine::exportFFMatrix(std::string path) {
-
+	if (this->preprocessor) {
+		auto triplets = this->preprocessor->getTriplets();
+		std::ofstream file;
+		file.open(path.data());
+		for (GLuint index = 0; index < triplets.size(); index++) {
+			file << index << " " << std::get<0>(triplets[index]) << " " << std::get<1>(triplets[index]) << " " << std::get<2>(triplets[index]) << std::endl;
+		}
+		file.close();
+	}
+	else {
+		EngineStore::logger.log("Unable to export form factors, none available.");
+	}
 }
+
 
 void Engine::exportEmission(std::string path) {
 	std::ofstream file;
 	file.open(path.data());
-	auto emission = this->scene->getEmissions();
-	for (GLuint index = 0; index < emission.size(); i++) {
+	auto emission = this->scene->getEmission();
+	for (GLuint index = 0; index < emission.size(); index++) {
 		file << index << " " << emission[index] << std::endl;
 	}
 	file.close();
@@ -118,8 +129,8 @@ void Engine::exportEmission(std::string path) {
 void Engine::exportReflactance(std::string path) {
 	std::ofstream file;
 	file.open(path.data());
-	auto reflactance = this->scene->getReflactances();
-	for (GLuint index = 0; index < reflactance.size(); i++) {
+	auto reflactance = this->scene->getReflactance();
+	for (GLuint index = 0; index < reflactance.size(); index++) {
 		file << index << " " << reflactance[index].x << " " << reflactance[index].y << " " << reflactance[index].z << std::endl;
 	}
 	file.close();
@@ -129,13 +140,29 @@ void Engine::exportRadiosity(std::string path) {
 	std::ofstream file;
 	file.open(path.data());
 	auto radiosity = this->scene->getRadiosity();
-	for (GLuint index = 0; index < radiosity.size(); i++) {
+	for (GLuint index = 0; index < radiosity.size(); index++) {
 		file << index << " " << radiosity[index].x << " " << radiosity[index].y << " " << radiosity[index].z << std::endl;
 	}
 	file.close();
 }
 
 void Engine::importFFMatrix(std::string path) {
+	if (!this->preprocessor) {
+		this->preprocessor = new PreprocessingController(this->scene);
+		this->setMode(PREPROCESS);
+	}
+	std::ifstream input(path);
+	std::string line;
+	std::vector<std::tuple<GLuint, GLuint, GLfloat>> triplets;
+	while (getline(input, line)) {
+		GLuint indexR = 0;
+		GLuint indexC = 0;
+		GLfloat value = .0f;
+		sscanf_s(line.c_str(), "%d %d %f ", &indexR, &indexC, &value);
+		if (indexR < this->scene->size() && indexC < this->scene->size())
+			triplets.push_back(std::tuple<GLuint, GLuint, GLfloat>(indexR, indexC, value));
+	}
+	this->preprocessor->setTriplets(triplets);
 }
 
 void Engine::importEmission(std::string path) {
@@ -171,7 +198,19 @@ void Engine::importReflactance(std::string path) {
 }
 
 void Engine::importRadiosity(std::string path) {
-
+	std::ifstream input(path);
+	std::string line;
+	std::vector<glm::vec3> radiosity(this->scene->size(), glm::vec3(.0f));
+	while (getline(input, line)) {
+		GLuint index = 0;
+		glm::vec3 value(.0f);
+		sscanf_s(line.c_str(), "%d %f %f %f ", &index, &value.x, &value.y, &value.z);
+		if (index < this->scene->size())
+			radiosity[index] = value;
+		else
+			EngineStore::logger.log("Unable to add reflactance " + std::to_string(index) + ", out of range.");
+	}
+	this->scene->setRadiosity(radiosity);
 }
 
 Engine::~Engine() {

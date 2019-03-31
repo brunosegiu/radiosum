@@ -28,6 +28,9 @@ public:
 	void configureInterpolation(bool enable);
 	void configureSolver(Solver* solver);
 
+	std::vector<std::tuple<GLuint, GLuint, GLfloat>> getTriplets();
+	void setTriplets(std::vector<std::tuple<GLuint, GLuint, GLfloat>> triplets);
+
 	PipelineStage checkPipelineStage();
 
 	virtual ~DiffusePipeline();

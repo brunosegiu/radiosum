@@ -212,6 +212,27 @@ void Mesh::setReflactance(glm::vec3 reflactance) {
 	this->vao->updateAttribute(0, sizeof(glm::vec3) * perVertex.size(), &perVertex[0].x, REFLACTANCE_ID);
 }
 
+void Mesh::setReflactance(std::vector<glm::vec3> reflactance) {
+	std::vector < glm::vec3 > perVertex;
+	GLuint flattenedVCount = 3 * this->tFaces + 6 * this->qFaces;
+	this->reflactance = reflactance;
+	perVertex = std::vector< glm::vec3 >(flattenedVCount, glm::vec3(.0f));
+	for (GLuint i = 0; i < flattenedVCount; i++) {
+		perVertex[i] = reflactance[i / 3];
+	}
+	this->vao->updateAttribute(0, sizeof(glm::vec3) * perVertex.size(), &perVertex[0].x, REFLACTANCE_ID);
+}
+
+void Mesh::setEmission(std::vector<GLfloat> emission) {
+	std::vector < GLfloat > perVertex;
+	GLuint flattenedVCount = 3 * this->tFaces + 6 * this->qFaces;
+	this->emission = emission;
+	perVertex = std::vector< GLfloat >(flattenedVCount, .0f);
+	for (GLuint i = 0; i < flattenedVCount; i++) {
+		perVertex[i] = emission[i / 3];
+	}
+	this->vao->updateAttribute(0, sizeof(glm::vec3) * perVertex.size(), &perVertex[0], EMISSION_ID);
+}
 
 void Mesh::draw(GLuint shaderID) {
 	GLuint tFacesLoc = glGetUniformLocation(shaderID, "tFaces");
@@ -233,7 +254,7 @@ IndexedBuffers Mesh::getGeometry() {
 	return this->geometry;
 }
 
-std::vector<GLfloat> Mesh::getEmissions() {
+std::vector<GLfloat> Mesh::getEmission() {
 	return this->emission;
 }
 
@@ -241,7 +262,7 @@ GLfloat Mesh::getEmission(GLuint faceIndex) {
 	return this->emission[faceIndex];
 }
 
-std::vector<glm::vec3> Mesh::getReflactances() {
+std::vector<glm::vec3> Mesh::getReflactance() {
 	return this->reflactance;
 }
 
