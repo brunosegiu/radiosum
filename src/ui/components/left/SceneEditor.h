@@ -5,9 +5,8 @@
 #include "Component.h"
 
 class SceneEditor : public Component {
-public:
-	SceneEditor();
-	void render();
-	virtual ~SceneEditor();
+ public:
+  SceneEditor();
+  void render();
+  virtual ~SceneEditor();
 };
-

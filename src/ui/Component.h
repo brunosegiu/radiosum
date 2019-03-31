@@ -7,14 +7,14 @@
 #include <imgui.h>
 
 class Component {
-public:
-	Component();
-	virtual void render() = 0;
-	void enable();
-	virtual ~Component();
-protected:
-	bool enabled;
-	GLuint width, height, scale, appWidth, appHeight;
-	std::map<std::string, Component*> children;
-};
+ public:
+  Component();
+  virtual void render() = 0;
+  void enable();
+  virtual ~Component();
 
+ protected:
+  bool enabled;
+  GLuint width, height, scale, appWidth, appHeight;
+  std::map<std::string, Component*> children;
+};

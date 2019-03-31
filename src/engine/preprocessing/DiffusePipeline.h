@@ -1,86 +1,86 @@
 #pragma once
 
-#include <vector>
-#include <thread>
 #include <mutex>
+#include <thread>
+#include <vector>
 
 #include <set>
 
 #include "EngineTypes.h"
-#include "geometry/Scene.h"
 #include "buffers/RowBuffer.h"
-#include "shaders/ComputeShader.h"
-#include "preprocessing/IDRenderer.h"
+#include "geometry/Scene.h"
 #include "preprocessing/HemicubeCorrector.h"
+#include "preprocessing/IDRenderer.h"
 #include "preprocessing/Solver.h"
+#include "shaders/ComputeShader.h"
 
 class DiffusePipeline {
-public:
-	DiffusePipeline(Scene* scene, GLuint resolution);
+ public:
+  DiffusePipeline(Scene* scene, GLuint resolution);
 
-	void computeFormFactors();
-	void computeRadiosity();
+  void computeFormFactors();
+  void computeRadiosity();
 
-	void configureFace(Face* face);
-	void configureFaceIndex(GLuint index);
-	void configureReflections(bool enable);
-	void configureChannels(std::set<Channel> channels);
-	void configureInterpolation(bool enable);
-	void configureSolver(Solver* solver);
+  void configureFace(Face* face);
+  void configureFaceIndex(GLuint index);
+  void configureReflections(bool enable);
+  void configureChannels(std::set<Channel> channels);
+  void configureInterpolation(bool enable);
+  void configureSolver(Solver* solver);
 
-	std::vector<std::tuple<GLuint, GLuint, GLfloat>> getTriplets();
-	void setTriplets(std::vector<std::tuple<GLuint, GLuint, GLfloat>> triplets);
+  std::vector<std::tuple<GLuint, GLuint, GLfloat>> getTriplets();
+  void setTriplets(std::vector<std::tuple<GLuint, GLuint, GLfloat>> triplets);
 
-	PipelineStage checkPipelineStage();
+  PipelineStage checkPipelineStage();
 
-	virtual ~DiffusePipeline();
-private:
-	// Config
+  virtual ~DiffusePipeline();
 
-	// Flags
-	bool enableReflections;
-	std::set<Channel> channels;
-	bool enableInterpolation;
+ private:
+  // Config
 
-	// Geometry, math...
-	Scene* scene;
-	Face* face;
-	GLuint index;
+  // Flags
+  bool enableReflections;
+  std::set<Channel> channels;
+  bool enableInterpolation;
 
-	// Internal
+  // Geometry, math...
+  Scene* scene;
+  Face* face;
+  GLuint index;
 
-	PipelineStage currentStage;
+  // Internal
 
-	IDRenderer* renderer;
+  PipelineStage currentStage;
 
-	ComputeShader* reducer;
-	RowBuffer* row;
-	HemicubeCorrector* corrector;
-	GLuint instances;
+  IDRenderer* renderer;
 
-	// Storage
+  ComputeShader* reducer;
+  RowBuffer* row;
+  HemicubeCorrector* corrector;
+  GLuint instances;
 
-	// FF
-	std::vector<std::tuple<GLuint, GLuint, GLfloat>> triplets;
-	std::vector<std::thread> formFactorWorkers;
-	std::mutex ffLock;
-	GLuint threadsReady;
+  // Storage
 
-	// Radiosity
-	std::vector<std::thread> radiosityWorkers;
-	std::vector<GLfloat> radiosity[N_CHANNELS];
-	bool radiosityReady[N_CHANNELS];
-	Solver * solver;
+  // FF
+  std::vector<std::tuple<GLuint, GLuint, GLfloat>> triplets;
+  std::vector<std::thread> formFactorWorkers;
+  std::mutex ffLock;
+  GLuint threadsReady;
 
-	// Internal functions for steps
+  // Radiosity
+  std::vector<std::thread> radiosityWorkers;
+  std::vector<GLfloat> radiosity[N_CHANNELS];
+  bool radiosityReady[N_CHANNELS];
+  Solver* solver;
 
-	// FF
-	void setUpRenderer();
-	std::vector<GLfloat> getMatrixRow(GLuint face);
-	void processRow(std::vector<GLfloat> faceFactors, GLuint faceIndex);
+  // Internal functions for steps
 
-	// Radiosity
-	void waitForWorkers();
-	void crWrapped(Channel channel);
+  // FF
+  void setUpRenderer();
+  std::vector<GLfloat> getMatrixRow(GLuint face);
+  void processRow(std::vector<GLfloat> faceFactors, GLuint faceIndex);
+
+  // Radiosity
+  void waitForWorkers();
+  void crWrapped(Channel channel);
 };
-

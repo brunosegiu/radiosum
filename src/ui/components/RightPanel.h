@@ -5,8 +5,8 @@
 #include "Component.h"
 
 class RightPanel : public Component {
-public:
-	RightPanel();
-	void render();
-	virtual ~RightPanel();
+ public:
+  RightPanel();
+  void render();
+  virtual ~RightPanel();
 };

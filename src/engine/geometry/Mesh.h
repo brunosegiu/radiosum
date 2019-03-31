@@ -7,51 +7,50 @@
 #include <glm.hpp>
 
 #include "geometry/Face.h"
-#include "geometry/VAO.h"
-#include "geometry/VBO.h" 
 #include "geometry/GeometryContainer.h"
+#include "geometry/VAO.h"
+#include "geometry/VBO.h"
 
 class Mesh {
-public:
-	static std::vector<Mesh*> load(std::string path);
+ public:
+  static std::vector<Mesh*> load(std::string path);
 
-	Mesh(IndexedBuffers geometry);
+  Mesh(IndexedBuffers geometry);
 
-	void draw(GLuint shaderID);
-	void drawGeometry(GLuint shaderID);
+  void draw(GLuint shaderID);
+  void drawGeometry(GLuint shaderID);
 
-	std::vector<GLfloat> getEmission();
-	GLfloat getEmission(GLuint faceIndex);
-	void setEmission(GLuint faceIndex, GLfloat emission);
-	void setEmission(GLfloat emission);
-	void setEmission(std::vector<GLfloat> emission);
+  std::vector<GLfloat> getEmission();
+  GLfloat getEmission(GLuint faceIndex);
+  void setEmission(GLuint faceIndex, GLfloat emission);
+  void setEmission(GLfloat emission);
+  void setEmission(std::vector<GLfloat> emission);
 
-	std::vector<glm::vec3> getReflactance();
-	glm::vec3 getReflactance(GLuint faceIndex);
-	void setReflactance(GLuint faceIndex, glm::vec3 reflactance);
-	void setReflactance(glm::vec3 reflactance);
-	void setReflactance(std::vector<glm::vec3> reflactance);
+  std::vector<glm::vec3> getReflactance();
+  glm::vec3 getReflactance(GLuint faceIndex);
+  void setReflactance(GLuint faceIndex, glm::vec3 reflactance);
+  void setReflactance(glm::vec3 reflactance);
+  void setReflactance(std::vector<glm::vec3> reflactance);
 
-	std::vector<glm::vec3> getRadiosity();
-	void setRadiosity(std::vector<glm::vec3> radiosity, bool smooth = true);
+  std::vector<glm::vec3> getRadiosity();
+  void setRadiosity(std::vector<glm::vec3> radiosity, bool smooth = true);
 
-	IndexedBuffers getGeometry();
+  IndexedBuffers getGeometry();
 
-	GLuint size();
-	Face getFace(GLuint index);
+  GLuint size();
+  Face getFace(GLuint index);
 
-	virtual ~Mesh();
+  virtual ~Mesh();
 
-private:
-	IndexedBuffers geometry;
-	std::vector<GLfloat> emission;
-	std::vector<glm::vec3> radiosity;
-	std::vector<glm::vec3> reflactance;
+ private:
+  IndexedBuffers geometry;
+  std::vector<GLfloat> emission;
+  std::vector<glm::vec3> radiosity;
+  std::vector<glm::vec3> reflactance;
 
-	std::vector<std::vector<GLuint>> adjacencies;
+  std::vector<std::vector<GLuint>> adjacencies;
 
-	VAO* vao;
-	VBO* simpleGeometry; // Hanzo
-	GLuint faces, tFaces, qFaces;
+  VAO* vao;
+  VBO* simpleGeometry;  // Hanzo
+  GLuint faces, tFaces, qFaces;
 };
-

@@ -5,8 +5,8 @@
 #include "Component.h"
 
 class MainMenu : public Component {
-public:
-	MainMenu();
-	void render();
-	virtual ~MainMenu();
+ public:
+  MainMenu();
+  void render();
+  virtual ~MainMenu();
 };

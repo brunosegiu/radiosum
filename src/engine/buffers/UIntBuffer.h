@@ -5,11 +5,11 @@
 #include "buffers/Buffer.h"
 
 class UIntBuffer : public Buffer {
-public:
-	UIntBuffer(GLuint width, GLuint height);
-	GLuint read();
-	virtual ~UIntBuffer();
+ public:
+  UIntBuffer(GLuint width, GLuint height);
+  GLuint read();
+  virtual ~UIntBuffer();
 
-private:
-	GLuint GLId, GLTextureId, GLDepthId;
+ private:
+  GLuint GLId, GLTextureId, GLDepthId;
 };

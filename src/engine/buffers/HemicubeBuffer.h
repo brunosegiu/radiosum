@@ -5,11 +5,11 @@
 #include "buffers/Buffer.h"
 
 class HemicubeBuffer : public Buffer {
-public:
-	HemicubeBuffer(GLuint width);
-	GLuint read();
-	virtual ~HemicubeBuffer();
-private:
-	GLuint GLDepthId;
-};
+ public:
+  HemicubeBuffer(GLuint width);
+  GLuint read();
+  virtual ~HemicubeBuffer();
 
+ private:
+  GLuint GLDepthId;
+};

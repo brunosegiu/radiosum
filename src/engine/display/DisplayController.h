@@ -1,28 +1,27 @@
 #pragma once
 
-#include "EngineTypes.h"
-#include "display/TextureRenderer.h"
-#include "display/SceneRenderer.h"
 #include "Camera.h"
+#include "EngineTypes.h"
+#include "display/SceneRenderer.h"
+#include "display/TextureRenderer.h"
 
 class DisplayController {
-public:
-	DisplayController(RenderMode mode);
-	void render();
-	GLuint read();
-	void setMode(RenderMode mode);
-	virtual ~DisplayController();
-private:
+ public:
+  DisplayController(RenderMode mode);
+  void render();
+  GLuint read();
+  void setMode(RenderMode mode);
+  virtual ~DisplayController();
 
-	Renderer* renderer;
-	TextureRenderer* bufferRenderer;
-	TextureRenderer* radiosityRenderer;
-	TextureRenderer* emissionsRenderer;
-	TextureRenderer* facesRenderer;
-	TextureRenderer* reflactancesRenderer;
+ private:
+  Renderer* renderer;
+  TextureRenderer* bufferRenderer;
+  TextureRenderer* radiosityRenderer;
+  TextureRenderer* emissionsRenderer;
+  TextureRenderer* facesRenderer;
+  TextureRenderer* reflactancesRenderer;
 
-	Camera* userCamera;
+  Camera* userCamera;
 
-	RenderMode mode;
+  RenderMode mode;
 };
-

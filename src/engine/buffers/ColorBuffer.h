@@ -1,10 +1,10 @@
 #pragma once
 
-#include "buffers/Buffer.h" 
+#include "buffers/Buffer.h"
 
 class ColorBuffer : public Buffer {
-public:
-	ColorBuffer(GLuint width = 0, GLuint height = 0);
-	void clean();
-	virtual ~ColorBuffer();
+ public:
+  ColorBuffer(GLuint width = 0, GLuint height = 0);
+  void clean();
+  virtual ~ColorBuffer();
 };

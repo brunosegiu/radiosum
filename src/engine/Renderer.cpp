@@ -1,36 +1,21 @@
 #include "Renderer.h"
 
+Renderer::Renderer() {}
 
-Renderer::Renderer() {
+void Renderer::setCamera(Camera* camera) { this->camera = camera; }
 
-}
+void Renderer::setScene(Scene* scene) { this->scene = scene; }
 
-void Renderer::setCamera(Camera* camera) {
-	this->camera = camera;
-}
+GLuint Renderer::read() { return this->buffer->read(); }
 
-void Renderer::setScene(Scene* scene) {
-	this->scene = scene;
-}
-
-GLuint Renderer::read() {
-	return this->buffer->read();
-}
-
-Buffer* Renderer::getBuffer() {
-	return this->buffer;
-}
+Buffer* Renderer::getBuffer() { return this->buffer; }
 
 void Renderer::start() {
-	this->shader->bind();
-	this->buffer->bind();
-	this->buffer->clean();
+  this->shader->bind();
+  this->buffer->bind();
+  this->buffer->clean();
 }
 
-Camera* Renderer::getCamera() {
-	return this->camera;
-}
+Camera* Renderer::getCamera() { return this->camera; }
 
-
-Renderer::~Renderer() {
-}
+Renderer::~Renderer() {}
