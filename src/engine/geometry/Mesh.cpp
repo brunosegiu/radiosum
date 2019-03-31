@@ -59,7 +59,7 @@ Mesh::Mesh(IndexedBuffers geometry) {
     adjacencies[geometry.triangles[i]].push_back(i / 3);
   }
   for (GLuint i = 0; i < geometry.quads.size(); i++) {
-    adjacencies[geometry.quads[i]].push_back(i / 4);
+    adjacencies[geometry.quads[i]].push_back(tFaces + (i / 4));
   }
 
   // Triangulate quads
