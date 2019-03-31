@@ -35,6 +35,14 @@ std::vector<GLfloat> Scene::getEmission() {
   return emissions;
 }
 
+std::vector<IndexedBuffers> Scene::getGeometry() {
+  std::vector<IndexedBuffers> geom;
+  for (auto &mesh : meshes) {
+    geom.push_back(mesh->getGeometry());
+  }
+  return geom;
+}
+
 std::vector<glm::vec3> Scene::getReflactance() {
   std::vector<glm::vec3> reflactances;
   for (auto mesh : meshes) {

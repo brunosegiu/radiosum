@@ -15,6 +15,7 @@ class Scene {
   Face getFace(GLuint index);
   void addMesh(std::string path);
   void addMesh(Mesh* mesh);
+  std::vector<IndexedBuffers> getGeometry();
 
   // Lighting
   GLfloat getEmission(GLuint faceIndex);

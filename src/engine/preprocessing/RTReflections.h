@@ -2,6 +2,7 @@
 
 #include <chrono>
 #include <random>
+#include <thread>
 
 #include <embree3/rtcore.h>
 #include <embree3/rtcore_geometry.h>
@@ -10,16 +11,21 @@
 
 class RTReflections : public ReflectionsPipeline {
  public:
-  RTReflections(std::vector<IndexedBuffers> geometry,
-                std::vector<GLfloat> reflactances);
-  std::vector<std::tuple<GLuint, GLfloat>> compute(Face* face);
+  RTReflections(Scene* scene);
+  void run();
   ~RTReflections();
+  bool done;
 
  private:
+  void runWr(std::vector<Face> faces);
+  std::vector<std::tuple<GLuint, GLfloat, GLfloat>> triples;
   std::vector<GLfloat> reflactances;
   GLuint renderRay(RTCRay ray);
   RTCDevice device;
   RTCScene scene;
+  Scene* nscene;
+  std::vector<std::tuple<GLuint, GLuint, GLfloat>> triplets;
   std::mt19937_64 rng;
   std::uniform_real_distribution<GLfloat> uniformGenerator;
+  std::thread main;
 };

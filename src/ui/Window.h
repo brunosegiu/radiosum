@@ -3,8 +3,9 @@
 #include <string>
 #include <vector>
 
-#include <GL/GLU.h>
 #include <GL/glew.h>
+
+#include <GL/GLU.h>
 #include <SDL.h>
 #include <SDL_opengl.h>
 
