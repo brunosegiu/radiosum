@@ -1,4 +1,13 @@
 #include "Texture.h"
+#include <SDL.h>
+#include <SDL_image.h>
+
+Texture* Texture::load(std::string path) {
+  SDL_Surface* sur = IMG_Load(path.data());
+  GLenum mode = sur->format->BytesPerPixel == 4 ? GL_RGBA : GL_RGB;
+  return new Texture(sur->w, sur->h, GL_TEXTURE_2D, mode, mode,
+                     GL_UNSIGNED_BYTE, sur->pixels);
+}
 
 Texture::Texture(GLuint width, GLuint height, GLenum target,
                  GLint internalFormat, GLenum format, GLenum type,

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 #include <GL/glew.h>
 
 class Texture {
@@ -9,6 +11,7 @@ class Texture {
           GLenum type = GL_UNSIGNED_BYTE, GLvoid* data = nullptr);
   void bind();
   GLuint read(GLenum texture = 0, bool cs = false);
+  static Texture* load(std::string path);
   virtual ~Texture();
 
  private:

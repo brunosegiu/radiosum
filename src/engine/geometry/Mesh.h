@@ -8,6 +8,7 @@
 
 #include "geometry/Face.h"
 #include "geometry/GeometryContainer.h"
+#include "geometry/Material.h"
 #include "geometry/VAO.h"
 #include "geometry/VBO.h"
 
@@ -15,7 +16,7 @@ class Mesh {
  public:
   static std::vector<Mesh*> load(std::string path);
 
-  Mesh(IndexedBuffers geometry);
+  Mesh(IndexedBuffers geometry, Material* material);
 
   void draw(GLuint shaderID);
   void drawGeometry(GLuint shaderID);
@@ -44,9 +45,8 @@ class Mesh {
 
  private:
   IndexedBuffers geometry;
-  std::vector<GLfloat> emission;
   std::vector<glm::vec3> radiosity;
-  std::vector<glm::vec3> reflactance;
+  Material* material;
 
   std::vector<std::vector<GLuint>> adjacencies;
 

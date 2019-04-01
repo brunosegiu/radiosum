@@ -5,6 +5,7 @@ DisplayController::DisplayController(RenderMode mode) {
   this->radiosityRenderer = new TextureRenderer("renderSceneRadiosity.frag");
   this->emissionsRenderer = new TextureRenderer("renderSceneEmissions.frag");
   this->facesRenderer = new TextureRenderer("renderSceneFaces.frag");
+  this->albedoRenderer = new TextureRenderer("renderSceneAlbedo.frag");
   this->reflactancesRenderer =
       new TextureRenderer("renderSceneReflactances.frag");
 
@@ -39,6 +40,9 @@ void DisplayController::setMode(RenderMode mode) {
       break;
     case REFLACTANCE:
       this->renderer = this->reflactancesRenderer;
+      break;
+    case ALBEDO:
+      this->renderer = this->albedoRenderer;
       break;
   }
 }

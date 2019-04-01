@@ -13,14 +13,16 @@ PreprocessingController::PreprocessingController(Scene* scene) {
 
 GLuint PreprocessingController::runStep() {
   GLuint index = this->iterator->faceIndex();
-  // if (index == 0) this->rPipeline->run();
-  if (EngineStore::pipelineStage == FF_LOADING ||
-      EngineStore::pipelineStage == INIT) {
-    Face* face = new Face(this->iterator->get());
-    this->dPipeline->configureFaceIndex(index);
-    this->dPipeline->configureFace(face);
-    this->dPipeline->computeFormFactors();
-    iterator->nextFace();
+  if (!iterator->end()) {
+    // if (index == 0) this->rPipeline->run();
+    if (EngineStore::pipelineStage == FF_LOADING ||
+        EngineStore::pipelineStage == INIT) {
+      Face* face = new Face(this->iterator->get());
+      this->dPipeline->configureFaceIndex(index);
+      this->dPipeline->configureFace(face);
+      this->dPipeline->computeFormFactors();
+      iterator->nextFace();
+    }
   }
   return index;
 }

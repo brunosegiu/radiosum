@@ -17,12 +17,13 @@ RTReflections::RTReflections(Scene* scene) : ReflectionsPipeline(scene) {
   this->reflactances = reflactances;
   auto geometry = scene->getGeometry();
   for (auto& mesh : geometry) {
-    RTCBuffer vertices = rtcNewSharedBuffer(
-        device, mesh.vertices.data(), sizeof(glm::vec3) * mesh.vertices.size());
+    RTCBuffer vertices =
+        rtcNewSharedBuffer(device, mesh.vertices.vertices.data(),
+                           sizeof(glm::vec3) * mesh.vertices.vertices.size());
     RTCGeometry triGeom =
         rtcNewGeometry(this->device, RTC_GEOMETRY_TYPE_TRIANGLE);
     rtcSetGeometryBuffer(triGeom, RTC_BUFFER_TYPE_VERTEX, 0, RTC_FORMAT_FLOAT3,
-                         vertices, 0, 0, mesh.vertices.size());
+                         vertices, 0, 0, mesh.vertices.vertices.size());
     GLuint* indexT = (GLuint*)rtcSetNewGeometryBuffer(
         triGeom, RTC_BUFFER_TYPE_INDEX, 0, RTC_FORMAT_UINT3, sizeof(GLuint),
         mesh.triangles.size());
@@ -35,7 +36,7 @@ RTReflections::RTReflections(Scene* scene) : ReflectionsPipeline(scene) {
     RTCGeometry quadGeom =
         rtcNewGeometry(this->device, RTC_GEOMETRY_TYPE_TRIANGLE);
     rtcSetGeometryBuffer(quadGeom, RTC_BUFFER_TYPE_VERTEX, 0, RTC_FORMAT_FLOAT3,
-                         vertices, 0, 0, mesh.vertices.size());
+                         vertices, 0, 0, mesh.vertices.vertices.size());
     GLuint* indexQ = (GLuint*)rtcSetNewGeometryBuffer(
         triGeom, RTC_BUFFER_TYPE_INDEX, 0, RTC_FORMAT_UINT3, sizeof(GLuint),
         mesh.quads.size());

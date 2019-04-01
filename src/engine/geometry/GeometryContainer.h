@@ -6,13 +6,18 @@
 #include <GL/glew.h>
 #include <glm.hpp>
 
-typedef struct IndexedBuffers {
+typedef struct VertexPack {
   std::vector<glm::vec3> vertices;
+  std::vector<glm::vec2> textures;
+} VertexPack;
+
+typedef struct IndexedBuffers {
+  VertexPack vertices;
   std::vector<GLuint> triangles;
   std::vector<GLuint> quads;
 } IndexedBuffers;
 
 typedef struct FlattenedBuffers {
-  std::vector<glm::vec3> triangles;
-  std::vector<glm::vec3> quads;
+  VertexPack triangles;
+  VertexPack quads;
 } FlattenedBuffers;
