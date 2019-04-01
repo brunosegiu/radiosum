@@ -13,61 +13,30 @@ std::vector<Mesh *> Mesh::load(std::string path) {
 
   throw std::runtime_error("Unable to load mesh, format not supported");
 }
-template <typename vect>
-std::vector<vect> triangulate(std::vector<vect> &quad) {
-  vect v0 = quad[0];
-  vect v1 = quad[1];
-  vect v2 = quad[2];
-  vect v3 = quad[3];
-
-  std::vector<vect> triangles;
-  triangles.reserve(6);
-
-  triangles.push_back(v0);
-  triangles.push_back(v1);
-  triangles.push_back(v3);
-
-  triangles.push_back(v1);
-  triangles.push_back(v2);
-  triangles.push_back(v3);
-
-  return triangles;
-}
 
 Mesh::Mesh(IndexedBuffers geometry, Material *material) {
   this->geometry = geometry;
-  this->tFaces = geometry.triangles.size() / 3;
-  this->qFaces = geometry.quads.size() / 4;
+  this->tFaces = geometry.vertices.triangles.size() / 3;
+  this->qFaces = geometry.vertices.quads.size() / 4;
   this->faces = tFaces + qFaces;
 
   // Compute adjacencies
-  adjacencies = std::vector<std::vector<GLuint>>(
-      geometry.vertices.vertices.size(), std::vector<GLuint>());
-  for (GLuint i = 0; i < geometry.triangles.size(); i++) {
-    adjacencies[geometry.triangles[i]].push_back(i / 3);
+  adjacencies = std::vector<std::vector<GLuint>>(geometry.vertices.data.size(),
+                                                 std::vector<GLuint>());
+  for (GLuint i = 0; i < geometry.vertices.triangles.size(); i++) {
+    adjacencies[geometry.vertices.triangles[i]].push_back(i / 3);
   }
-  for (GLuint i = 0; i < geometry.quads.size(); i++) {
-    adjacencies[geometry.quads[i]].push_back(tFaces + (i / 4));
+  for (GLuint i = 0; i < geometry.vertices.quads.size(); i++) {
+    adjacencies[geometry.vertices.quads[i]].push_back(tFaces + (i / 4));
   }
 
-  // Triangulate quads
-  FlattenedBuffers flattened = deIndex(geometry);
-  std::vector<glm::vec3> triangles = flattened.triangles.vertices;
-  for (GLuint i = 0; i < flattened.quads.vertices.size(); i += 4) {
-    std::vector<glm::vec3> quad =
-        std::vector<glm::vec3>(flattened.quads.vertices.begin() + i,
-                               flattened.quads.vertices.begin() + i + 4);
-    std::vector<glm::vec3> triangulated = triangulate(quad);
-    triangles.insert(triangles.end(), triangulated.begin(), triangulated.end());
-  }
-  std::vector<glm::vec2> textures = flattened.triangles.textures;
-  for (GLuint i = 0; i < flattened.quads.textures.size(); i += 4) {
-    std::vector<glm::vec2> quad =
-        std::vector<glm::vec2>(flattened.quads.textures.begin() + i,
-                               flattened.quads.textures.begin() + i + 4);
-    std::vector<glm::vec2> triangulated = triangulate(quad);
-    textures.insert(textures.end(), triangulated.begin(), triangulated.end());
-  }
+  // Flatten faces (1 face -> 3/6 vertices)
+  std::vector<glm::vec3> triangles =
+      getFlattened<IndexedBuffer<glm::vec3>, glm::vec3>(geometry.vertices);
+  std::vector<glm::vec2> textures =
+      getFlattened<IndexedBuffer<glm::vec2>, glm::vec2>(geometry.textures);
+  std::vector<glm::vec3> normals =
+      getFlattened<IndexedBuffer<glm::vec3>, glm::vec3>(geometry.normals);
 
   this->vao = new VAO();
 
@@ -89,17 +58,19 @@ Mesh::Mesh(IndexedBuffers geometry, Material *material) {
   if (textures.size())
     this->vao->addAttribute(sizeof(glm::vec2) * textures.size(), &textures[0].x,
                             2, GL_FLOAT, TEXTURES_ID);
+  if (normals.size())
+    this->vao->addAttribute(sizeof(glm::vec3) * normals.size(), &normals[0].x,
+                            3, GL_FLOAT, NORMALS_ID);
 
   this->simpleGeometry = new VBO();
-  this->simpleGeometry->addVertices(geometry.vertices.vertices);
-  std::vector<GLuint> indices = geometry.triangles;
-  for (GLuint i = 0; i < geometry.quads.size(); i += 4) {
-    indices.push_back(geometry.quads[i + 0]);
-    indices.push_back(geometry.quads[i + 1]);
-    indices.push_back(geometry.quads[i + 3]);
-    indices.push_back(geometry.quads[i + 1]);
-    indices.push_back(geometry.quads[i + 2]);
-    indices.push_back(geometry.quads[i + 3]);
+  this->simpleGeometry->addVertices(geometry.vertices.data);
+  std::vector<GLuint> indices = geometry.vertices.triangles;
+  for (GLuint i = 0; i < geometry.vertices.quads.size(); i += 4) {
+    std::vector<GLuint> quad =
+        std::vector<GLuint>(geometry.vertices.quads.begin() + i,
+                            geometry.vertices.quads.begin() + i + 4);
+    std::vector<GLuint> triangulated = triangulate(quad);
+    indices.insert(indices.end(), triangulated.begin(), triangulated.end());
   }
   this->simpleGeometry->addIndices(indices);
 }
@@ -121,24 +92,30 @@ void Mesh::setRadiosity(std::vector<glm::vec3> radiosity, bool smooth) {
       glm::vec3 value = radiosity[i];
       for (GLuint vertex = 0; vertex < 3; vertex++) {
         perVertexRadiosity[3 * i + vertex] = interpolate(
-            this->radiosity,
-            this->adjacencies[this->geometry.triangles[3 * i + vertex]]);
+            this->radiosity, this->adjacencies[this->geometry.vertices
+                                                   .triangles[3 * i + vertex]]);
       }
     }
     for (GLuint i = 0; i < qFaces; i++) {
       glm::vec3 value = radiosity[tFaces + i];
       perVertexRadiosity[3 * tFaces + 6 * i + 0] = interpolate(
-          this->radiosity, this->adjacencies[this->geometry.quads[4 * i + 0]]);
+          this->radiosity,
+          this->adjacencies[this->geometry.vertices.quads[4 * i + 0]]);
       perVertexRadiosity[3 * tFaces + 6 * i + 1] = interpolate(
-          this->radiosity, this->adjacencies[this->geometry.quads[4 * i + 1]]);
+          this->radiosity,
+          this->adjacencies[this->geometry.vertices.quads[4 * i + 1]]);
       perVertexRadiosity[3 * tFaces + 6 * i + 2] = interpolate(
-          this->radiosity, this->adjacencies[this->geometry.quads[4 * i + 3]]);
+          this->radiosity,
+          this->adjacencies[this->geometry.vertices.quads[4 * i + 3]]);
       perVertexRadiosity[3 * tFaces + 6 * i + 3] = interpolate(
-          this->radiosity, this->adjacencies[this->geometry.quads[4 * i + 1]]);
+          this->radiosity,
+          this->adjacencies[this->geometry.vertices.quads[4 * i + 1]]);
       perVertexRadiosity[3 * tFaces + 6 * i + 4] = interpolate(
-          this->radiosity, this->adjacencies[this->geometry.quads[4 * i + 2]]);
+          this->radiosity,
+          this->adjacencies[this->geometry.vertices.quads[4 * i + 2]]);
       perVertexRadiosity[3 * tFaces + 6 * i + 5] = interpolate(
-          this->radiosity, this->adjacencies[this->geometry.quads[4 * i + 3]]);
+          this->radiosity,
+          this->adjacencies[this->geometry.vertices.quads[4 * i + 3]]);
     }
   } else {
     for (GLuint i = 0; i < tFaces; i++) {
@@ -234,23 +211,23 @@ Face Mesh::getFace(GLuint index) {
   index = index % this->size();
   if (index < tFaces) {
     std::vector<GLuint> indices(3);
-    indices[0] = this->geometry.triangles[3 * index];
-    indices[1] = this->geometry.triangles[3 * index + 1];
-    indices[2] = this->geometry.triangles[3 * index + 2];
-    return Face(this->geometry.vertices.vertices[indices[0]],
-                this->geometry.vertices.vertices[indices[1]],
-                this->geometry.vertices.vertices[indices[2]]);
+    indices[0] = this->geometry.vertices.triangles[3 * index];
+    indices[1] = this->geometry.vertices.triangles[3 * index + 1];
+    indices[2] = this->geometry.vertices.triangles[3 * index + 2];
+    return Face(this->geometry.vertices.data[indices[0]],
+                this->geometry.vertices.data[indices[1]],
+                this->geometry.vertices.data[indices[2]]);
   } else {
     GLuint inQuad = index - tFaces;
     std::vector<GLuint> indices(4);
-    indices[0] = this->geometry.quads[4 * inQuad + 0];
-    indices[1] = this->geometry.quads[4 * inQuad + 1];
-    indices[2] = this->geometry.quads[4 * inQuad + 2];
-    indices[3] = this->geometry.quads[4 * inQuad + 3];
-    return Face(this->geometry.vertices.vertices[indices[0]],
-                this->geometry.vertices.vertices[indices[1]],
-                this->geometry.vertices.vertices[indices[2]],
-                this->geometry.vertices.vertices[indices[3]]);
+    indices[0] = this->geometry.vertices.quads[4 * inQuad + 0];
+    indices[1] = this->geometry.vertices.quads[4 * inQuad + 1];
+    indices[2] = this->geometry.vertices.quads[4 * inQuad + 2];
+    indices[3] = this->geometry.vertices.quads[4 * inQuad + 3];
+    return Face(this->geometry.vertices.data[indices[0]],
+                this->geometry.vertices.data[indices[1]],
+                this->geometry.vertices.data[indices[2]],
+                this->geometry.vertices.data[indices[3]]);
   }
 }
 

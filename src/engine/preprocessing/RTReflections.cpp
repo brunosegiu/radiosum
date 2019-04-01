@@ -18,17 +18,17 @@ RTReflections::RTReflections(Scene* scene) : ReflectionsPipeline(scene) {
   auto geometry = scene->getGeometry();
   for (auto& mesh : geometry) {
     RTCBuffer vertices =
-        rtcNewSharedBuffer(device, mesh.vertices.vertices.data(),
-                           sizeof(glm::vec3) * mesh.vertices.vertices.size());
+        rtcNewSharedBuffer(device, mesh.vertices.data.data(),
+                           sizeof(glm::vec3) * mesh.vertices.data.size());
     RTCGeometry triGeom =
         rtcNewGeometry(this->device, RTC_GEOMETRY_TYPE_TRIANGLE);
     rtcSetGeometryBuffer(triGeom, RTC_BUFFER_TYPE_VERTEX, 0, RTC_FORMAT_FLOAT3,
-                         vertices, 0, 0, mesh.vertices.vertices.size());
+                         vertices, 0, 0, mesh.vertices.data.size());
     GLuint* indexT = (GLuint*)rtcSetNewGeometryBuffer(
         triGeom, RTC_BUFFER_TYPE_INDEX, 0, RTC_FORMAT_UINT3, sizeof(GLuint),
-        mesh.triangles.size());
-    for (GLuint i = 0; i < mesh.triangles.size(); i++) {
-      indexT[i] = mesh.triangles[i];
+        mesh.vertices.triangles.size());
+    for (GLuint i = 0; i < mesh.vertices.triangles.size(); i++) {
+      indexT[i] = mesh.vertices.triangles[i];
     }
     rtcCommitGeometry(triGeom);
     rtcAttachGeometry(this->scene, triGeom);
@@ -36,12 +36,12 @@ RTReflections::RTReflections(Scene* scene) : ReflectionsPipeline(scene) {
     RTCGeometry quadGeom =
         rtcNewGeometry(this->device, RTC_GEOMETRY_TYPE_TRIANGLE);
     rtcSetGeometryBuffer(quadGeom, RTC_BUFFER_TYPE_VERTEX, 0, RTC_FORMAT_FLOAT3,
-                         vertices, 0, 0, mesh.vertices.vertices.size());
+                         vertices, 0, 0, mesh.vertices.data.size());
     GLuint* indexQ = (GLuint*)rtcSetNewGeometryBuffer(
         triGeom, RTC_BUFFER_TYPE_INDEX, 0, RTC_FORMAT_UINT3, sizeof(GLuint),
-        mesh.quads.size());
-    for (GLuint i = 0; i < mesh.quads.size(); i++) {
-      indexQ[i] = mesh.quads[i];
+        mesh.vertices.quads.size());
+    for (GLuint i = 0; i < mesh.vertices.quads.size(); i++) {
+      indexQ[i] = mesh.vertices.quads[i];
     }
     rtcCommitGeometry(quadGeom);
     rtcAttachGeometry(this->scene, quadGeom);

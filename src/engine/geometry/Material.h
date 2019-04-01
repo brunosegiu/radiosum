@@ -12,6 +12,7 @@
 #define REFLACTANCE_ID 2
 #define RADIOSITY_ID 3
 #define TEXTURES_ID 4
+#define NORMALS_ID 5
 
 // Tied to geometry
 

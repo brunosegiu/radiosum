@@ -66,6 +66,21 @@ inline std::map<std::string, Material *> loadMtl(std::string path) {
   return materials;
 }
 
+inline std::pair<GLuint, GLuint> getOffsets(std::vector<GLuint> &v0,
+                                            std::vector<GLuint> &v1) {
+  GLuint min = MAXUINT32;
+  GLuint max = 0;
+  for (auto index : v0) {
+    min = index < min ? index : min;
+    max = index > max ? index : max;
+  }
+  for (auto index : v1) {
+    min = index < min ? index : min;
+    max = index > max ? index : max;
+  }
+  return std::pair<GLuint, GLuint>(min, max);
+}
+
 inline std::vector<Mesh *> loadOBJ(std::string path) {
   std::ifstream input(path);
   std::string mtlPath = path;
@@ -147,53 +162,72 @@ inline std::vector<Mesh *> loadOBJ(std::string path) {
   GLuint index = 0;
   for (auto &object : objects) {
     IndexedBuffers indObj;
-    indObj.triangles = object.first[VERTICES];
-    indObj.quads = object.second[VERTICES];
+    indObj.vertices.triangles = object.first[VERTICES];
+    indObj.vertices.quads = object.second[VERTICES];
+    {
+      GLuint min, max;
+      auto minMax =
+          getOffsets(indObj.vertices.triangles, indObj.vertices.quads);
+      min = minMax.first;
+      max = minMax.second;
 
-    GLuint min = MAXUINT32;
-    GLuint max = 0;
-    for (auto index : indObj.triangles) {
-      min = index < min ? index : min;
-      max = index > max ? index : max;
-    }
-    for (auto index : indObj.quads) {
-      min = index < min ? index : min;
-      max = index > max ? index : max;
-    }
+      indObj.vertices.data = std::vector<glm::vec3>(
+          indexedVertices.begin() + min, indexedVertices.begin() + max + 1);
 
-    indObj.vertices.vertices = std::vector<glm::vec3>(
-        indexedVertices.begin() + min, indexedVertices.begin() + max + 1);
-
-    for (auto &index : indObj.triangles) {
-      index = index - min;
-    }
-    for (auto &index : indObj.quads) {
-      index = index - min;
-    }
-
-    if (object.first[TEXTURES].size() > 0 ||
-        object.second[TEXTURES].size() > 0) {
-      GLuint tmin = MAXUINT32;
-      GLuint tmax = 0;
-      for (auto index : object.first[TEXTURES]) {
-        tmin = index < tmin ? index : tmin;
-        tmax = index > tmax ? index : tmax;
+      for (auto &index : indObj.vertices.triangles) {
+        index = index - min;
       }
-      for (auto index : object.second[TEXTURES]) {
-        tmin = index < tmin ? index : tmin;
-        tmax = index > tmax ? index : tmax;
-      }
-      indObj.vertices.textures = std::vector<glm::vec2>(
-          indObj.vertices.vertices.size(), glm::vec2(.0f));
-      for (GLuint i = 0; i < object.first[TEXTURES].size(); i++) {
-        indObj.vertices.textures[object.first[VERTICES][i] - min] =
-            indexedTextures[object.first[TEXTURES][i]];
-      }
-      for (GLuint i = 0; i < object.second[TEXTURES].size(); i++) {
-        indObj.vertices.textures[object.first[VERTICES][i] - min] =
-            indexedTextures[object.second[TEXTURES][i]];
+      for (auto &index : indObj.vertices.quads) {
+        index = index - min;
       }
     }
+
+    {
+      if (object.first[TEXTURES].size() > 0 ||
+          object.second[TEXTURES].size() > 0) {
+        indObj.textures.triangles = object.first[TEXTURES];
+        indObj.textures.quads = object.second[TEXTURES];
+        GLuint min, max;
+        auto minMax =
+            getOffsets(indObj.textures.triangles, indObj.textures.quads);
+        min = minMax.first;
+        max = minMax.second;
+
+        indObj.textures.data = std::vector<glm::vec2>(
+            indexedTextures.begin() + min, indexedTextures.begin() + max + 1);
+
+        for (auto &index : indObj.textures.triangles) {
+          index = index - min;
+        }
+        for (auto &index : indObj.textures.quads) {
+          index = index - min;
+        }
+      }
+    }
+
+    {
+      if (object.first[NORMALS].size() > 0 ||
+          object.second[NORMALS].size() > 0) {
+        indObj.normals.triangles = object.first[NORMALS];
+        indObj.normals.quads = object.second[NORMALS];
+        GLuint min, max;
+        auto minMax =
+            getOffsets(indObj.normals.triangles, indObj.normals.quads);
+        min = minMax.first;
+        max = minMax.second;
+
+        indObj.normals.data = std::vector<glm::vec3>(
+            indexedNormals.begin() + min, indexedNormals.begin() + max + 1);
+
+        for (auto &index : indObj.normals.triangles) {
+          index = index - min;
+        }
+        for (auto &index : indObj.normals.quads) {
+          index = index - min;
+        }
+      }
+    }
+
     Mesh *mesh = new Mesh(indObj, vectorizedMaterials[index]);
     meshes.push_back(mesh);
     index++;
@@ -201,45 +235,47 @@ inline std::vector<Mesh *> loadOBJ(std::string path) {
   return meshes;
 }
 
-inline FlattenedBuffers deIndex(IndexedBuffers &buffers) {
-  FlattenedBuffers flattened;
+template <typename vect>
+std::vector<vect> triangulate(std::vector<vect> &quad) {
+  vect v0 = quad[0];
+  vect v1 = quad[1];
+  vect v2 = quad[2];
+  vect v3 = quad[3];
+
+  std::vector<vect> triangles;
+  triangles.reserve(6);
+
+  triangles.push_back(v0);
+  triangles.push_back(v1);
+  triangles.push_back(v3);
+
+  triangles.push_back(v1);
+  triangles.push_back(v2);
+  triangles.push_back(v3);
+
+  return triangles;
+}
+
+template <typename IndexBuffer, typename vectorT>
+inline std::vector<vectorT> getFlattened(IndexBuffer &buffers) {
+  std::vector<vectorT> flat;
+  const auto vertices = buffers.data;
   for (unsigned int geom = 0; geom < 2; geom++) {
-    const auto vertices = buffers.vertices;
     const auto indices = (geom == 0 ? buffers.triangles : buffers.quads);
     for (unsigned int i = 0; i < indices.size(); i += (geom == 0 ? 3 : 4)) {
-      glm::vec3 v0 = vertices.vertices[indices[i]];
-      glm::vec3 v1 = vertices.vertices[indices[i + 1]];
-      glm::vec3 v2 = vertices.vertices[indices[i + 2]];
-
+      vectorT v0 = vertices[indices[i]];
+      vectorT v1 = vertices[indices[i + 1]];
+      vectorT v2 = vertices[indices[i + 2]];
       if (geom == 0) {
-        flattened.triangles.vertices.push_back(v0);
-        flattened.triangles.vertices.push_back(v1);
-        flattened.triangles.vertices.push_back(v2);
+        std::vector<vectorT> tri = {v0, v1, v2};
+        flat.insert(flat.end(), tri.begin(), tri.end());
       } else {
-        glm::vec3 v3 = vertices.vertices[indices[i + 3]];
-        flattened.quads.vertices.push_back(v0);
-        flattened.quads.vertices.push_back(v1);
-        flattened.quads.vertices.push_back(v2);
-        flattened.quads.vertices.push_back(v3);
-      }
-
-      if (vertices.textures.size() > 0) {
-        glm::vec2 t0 = vertices.textures[indices[i]];
-        glm::vec2 t1 = vertices.textures[indices[i + 1]];
-        glm::vec2 t2 = vertices.textures[indices[i + 2]];
-        if (geom == 0) {
-          flattened.triangles.textures.push_back(t0);
-          flattened.triangles.textures.push_back(t1);
-          flattened.triangles.textures.push_back(t2);
-        } else {
-          glm::vec2 t3 = vertices.textures[indices[i + 3]];
-          flattened.quads.textures.push_back(t0);
-          flattened.quads.textures.push_back(t1);
-          flattened.quads.textures.push_back(t2);
-          flattened.quads.textures.push_back(t3);
-        }
+        vectorT v3 = vertices[indices[i + 3]];
+        std::vector<vectorT> quad = {v0, v1, v2, v3};
+        auto triangulated = triangulate(quad);
+        flat.insert(flat.end(), triangulated.begin(), triangulated.end());
       }
     }
   }
-  return flattened;
+  return flat;
 }
