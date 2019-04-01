@@ -26,5 +26,5 @@ void main() {
 	radiosity = max(radiosityToFrag, 0.0f);
 	emission = max(emissionToFrag, 0.0f);
 	reflactance = max(reflactanceToFrag, 0.0f);
-	albedo = texture(albedoSampler,uvToFrag).rgb;
+	albedo = texture(albedoSampler,vec2(uvToFrag.x, 1.0f - uvToFrag.y)).rgb;
 }
