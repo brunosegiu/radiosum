@@ -11,6 +11,5 @@ class Preprocess : public Component {
   virtual ~Preprocess();
 
  private:
-  bool smooth;
   int channelCount;
 };

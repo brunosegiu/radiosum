@@ -171,9 +171,12 @@ void Mesh::draw(GLuint shaderID) {
   this->material->bind();
   GLuint tFacesLoc = glGetUniformLocation(shaderID, "tFaces");
   glUniform1ui(tFacesLoc, this->tFaces);
+  GLuint texturedLoc = glGetUniformLocation(shaderID, "textured");
+  glUniform1ui(texturedLoc, this->material->textured() ? 1 : 0);
   vao->bind();
   glDrawArrays(GL_TRIANGLES, 0, GLsizei(3 * this->tFaces + 6 * qFaces));
   vao->unbind();
+  this->material->unbind();
 }
 
 void Mesh::drawGeometry(GLuint shaderID) {

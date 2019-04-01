@@ -13,6 +13,7 @@ layout(location = 4) out vec3 albedo;
 
 uniform uint tFaces;
 uniform uint offset;
+uniform uint textured = 0;
 layout(location = 0) uniform sampler2D albedoSampler;
 
 uint correrctID(uint vertexID){
@@ -26,5 +27,5 @@ void main() {
 	radiosity = max(radiosityToFrag, 0.0f);
 	emission = max(emissionToFrag, 0.0f);
 	reflactance = max(reflactanceToFrag, 0.0f);
-	albedo = texture(albedoSampler,vec2(uvToFrag.x, 1.0f - uvToFrag.y)).rgb;
+	albedo = textured == 1 ? texture(albedoSampler,vec2(uvToFrag.x, 1.0f - uvToFrag.y)).rgb : vec3(.0f);
 }

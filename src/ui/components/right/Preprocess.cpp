@@ -8,7 +8,6 @@
 
 Preprocess::Preprocess() : Component() {
   this->enable();
-  this->smooth = false;
   this->channelCount = 0;
 }
 
@@ -40,19 +39,6 @@ void Preprocess::render() {
       ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
       ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f);
     }
-    if (ImGui::RadioButton("Interpolate", this->smooth)) {
-      if (!this->smooth && EngineStore::pipelineStage == RADIOSITY_READY) {
-        UIStore::engine->setRadiosity(!smooth);
-      }
-      this->smooth = true;
-    }
-    ImGui::SameLine();
-    if (ImGui::RadioButton("Flatten", !this->smooth)) {
-      if (this->smooth && EngineStore::pipelineStage == RADIOSITY_READY) {
-        UIStore::engine->setRadiosity(!smooth);
-      }
-      this->smooth = false;
-    }
     ImGui::Combo("Channels", &this->channelCount, "Single\0Double\0Triple");
     ImGui::Combo("Solver", &this->channelCount,
                  "Eigen: SparseLU\0Eigen: Cholesky\0Other");
@@ -63,7 +49,7 @@ void Preprocess::render() {
       UIStore::engine->computeRadiosity(
           std::vector<Channel>(channels.begin(),
                                channels.begin() + this->channelCount + 1),
-          this->smooth);
+          UIStore::shading == GOURAUD);
     }
     if (!enableStep2) {
       ImGui::PopItemFlag();

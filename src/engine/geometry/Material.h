@@ -23,6 +23,9 @@ class Material {
 
   void instance(GLuint faceCount, GLuint vertexCount, GLuint tFaces, VAO* vao);
   void bind();
+  void unbind();
+
+  bool textured();
 
   std::vector<GLfloat> getEmission();
   GLfloat getEmission(GLuint faceIndex);

@@ -40,6 +40,11 @@ inline std::map<std::string, Material *> loadMtl(std::string path) {
         Material *mat =
             new Material(currentReflactance, currentEmission, texture);
         materials[currentMTL] = mat;
+
+        currentReflactance = glm::vec3(.0f);
+        currentEmission = .0f;
+        currentTexturePath = "";
+        currentMTL = "";
       } else {
         run = true;
       }

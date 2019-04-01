@@ -2,6 +2,7 @@
 
 #include <string>
 
+#include "EngineStore.h"
 #include "UIStore.h"
 #include "Utils.h"
 
@@ -89,10 +90,36 @@ void MainMenu::render() {
     }
     if (ImGui::BeginMenu("Settings")) {
       if (ImGui::BeginMenu("Render")) {
-        if (ImGui::MenuItem("Radiosity", nullptr,
-                            UIStore::engine->getMode() == RADIOSITY)) {
-          UIStore::engine->setMode(RADIOSITY);
+        if (ImGui::BeginMenu("Radiosity")) {
+          bool enabled = UIStore::engine->getMode() == RADIOSITY;
+          if (ImGui::MenuItem("Flat", nullptr,
+                              enabled && UIStore::shading == FLAT)) {
+            UIStore::engine->setMode(RADIOSITY);
+            if (EngineStore::pipelineStage == RADIOSITY_READY) {
+              UIStore::engine->setRadiosity(false);
+              UIStore::shading = FLAT;
+            }
+          }
+          if (ImGui::MenuItem("Gouraud", nullptr,
+                              enabled && UIStore::shading == GOURAUD)) {
+            UIStore::engine->setMode(RADIOSITY);
+            if (EngineStore::pipelineStage == RADIOSITY_READY) {
+              UIStore::engine->setRadiosity(true);
+              UIStore::shading = GOURAUD;
+            }
+          }
+          if (ImGui::MenuItem("Phong", nullptr,
+                              enabled && UIStore::shading == PHONG)) {
+            UIStore::engine->setMode(RADIOSITY);
+            if (EngineStore::pipelineStage == RADIOSITY_READY) {
+              UIStore::engine->setRadiosity(false);
+              UIStore::shading = PHONG;
+            }
+            // Enable normals
+          }
+          ImGui::EndMenu();
         }
+
         if (ImGui::MenuItem("Emission", nullptr,
                             UIStore::engine->getMode() == EMISSION)) {
           UIStore::engine->setMode(EMISSION);

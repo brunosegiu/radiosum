@@ -10,6 +10,7 @@ class Texture {
           GLint internalFormat = GL_RGB, GLenum format = GL_RGB,
           GLenum type = GL_UNSIGNED_BYTE, GLvoid* data = nullptr);
   void bind();
+  void unbind(GLuint texture);
   GLuint read(GLenum texture = 0, bool cs = false);
   static Texture* load(std::string path);
   virtual ~Texture();

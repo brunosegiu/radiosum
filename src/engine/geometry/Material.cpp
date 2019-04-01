@@ -50,6 +50,14 @@ void Material::bind() {
   }
 }
 
+void Material::unbind() {
+  if (texture) {
+    this->texture->unbind(0);
+  }
+}
+
+bool Material::textured() { return this->texture != nullptr; }
+
 void Material::setEmission(GLuint faceIndex, GLfloat emission) {
   this->emissions[faceIndex] = emission;
   std::vector<GLfloat> perVertex;

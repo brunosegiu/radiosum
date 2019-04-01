@@ -28,6 +28,12 @@ Texture::Texture(GLuint width, GLuint height, GLenum target,
 
 void Texture::bind() { glBindTexture(this->target, this->GLId); }
 
+void Texture::unbind(GLuint texture) {
+  glActiveTexture(GL_TEXTURE0 + texture);
+  glBindTexture(this->target, 0);
+  glDisable(target);
+}
+
 GLuint Texture::read(GLuint texture, bool cs) {
   if (cs)
     glBindImageTexture(texture, this->GLId, 0, GL_FALSE, 0, GL_READ_ONLY,
@@ -35,6 +41,7 @@ GLuint Texture::read(GLuint texture, bool cs) {
   else {
     this->bind();
     glActiveTexture(GL_TEXTURE0 + texture);
+    glEnable(this->target);
   }
   return this->GLId;
 }
