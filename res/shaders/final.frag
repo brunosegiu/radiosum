@@ -4,6 +4,7 @@ in smooth float emissionToFrag;
 in smooth vec3 radiosityToFrag;
 in smooth vec3 reflactanceToFrag;
 in smooth vec2 uvToFrag;
+in smooth float phongFactorToFrag;
 
 layout(location = 0) out vec3 radiosity;
 layout(location = 1) out uint id;

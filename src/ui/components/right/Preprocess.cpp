@@ -8,7 +8,7 @@
 
 Preprocess::Preprocess() : Component() {
   this->enable();
-  this->channelCount = 0;
+  this->channelCount = 2;
 }
 
 void Preprocess::render() {
