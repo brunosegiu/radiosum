@@ -14,7 +14,9 @@ PreprocessingController::PreprocessingController(Scene* scene) {
 GLuint PreprocessingController::runStep() {
   GLuint index = this->iterator->faceIndex();
   if (!iterator->end()) {
-    // if (index == 0) this->rPipeline->run();
+    if (index == 0) {
+      // this->rPipeline->run();
+    }
     if (EngineStore::pipelineStage == FF_LOADING ||
         EngineStore::pipelineStage == INIT) {
       Face* face = new Face(this->iterator->get());

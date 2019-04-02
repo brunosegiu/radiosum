@@ -7,6 +7,7 @@
 #include <set>
 
 #include "EngineTypes.h"
+#include "Timer.h"
 #include "buffers/RowBuffer.h"
 #include "geometry/Scene.h"
 #include "preprocessing/HemicubeCorrector.h"
@@ -58,6 +59,8 @@ class DiffusePipeline {
   RowBuffer* row;
   HemicubeCorrector* corrector;
   GLuint instances;
+
+  Timer t;
 
   // Storage
 

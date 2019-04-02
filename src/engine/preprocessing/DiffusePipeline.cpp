@@ -43,6 +43,8 @@ PipelineStage DiffusePipeline::checkPipelineStage() {
     if (threadsReady == this->scene->size()) {
       this->threadsReady = 0;
       this->currentStage = FF_READY;
+      EngineStore::logger.log("Computed Form Factors in " +
+                              std::to_string(t.get()) + " seconds");
     }
     ffLock.unlock();
   } else if (this->currentStage == FF_READY) {
@@ -60,6 +62,8 @@ PipelineStage DiffusePipeline::checkPipelineStage() {
         radiosityReady[channel] = false;
       }
       this->currentStage = RADIOSITY_READY;
+      EngineStore::logger.log("Computed radiosity in " +
+                              std::to_string(t.get()) + " seconds");
       std::vector<glm::vec3> radiosityVec3;
       radiosityVec3.reserve(this->radiosity[RED].size());
       for (GLuint i = 0; i < this->radiosity[RED].size(); i++) {
@@ -139,6 +143,9 @@ void DiffusePipeline::setTriplets(
 }
 
 void DiffusePipeline::computeFormFactors() {
+  if (this->index == 0) {
+    t = Timer();
+  }
   if (this->index < this->scene->size()) {
     this->currentStage = FF_LOADING;
     EngineStore::ffProgress = this->index / GLfloat(this->scene->size());
@@ -156,9 +163,6 @@ void DiffusePipeline::computeFormFactors() {
       this->formFactorWorkers.push_back(
           std::thread(&DiffusePipeline::processRow, this, faceFactors, index));
     }
-  } else {
-    this->currentStage = FF_READY;
-    EngineStore::ffProgress = .0f;
   }
 }
 
@@ -183,6 +187,7 @@ void DiffusePipeline::crWrapped(Channel channel) {
 void DiffusePipeline::computeRadiosity() {
   this->waitForWorkers();
   this->currentStage = RADIOSITY_LOADING;
+  t = Timer();
   radiosityReady[RED] = false;
   radiosityReady[GREEN] = false;
   radiosityReady[BLUE] = false;
