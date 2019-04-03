@@ -46,9 +46,10 @@ void PreprocessingController::checkFlags() {
 }
 
 void PreprocessingController::computeRadiosity(std::set<Channel> channels,
-                                               bool smooth) {
+                                               EigenOpt solver, bool smooth) {
   this->dPipeline->configureInterpolation(smooth);
   this->dPipeline->configureChannels(std::set<Channel>(channels));
+  this->dPipeline->configureSolver(solver);
   this->dPipeline->computeRadiosity();
 }
 

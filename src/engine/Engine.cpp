@@ -42,12 +42,13 @@ void Engine::preprocess(bool withOutput) {
   if (!withOutput) this->preprocessor->runUnsafe(false);
 }
 
-void Engine::computeRadiosity(std::vector<Channel> channels, bool smooth) {
+void Engine::computeRadiosity(std::vector<Channel> channels, EigenOpt solver,
+                              bool smooth) {
   std::set<Channel> sChannels;
   for (auto& channel : channels) {
     sChannels.insert(channel);
   }
-  this->preprocessor->computeRadiosity(sChannels, smooth);
+  this->preprocessor->computeRadiosity(sChannels, solver, smooth);
 }
 
 void Engine::setRadiosity(bool smooth) {
