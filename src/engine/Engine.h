@@ -25,7 +25,8 @@ class Engine {
   void preprocess(
       bool withOutput = true);  // if withOutput == false run preprocessor until
                                 // it finishes, without rendering steps
-  void computeRadiosity(std::vector<Channel> channels, bool smooth = false);
+  void computeRadiosity(std::vector<Channel> channels, EigenOpt solver = SLU,
+                        bool smooth = false);
   void setRadiosity(bool smooth);
   Camera* getCamera();
 

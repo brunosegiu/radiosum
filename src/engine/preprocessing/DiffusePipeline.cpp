@@ -21,20 +21,29 @@ DiffusePipeline::DiffusePipeline(Scene* scene, GLuint resolution) {
   radiosityReady[GREEN] = false;
   radiosityReady[BLUE] = false;
   threadsReady = 0;
+
+  solverType = SLU;
 }
 
 void DiffusePipeline::configureFace(Face* face) { this->face = face; }
+
 void DiffusePipeline::configureFaceIndex(GLuint index) { this->index = index; }
+
 void DiffusePipeline::configureReflections(bool enable) {
   this->enableReflections = enable;
 }
+
 void DiffusePipeline::configureChannels(std::set<Channel> channels) {
   this->channels = channels;
 }
+
 void DiffusePipeline::configureInterpolation(bool enable) {
   this->enableInterpolation = enable;
 }
-void DiffusePipeline::configureSolver(Solver* solver) {}
+
+void DiffusePipeline::configureSolver(EigenOpt solver) {
+  this->solverType = solver;
+}
 
 PipelineStage DiffusePipeline::checkPipelineStage() {
   if (this->currentStage == INIT) {
@@ -167,7 +176,26 @@ void DiffusePipeline::computeFormFactors() {
 }
 
 void DiffusePipeline::crWrapped(Channel channel) {
-  Solver* solver = new EigenSolver();
+  EigenSolver* solver;
+
+  switch (this->solverType) {
+    case SLU:
+      solver = new EigenSolverSparseLU();
+      break;
+    case SLDLT:
+      solver = new EigenSolverSimplicialLDLT();
+      break;
+    case CG:
+      solver = new EigenSolverConjugateGradient();
+      break;
+    case BICGSTAB:
+      solver = new EigenSolverBiCGSTAB();
+      break;
+    default:
+      solver = new EigenSolverSparseLU();
+      break;
+  }
+
   solver->init(this->scene->size(), this->triplets);
 
   std::vector<glm::vec3> reflactanceRGB = this->scene->getReflactance();
@@ -179,9 +207,9 @@ void DiffusePipeline::crWrapped(Channel channel) {
   solver->multiplyReflactance(channelReflactance);
 
   std::vector<GLfloat> emissions = this->scene->getEmission();
-
   this->radiosity[channel] = solver->solve(emissions);
   this->radiosityReady[channel] = true;
+  delete solver;
 }
 
 void DiffusePipeline::computeRadiosity() {

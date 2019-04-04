@@ -1,7 +1,5 @@
 #include "preprocessing/EigenSolver.h"
 
-EigenSolver::EigenSolver() {}
-
 void EigenSolver::init(
     GLuint size, std::vector<std::tuple<GLuint, GLuint, GLfloat>> triplets) {
   matrix = Eigen::SparseMatrix<GLfloat>(size, size);
@@ -16,6 +14,24 @@ void EigenSolver::init(
   matrix.setFromTriplets(eigenTriplets.begin(), eigenTriplets.end());
 }
 
+std::vector<GLfloat> EigenSolver::solve(std::vector<GLfloat> emissions) {
+  // Initialize solver
+  this->initSolver();
+
+  // Get emissions
+  Eigen::Map<Eigen::VectorXf, Eigen::Unaligned> emissionsXf(emissions.data(),
+                                                            emissions.size());
+  Eigen::VectorXf _radiosity(emissionsXf.size());
+
+  // Compute radiosity
+  _radiosity = this->solve(emissionsXf);
+
+  std::vector<GLfloat> radiosity =
+      std::vector<GLfloat>(size_t(_radiosity.size()), 0.0f);
+  Eigen::VectorXf::Map(&radiosity[0], _radiosity.size()) = _radiosity;
+  return radiosity;
+}
+
 void EigenSolver::multiplyReflactance(std::vector<GLfloat> reflactance) {
   for (int k = 0; k < matrix.outerSize(); ++k) {
     for (Eigen::SparseMatrix<GLfloat>::InnerIterator it(matrix, k); it; ++it) {
@@ -26,9 +42,7 @@ void EigenSolver::multiplyReflactance(std::vector<GLfloat> reflactance) {
   }
 }
 
-std::vector<GLfloat> EigenSolver::solve(std::vector<GLfloat> emissions) {
-  // Initialize solver
-  Eigen::SparseLU<Eigen::SparseMatrix<GLfloat>> solver;
+void EigenSolverSparseLU::initSolver() {
   solver.analyzePattern(matrix);
   solver.factorize(matrix);
 
@@ -36,23 +50,73 @@ std::vector<GLfloat> EigenSolver::solve(std::vector<GLfloat> emissions) {
     throw std::runtime_error(
         "Cannot compute radiosity from form factor matrix");
   }
+}
 
-  // Get emissions
-  Eigen::Map<Eigen::VectorXf, Eigen::Unaligned> emissionsXf(emissions.data(),
-                                                            emissions.size());
-  Eigen::VectorXf _radiosity(emissionsXf.size());
-
-  // Compute radiosity
-  _radiosity = solver.solve(emissionsXf);
+Eigen::VectorXf EigenSolverSparseLU::solve(
+    Eigen::Map<Eigen::VectorXf, Eigen::Unaligned> &vector) {
+  auto res = solver.solve(vector);
   if (solver.info() != Eigen::Success) {
     throw std::runtime_error(
         "Cannot compute radiosity from form factor matrix");
   }
-
-  std::vector<GLfloat> radiosity =
-      std::vector<GLfloat>(size_t(_radiosity.size()), 0.0f);
-  Eigen::VectorXf::Map(&radiosity[0], _radiosity.size()) = _radiosity;
-  return radiosity;
+  return res;
 }
 
-EigenSolver::~EigenSolver() {}
+void EigenSolverSimplicialLDLT::initSolver() {
+  solver.analyzePattern(matrix);
+  solver.factorize(matrix);
+
+  if (solver.info() != Eigen::Success) {
+    throw std::runtime_error(
+        "Cannot compute radiosity from form factor matrix");
+  }
+}
+
+Eigen::VectorXf EigenSolverSimplicialLDLT::solve(
+    Eigen::Map<Eigen::VectorXf, Eigen::Unaligned> &vector) {
+  solver.solve(vector);
+  auto res = solver.solve(vector);
+  if (solver.info() != Eigen::Success) {
+    throw std::runtime_error(
+        "Cannot compute radiosity from form factor matrix");
+  }
+  return res;
+}
+
+void EigenSolverConjugateGradient::initSolver() {
+  solver.compute(matrix);
+
+  if (solver.info() != Eigen::Success) {
+    throw std::runtime_error(
+        "Cannot compute radiosity from form factor matrix");
+  }
+}
+
+Eigen::VectorXf EigenSolverConjugateGradient::solve(
+    Eigen::Map<Eigen::VectorXf, Eigen::Unaligned> &vector) {
+  auto res = solver.solve(vector);
+  if (solver.info() != Eigen::Success) {
+    throw std::runtime_error(
+        "Cannot compute radiosity from form factor matrix");
+  }
+  return res;
+}
+
+void EigenSolverBiCGSTAB::initSolver() {
+  solver.compute(matrix);
+
+  if (solver.info() != Eigen::Success) {
+    throw std::runtime_error(
+        "Cannot compute radiosity from form factor matrix");
+  }
+}
+
+Eigen::VectorXf EigenSolverBiCGSTAB::solve(
+    Eigen::Map<Eigen::VectorXf, Eigen::Unaligned> &vector) {
+  auto res = solver.solve(vector);
+  if (solver.info() != Eigen::Success) {
+    throw std::runtime_error(
+        "Cannot compute radiosity from form factor matrix");
+  }
+  return res;
+}

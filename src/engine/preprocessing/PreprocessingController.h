@@ -12,7 +12,8 @@ class PreprocessingController {
   PreprocessingController(Scene* scene);
   GLuint runStep();
   void runUnsafe(bool full = false);
-  void computeRadiosity(std::set<Channel> channels, bool smooth = false);
+  void computeRadiosity(std::set<Channel> channels, EigenOpt solver = SLU,
+                        bool smooth = false);
   void checkFlags();
   std::vector<std::tuple<GLuint, GLuint, GLfloat>> getTriplets();
   void setTriplets(std::vector<std::tuple<GLuint, GLuint, GLfloat>>);

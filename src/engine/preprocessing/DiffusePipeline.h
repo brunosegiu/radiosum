@@ -12,8 +12,9 @@
 #include "geometry/Scene.h"
 #include "preprocessing/HemicubeCorrector.h"
 #include "preprocessing/IDRenderer.h"
-#include "preprocessing/Solver.h"
 #include "shaders/ComputeShader.h"
+
+enum EigenOpt { SLU, SLDLT, CG, BICGSTAB };
 
 class DiffusePipeline {
  public:
@@ -27,7 +28,7 @@ class DiffusePipeline {
   void configureReflections(bool enable);
   void configureChannels(std::set<Channel> channels);
   void configureInterpolation(bool enable);
-  void configureSolver(Solver* solver);
+  void configureSolver(EigenOpt solver);
 
   std::vector<std::tuple<GLuint, GLuint, GLfloat>> getTriplets();
   void setTriplets(std::vector<std::tuple<GLuint, GLuint, GLfloat>> triplets);
@@ -74,7 +75,7 @@ class DiffusePipeline {
   std::vector<std::thread> radiosityWorkers;
   std::vector<GLfloat> radiosity[N_CHANNELS];
   bool radiosityReady[N_CHANNELS];
-  Solver* solver;
+  EigenOpt solverType;
 
   // Internal functions for steps
 
