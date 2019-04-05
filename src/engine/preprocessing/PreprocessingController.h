@@ -4,23 +4,23 @@
 
 #include "EngineTypes.h"
 #include "geometry/Scene.h"
-#include "preprocessing/DiffusePipeline.h"
-#include "preprocessing/RTReflections.h"
+#include "preprocessing/Pipeline.h"
+
+enum RendererType { OPENGL, RAYTRACING };
 
 class PreprocessingController {
  public:
-  PreprocessingController(Scene* scene);
+  PreprocessingController(Scene* scene, RendererType = OPENGL);
   GLuint runStep();
   void runUnsafe(bool full = false);
-  void computeRadiosity(std::set<Channel> channels, EigenOpt solver = SLU,
-                        bool smooth = false);
-  void checkFlags();
+  void computeRadiosity(std::set<Channel> channels,
+                        EigenSolverType solver = SLU, bool smooth = false);
+  void pollState();
   std::vector<std::tuple<GLuint, GLuint, GLfloat>> getTriplets();
   void setTriplets(std::vector<std::tuple<GLuint, GLuint, GLfloat>>);
   virtual ~PreprocessingController();
 
  private:
   SceneIterator* iterator;
-  DiffusePipeline* dPipeline;
-  RTReflections* rPipeline;
+  Pipeline* pipeline;
 };

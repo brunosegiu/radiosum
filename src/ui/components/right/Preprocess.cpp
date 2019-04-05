@@ -10,6 +10,7 @@ Preprocess::Preprocess() : Component() {
   this->enable();
   this->channelCount = 2;
   this->solver = 0;
+  this->renderer = 0;
 }
 
 void Preprocess::render() {
@@ -17,6 +18,7 @@ void Preprocess::render() {
     ImGui::TextColored(ImVec4(.0f, 1.0f, .0f, 1.0f), "Step 1: ");
     ImGui::SameLine();
     ImGui::Text("Compute Form Factors");
+    ImGui::Combo("Renderer", &this->renderer, "OpenGL\0Raytracing\0");
 
     float progress = EngineStore::ffProgress;
     float radProgress = EngineStore::radiosityProgress;
@@ -24,7 +26,8 @@ void Preprocess::render() {
     ImGui::Text("Progress");
     ImGui::ProgressBar(progress);
     if (ImGui::Button("Compute form factors")) {
-      UIStore::engine->preprocess(UIStore::enablePreprocessRendering);
+      UIStore::engine->preprocess(UIStore::enablePreprocessRendering,
+                                  (RendererType)this->renderer);
     }
 
     ImGui::Spacing();
@@ -51,7 +54,7 @@ void Preprocess::render() {
       UIStore::engine->computeRadiosity(
           std::vector<Channel>(channels.begin(),
                                channels.begin() + this->channelCount + 1),
-          (EigenOpt)this->solver, UIStore::shading == GOURAUD);
+          (EigenSolverType)this->solver, UIStore::shading == GOURAUD);
     }
     if (!enableStep2) {
       ImGui::PopItemFlag();

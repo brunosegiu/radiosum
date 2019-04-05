@@ -31,8 +31,6 @@
     <ClCompile Include="src\engine\Texture.cpp" />
     <ClCompile Include="src\engine\shaders\ComputeShader.cpp" />
     <ClCompile Include="src\engine\shaders\Shader.cpp" />
-    <ClCompile Include="src\engine\preprocessing\HemicubeCorrector.cpp" />
-    <ClCompile Include="src\engine\preprocessing\IDRenderer.cpp" />
     <ClCompile Include="src\engine\preprocessing\PreprocessingController.cpp" />
     <ClCompile Include="src\engine\geometry\Face.cpp" />
     <ClCompile Include="src\engine\geometry\Mesh.cpp" />
@@ -63,10 +61,14 @@
     <ClCompile Include="src\ui\components\right\LightingEditor.cpp" />
     <ClCompile Include="src\ui\components\left\SceneEditor.cpp" />
     <ClCompile Include="src\engine\preprocessing\EigenSolver.cpp" />
-    <ClCompile Include="src\engine\preprocessing\RTReflections.cpp" />
-    <ClCompile Include="src\engine\preprocessing\DiffusePipeline.cpp" />
     <ClCompile Include="src\engine\geometry\VBO.cpp" />
     <ClCompile Include="src\engine\geometry\Material.cpp" />
+    <ClCompile Include="src\engine\preprocessing\Pipeline.cpp" />
+    <ClCompile Include="src\engine\preprocessing\opengl\HemicubeCorrector.cpp" />
+    <ClCompile Include="src\engine\preprocessing\opengl\IDRenderer.cpp" />
+    <ClCompile Include="src\engine\preprocessing\opengl\OpenGLPipeline.cpp" />
+    <ClCompile Include="src\engine\preprocessing\raytracing\RaytracedPipeline.cpp" />
+    <ClCompile Include="src\engine\preprocessing\raytracing\RayGenerator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source">
@@ -117,8 +119,6 @@
     <ClInclude Include="src\engine\Texture.h" />
     <ClInclude Include="src\engine\shaders\ComputeShader.h" />
     <ClInclude Include="src\engine\shaders\Shader.h" />
-    <ClInclude Include="src\engine\preprocessing\HemicubeCorrector.h" />
-    <ClInclude Include="src\engine\preprocessing\IDRenderer.h" />
     <ClInclude Include="src\engine\preprocessing\PreprocessingController.h" />
     <ClInclude Include="src\engine\geometry\Face.h" />
     <ClInclude Include="src\engine\geometry\GeometryContainer.h" />
@@ -152,12 +152,15 @@
     <ClInclude Include="src\ui\components\right\LightingEditor.h" />
     <ClInclude Include="src\ui\components\left\SceneEditor.h" />
     <ClInclude Include="src\engine\preprocessing\EigenSolver.h" />
-    <ClInclude Include="src\engine\preprocessing\ReflectionsPipeline.h" />
-    <ClInclude Include="src\engine\preprocessing\RTReflections.h" />
-    <ClInclude Include="src\engine\preprocessing\DiffusePipeline.h" />
     <ClInclude Include="src\engine\geometry\GeometryUtils.h" />
     <ClInclude Include="src\engine\geometry\VBO.h" />
     <ClInclude Include="src\engine\geometry\Material.h" />
+    <ClInclude Include="src\engine\preprocessing\Pipeline.h" />
+    <ClInclude Include="src\engine\preprocessing\opengl\HemicubeCorrector.h" />
+    <ClInclude Include="src\engine\preprocessing\opengl\IDRenderer.h" />
+    <ClInclude Include="src\engine\preprocessing\opengl\OpenGLPipeline.h" />
+    <ClInclude Include="src\engine\preprocessing\raytracing\RaytracedPipeline.h" />
+    <ClInclude Include="src\engine\preprocessing\raytracing\RayGenerator.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.ini">

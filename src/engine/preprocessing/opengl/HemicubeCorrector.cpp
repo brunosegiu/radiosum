@@ -1,30 +1,38 @@
-#include "preprocessing/HemicubeCorrector.h"
+#include "preprocessing/opengl/HemicubeCorrector.h"
 
 #define _USE_MATH_DEFINES
 #include <math.h>
 #include <vector>
+#include "EngineStore.h"
 
 HemicubeCorrector::HemicubeCorrector(GLuint width) {
   std::vector<GLfloat> topData(width * width, 0.0f);
   const double halfWidth = (.5 * GLdouble(width));
   const double normalizeTerm = 1.0 / GLdouble(width * width * 3);
+  double acum = .0;
   for (GLuint ix = 0; ix < width; ix++) {
     for (GLuint iy = 0; iy < width; iy++) {
       GLdouble x = (GLdouble(ix) - halfWidth) / halfWidth;
       GLdouble y = (GLdouble(iy) - halfWidth) / halfWidth;
       GLdouble sqrtDiv = (x * x + y * y + 1.0);
-      topData[ix * width + iy] = normalizeTerm / (M_PI * (sqrtDiv * sqrtDiv));
+      GLfloat term = 1.0 / (M_PI * (sqrtDiv * sqrtDiv));
+      term = normalizeTerm * term;
+      topData[ix * width + iy] = normalizeTerm;
+      acum += term;
     }
   }
+  EngineStore::logger.log(std::to_string(acum));
 
   std::vector<GLfloat> sideData(width * (width / 2), 0.0f);
   for (GLuint iy = 0; iy < width; iy++) {
-    for (GLuint iz = 0; iz < width / 2; iz++) {
+    for (GLuint iz = 0; iz < GLuint(halfWidth); iz++) {
       GLdouble y = (GLdouble(iy) - halfWidth) / halfWidth;
-      GLdouble z = GLdouble(iz) / halfWidth;
+      GLdouble z = (GLdouble(iz) - halfWidth * .5) / (halfWidth * .5);
       GLdouble sqrtDiv = (y * y + z * z + 1.0);
-      sideData[iy * width / 2 + iz] =
-          normalizeTerm * (z / (M_PI * (sqrtDiv * sqrtDiv)));
+      GLfloat term = (abs(z) / (M_PI * (sqrtDiv * sqrtDiv)));
+      term = normalizeTerm * term;
+      sideData[iy * halfWidth + iz] = normalizeTerm;
+      acum += term;
     }
   }
 

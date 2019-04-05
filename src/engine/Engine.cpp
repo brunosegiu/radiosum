@@ -35,15 +35,15 @@ void Engine::setMode(RenderMode mode) {
 
 RenderMode Engine::getMode() { return this->mode; }
 
-void Engine::preprocess(bool withOutput) {
+void Engine::preprocess(bool withOutput, RendererType renderer) {
   if (this->preprocessor) delete this->preprocessor;
-  this->preprocessor = new PreprocessingController(this->scene);
+  this->preprocessor = new PreprocessingController(this->scene, renderer);
   this->setMode(PREPROCESS);
   if (!withOutput) this->preprocessor->runUnsafe(false);
 }
 
-void Engine::computeRadiosity(std::vector<Channel> channels, EigenOpt solver,
-                              bool smooth) {
+void Engine::computeRadiosity(std::vector<Channel> channels,
+                              EigenSolverType solver, bool smooth) {
   std::set<Channel> sChannels;
   for (auto& channel : channels) {
     sChannels.insert(channel);
@@ -63,7 +63,7 @@ Scene* Engine::getScene() { return this->scene; }
 
 void Engine::step() {
   if (this->preprocessor != nullptr) {
-    this->preprocessor->checkFlags();
+    this->preprocessor->pollState();
   }
   if (this->mode == PREPROCESS && this->preprocessor != nullptr) {
     this->preprocessor->runStep();
@@ -96,7 +96,7 @@ void Engine::exportFFMatrix(std::string path) {
     std::ofstream file;
     file.open(path.data());
     for (GLuint index = 0; index < triplets.size(); index++) {
-      file << index << " " << std::get<0>(triplets[index]) << " "
+      file << std::get<0>(triplets[index]) << " "
            << std::get<1>(triplets[index]) << " "
            << std::get<2>(triplets[index]) << std::endl;
     }
