@@ -67,7 +67,8 @@ void Material::setEmission(GLuint faceIndex, GLfloat emission) {
     perVertex = std::vector<GLfloat>(6, emission);
   }
   this->vao->updateAttribute(
-      faceIndex < tFaces ? faceIndex * 3 : 6 * faceIndex - tFaces * 3,
+      sizeof(GLfloat) *
+          (faceIndex < tFaces ? faceIndex * 3 : 6 * faceIndex - tFaces * 3),
       sizeof(GLfloat) * perVertex.size(), &perVertex[0], EMISSION_ID);
 }
 
@@ -80,6 +81,20 @@ void Material::setEmission(GLfloat emission) {
                              &perVertex[0], EMISSION_ID);
 }
 
+void Material::setEmission(std::vector<GLfloat> emission) {
+  std::vector<GLfloat> perVertex;
+  this->emissions = emission;
+  perVertex = std::vector<GLfloat>(vertexCount, .0f);
+  for (GLuint i = 0; i < tFaces * 3; i++) {
+    perVertex[i] = emission[i / 3];
+  }
+  for (GLuint i = tFaces * 3; i < (vertexCount - tFaces * 3); i++) {
+    perVertex[i] = emission[tFaces + i / 6];
+  }
+  this->vao->updateAttribute(0, sizeof(glm::vec3) * perVertex.size(),
+                             &perVertex[0], EMISSION_ID);
+}
+
 void Material::setReflactance(GLuint faceIndex, glm::vec3 reflactance) {
   this->reflactances[faceIndex] = reflactance;
   std::vector<glm::vec3> perVertex;
@@ -89,7 +104,8 @@ void Material::setReflactance(GLuint faceIndex, glm::vec3 reflactance) {
     perVertex = std::vector<glm::vec3>(6, reflactance);
   }
   this->vao->updateAttribute(
-      faceIndex < tFaces ? faceIndex * 3 : 6 * faceIndex - tFaces * 3,
+      sizeof(glm::vec3) *
+          (faceIndex < tFaces ? faceIndex * 3 : 6 * faceIndex - tFaces * 3),
       sizeof(glm::vec3) * perVertex.size(), &perVertex[0].x, REFLACTANCE_ID);
 }
 
@@ -106,22 +122,14 @@ void Material::setReflactance(std::vector<glm::vec3> reflactance) {
   std::vector<glm::vec3> perVertex;
   this->reflactances = reflactance;
   perVertex = std::vector<glm::vec3>(vertexCount, glm::vec3(.0f));
-  for (GLuint i = 0; i < vertexCount; i++) {
+  for (GLuint i = 0; i < tFaces * 3; i++) {
     perVertex[i] = reflactance[i / 3];
+  }
+  for (GLuint i = tFaces * 3; i < (vertexCount - tFaces * 3); i++) {
+    perVertex[i] = reflactance[tFaces + i / 6];
   }
   this->vao->updateAttribute(0, sizeof(glm::vec3) * perVertex.size(),
                              &perVertex[0].x, REFLACTANCE_ID);
-}
-
-void Material::setEmission(std::vector<GLfloat> emission) {
-  std::vector<GLfloat> perVertex;
-  this->emissions = emission;
-  perVertex = std::vector<GLfloat>(vertexCount, .0f);
-  for (GLuint i = 0; i < vertexCount; i++) {
-    perVertex[i] = emission[i / 3];
-  }
-  this->vao->updateAttribute(0, sizeof(glm::vec3) * perVertex.size(),
-                             &perVertex[0], EMISSION_ID);
 }
 
 std::vector<GLfloat> Material::getEmission() { return this->emissions; }
