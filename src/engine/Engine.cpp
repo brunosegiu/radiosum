@@ -77,6 +77,8 @@ void Engine::step() {
 }
 
 GLuint Engine::pick(GLint x, GLint y) {
+  EngineStore::logger.log("Getting face id at: " + std::to_string(x) + "/" +
+                          std::to_string(y));
   Picker picker(this->scene->size(),
                 dynamic_cast<PickingBuffer*>(this->sceneRenderer->getBuffer()));
   return picker.getSelected(x, y);

@@ -24,7 +24,7 @@ void OpenGLPipeline::setUpRenderer() {
     glm::vec4 plane = face.getPlane();
     origin = face.getBarycenter();
     normal = face.getNormal();
-    up = glm::normalize(face.v1 - face.v0);
+    up = face.getUp();
     origin += normal * 0.01f;
     delete this->renderer->getCamera();
     Camera* faceCamera =

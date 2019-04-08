@@ -5,6 +5,7 @@
 #include <GL/glew.h>
 
 #include "EventListener.h"
+#include "geometry/Face.h"
 
 class CameraController : public EventListener {
  public:
@@ -13,6 +14,8 @@ class CameraController : public EventListener {
   void update();
   void toggleIn();
   void process(SDL_Event& event);
+
+  void goTo(Face face);
 
   virtual ~CameraController();
 

@@ -9,9 +9,10 @@ class RenderWindow : public Component {
   RenderWindow();
   void setTexture(GLuint texture);
   void render();
+  void update();
   virtual ~RenderWindow();
 
  private:
   GLuint texture;
-  GLfloat scale;
+  ImVec2 mousePos;
 };

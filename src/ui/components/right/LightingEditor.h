@@ -5,15 +5,13 @@
 #include "Component.h"
 #include "EventListener.h"
 
-class EmissionEditor : public Component {
+class LightingEditor : public Component {
  public:
-  EmissionEditor();
+  LightingEditor();
   void render();
-  void update();
-  virtual ~EmissionEditor();
+  virtual ~LightingEditor();
 
  private:
   GLfloat emission;
   GLfloat reflactance[3];
-  ImVec2 mousePos;
 };

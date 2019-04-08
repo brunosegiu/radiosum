@@ -14,6 +14,8 @@ Application::Application() {
   this->attachListener(this->ui);
   this->attachListener(this->window);
   this->attachListener(this->cameraController);
+
+  UIStore::camera = this->cameraController;
 }
 
 void Application::update() {

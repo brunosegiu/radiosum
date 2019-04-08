@@ -9,4 +9,7 @@ class SceneEditor : public Component {
   SceneEditor();
   void render();
   virtual ~SceneEditor();
+
+ private:
+  GLint prevSelectedFace;
 };

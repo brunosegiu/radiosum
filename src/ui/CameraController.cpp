@@ -97,6 +97,12 @@ void CameraController::update() {
   this->lastUpdate = clock();
 }
 
+void CameraController::goTo(Face face) {
+  UIStore::engine->getCamera()->setOrigin(face.getBarycenter());
+  UIStore::engine->getCamera()->setDirection(face.getNormal());
+  UIStore::engine->getCamera()->setUp(face.getUp());
+}
+
 void CameraController::process(SDL_Event& event) {
   this->update();
   switch (event.type) {

@@ -8,7 +8,7 @@
 RightPanel::RightPanel() : Component() {
   this->enable();
   this->children["0PREPROCESS"] = new Preprocess();
-  this->children["1LIGHTING"] = new EmissionEditor();
+  this->children["1LIGHTING"] = new LightingEditor();
 }
 
 void RightPanel::render() {

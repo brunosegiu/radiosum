@@ -21,6 +21,8 @@ glm::vec3 Face::getNormal() {
   return glm::normalize(glm::cross(u, v));
 }
 
+glm::vec3 Face::getUp() { return glm::normalize(v0 - v1); }
+
 glm::vec3 Face::getBarycenter() {
   if (mode == TRIANGLE)
     return (v0 + v1 + v2) / 3.0f;
