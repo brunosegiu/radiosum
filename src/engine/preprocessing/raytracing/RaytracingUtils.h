@@ -15,7 +15,7 @@ inline RTCRay getRay(const glm::vec3& orig, const glm::vec3& dir) {
   ray.dir_z = dir.z;
 
   ray.tfar = 5000.0f;
-  ray.tnear = 0.01f;
+  ray.tnear = 0.0f;
   ray.time = 0;
 
   ray.flags = 0;

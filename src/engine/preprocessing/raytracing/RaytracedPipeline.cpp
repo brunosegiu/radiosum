@@ -11,36 +11,45 @@ RaytracedPipeline::RaytracedPipeline(Scene* scene, GLuint resolution)
   this->eScene = rtcNewScene(this->device);
   this->reflactances = reflactances;
   auto geometry = scene->getGeometry();
+  GLuint currentOffset = 0;
   for (auto& mesh : geometry) {
     RTCBuffer vertices =
         rtcNewSharedBuffer(device, mesh.vertices.data.data(),
                            sizeof(glm::vec3) * mesh.vertices.data.size());
-    RTCGeometry triGeom =
-        rtcNewGeometry(this->device, RTC_GEOMETRY_TYPE_TRIANGLE);
-    rtcSetGeometryBuffer(triGeom, RTC_BUFFER_TYPE_VERTEX, 0, RTC_FORMAT_FLOAT3,
-                         vertices, 0, sizeof(glm::vec3),
-                         mesh.vertices.data.size() / 3);
-    GLuint* indexT = (GLuint*)rtcSetNewGeometryBuffer(
-        triGeom, RTC_BUFFER_TYPE_INDEX, 0, RTC_FORMAT_UINT3, 3 * sizeof(GLuint),
-        mesh.vertices.triangles.size() / 3);
-    for (GLuint i = 0; i < mesh.vertices.triangles.size(); i++) {
-      indexT[i] = mesh.vertices.triangles[i];
+    if (mesh.vertices.triangles.size() > 0) {
+      RTCGeometry triGeom =
+          rtcNewGeometry(this->device, RTC_GEOMETRY_TYPE_TRIANGLE);
+      rtcSetGeometryBuffer(triGeom, RTC_BUFFER_TYPE_VERTEX, 0,
+                           RTC_FORMAT_FLOAT3, vertices, 0, sizeof(glm::vec3),
+                           mesh.vertices.data.size());
+      GLuint* indexT = (GLuint*)rtcSetNewGeometryBuffer(
+          triGeom, RTC_BUFFER_TYPE_INDEX, 0, RTC_FORMAT_UINT3,
+          3 * sizeof(GLuint), mesh.vertices.triangles.size() / 3);
+      for (GLuint i = 0; i < mesh.vertices.triangles.size(); i++) {
+        indexT[i] = mesh.vertices.triangles[i];
+      }
+      rtcCommitGeometry(triGeom);
+      rtcAttachGeometry(this->eScene, triGeom);
+      offsetMap.push_back(currentOffset);
+      currentOffset += mesh.vertices.triangles.size() / 3;
     }
-    rtcCommitGeometry(triGeom);
-    rtcAttachGeometry(this->eScene, triGeom);
-
-    RTCGeometry quadGeom = rtcNewGeometry(this->device, RTC_GEOMETRY_TYPE_QUAD);
-    rtcSetGeometryBuffer(quadGeom, RTC_BUFFER_TYPE_VERTEX, 0, RTC_FORMAT_FLOAT3,
-                         vertices, 0, sizeof(glm::vec3),
-                         mesh.vertices.data.size() / 3);
-    GLuint* indexQ = (GLuint*)rtcSetNewGeometryBuffer(
-        quadGeom, RTC_BUFFER_TYPE_INDEX, 0, RTC_FORMAT_UINT4,
-        4 * sizeof(GLuint), mesh.vertices.quads.size() / 4);
-    for (GLuint i = 0; i < mesh.vertices.quads.size(); i++) {
-      indexQ[i] = mesh.vertices.quads[i];
+    if (mesh.vertices.quads.size() > 0) {
+      RTCGeometry quadGeom =
+          rtcNewGeometry(this->device, RTC_GEOMETRY_TYPE_QUAD);
+      rtcSetGeometryBuffer(quadGeom, RTC_BUFFER_TYPE_VERTEX, 0,
+                           RTC_FORMAT_FLOAT3, vertices, 0, sizeof(glm::vec3),
+                           mesh.vertices.data.size());
+      GLuint* indexQ = (GLuint*)rtcSetNewGeometryBuffer(
+          quadGeom, RTC_BUFFER_TYPE_INDEX, 0, RTC_FORMAT_UINT4,
+          4 * sizeof(GLuint), mesh.vertices.quads.size() / 4);
+      for (GLuint i = 0; i < mesh.vertices.quads.size(); i++) {
+        indexQ[i] = mesh.vertices.quads[i];
+      }
+      rtcCommitGeometry(quadGeom);
+      rtcAttachGeometry(this->eScene, quadGeom);
+      offsetMap.push_back(currentOffset);
+      currentOffset += mesh.vertices.quads.size() / 4;
     }
-    rtcCommitGeometry(quadGeom);
-    rtcAttachGeometry(this->eScene, quadGeom);
   }
 
   rtcCommitScene(this->eScene);
@@ -57,7 +66,7 @@ std::pair<GLuint, GLfloat> RaytracedPipeline::renderRay(RTCRay ray) {
 
   rtcIntersect1(this->eScene, &context, &query);
   if (query.hit.geomID != RTC_INVALID_GEOMETRY_ID) {
-    GLuint face = query.hit.primID;
+    GLuint face = offsetMap[query.hit.geomID] + query.hit.primID;
     return std::pair<GLuint, GLfloat>(face, 1.0f / GLfloat(this->nRays));
     if (this->reflactances[face] > .0f) {
       glm::vec3 rayDir =
@@ -79,29 +88,31 @@ std::pair<GLuint, GLfloat> RaytracedPipeline::renderRay(RTCRay ray) {
 
 void RaytracedPipeline::runWr(std::vector<Face> faces) {
   if (!done) {
+#pragma omp parallel for
     for (int i = 0; i < scene->size(); i++) {
       Face face = faces[i];
-      glm::vec3 orig = face.getBarycenter();
       glm::vec3 normal = face.getNormal();
+      glm::vec3 orig = face.getBarycenter() + normal * 1e-5f;
       glm::mat3 base = getBase(normal);
-      ffLock.lock();
-      triplets.push_back(std::tuple<GLuint, GLuint, GLfloat>(i, i, 1.0f));
-      ffLock.unlock();
       EngineStore::ffProgress += i / GLfloat(scene->size());
+      std::map<GLuint, GLfloat> row;
       for (GLuint samples = 0; samples < nRays; samples++) {
         glm::vec3 dir = base * generator.getHemisphereDir(normal);
         RTCRay ray = getRay(orig, dir);
         std::pair<GLuint, GLfloat> ff = this->renderRay(ray);
-        if (ff.second > .0f) {
-          ffLock.lock();
-          triplets.push_back(
-              std::tuple<GLuint, GLuint, GLfloat>(i, ff.first, ff.second));
-          ffLock.unlock();
-        }
+        if (ff.second > .0f)
+          row[ff.first] =
+              ff.second + (row.count(ff.first) > 0 ? row[ff.first] : .0f);
       }
+      ffLock.lock();
+      for (auto& pair : row) {
+        triplets.push_back(
+            std::tuple<GLuint, GLuint, GLfloat>(i, pair.first, pair.second));
+      }
+      ffLock.unlock();
     }
-    done = true;
   }
+  done = true;
 }
 
 void RaytracedPipeline::computeFormFactors() {

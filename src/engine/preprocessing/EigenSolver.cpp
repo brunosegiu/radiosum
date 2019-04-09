@@ -35,10 +35,12 @@ std::vector<GLfloat> EigenSolver::solve(std::vector<GLfloat> emissions) {
 void EigenSolver::multiplyReflactance(std::vector<GLfloat> reflactance) {
   for (int k = 0; k < matrix.outerSize(); ++k) {
     for (Eigen::SparseMatrix<GLfloat>::InnerIterator it(matrix, k); it; ++it) {
-      it.valueRef() = it.row() == it.col()
-                          ? it.value()
-                          : -it.value() * reflactance[it.row()];
+      it.valueRef() = -it.value() * reflactance[it.row()];
     }
+  }
+
+  for (GLuint i = 0; i < reflactance.size(); i++) {
+    matrix.coeffRef(i, i) = 1.0f;
   }
 }
 

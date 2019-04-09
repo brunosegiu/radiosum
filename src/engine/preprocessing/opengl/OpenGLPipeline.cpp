@@ -25,7 +25,7 @@ void OpenGLPipeline::setUpRenderer() {
     origin = face.getBarycenter();
     normal = face.getNormal();
     up = face.getUp();
-    origin += normal * 0.01f;
+    origin += normal * 1e-5f;
     delete this->renderer->getCamera();
     Camera* faceCamera =
         new Camera(1.0f, 90.0f, 0.2f, 500.0f, origin, normal, up);
@@ -48,12 +48,7 @@ void OpenGLPipeline::processRow(std::vector<GLfloat> faceFactors,
   GLuint iIndex = faceIndex;
   for (GLuint jIndex = 0; jIndex < faceFactors.size() - 1; jIndex++) {
     GLfloat ff = GLfloat(faceFactors[jIndex + 1]);
-    if (iIndex == jIndex) {
-      ffLock.lock();
-      this->triplets.push_back(
-          std::tuple<GLuint, GLuint, GLfloat>(iIndex, jIndex, 1.0f));
-      ffLock.unlock();
-    } else if (ff > 0.0f) {
+    if (ff > 0.0f) {
       ffLock.lock();
       this->triplets.push_back(
           std::tuple<GLuint, GLuint, GLfloat>(iIndex, jIndex, ff));

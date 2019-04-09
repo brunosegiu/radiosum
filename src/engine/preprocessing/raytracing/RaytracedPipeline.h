@@ -34,4 +34,6 @@ class RaytracedPipeline : public Pipeline {
 
   GLuint nRays;
   RayGenerator generator;
+
+  std::vector<GLuint> offsetMap;
 };

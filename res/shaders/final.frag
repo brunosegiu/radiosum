@@ -24,8 +24,10 @@ uint correrctID(uint vertexID){
 
 void main() {
 	id = correrctID(gl_PrimitiveID) + offset;
-	radiosity = max(radiosityToFrag, 0.0f);
+
+	vec3 albedoColor = textured == 1 ? texture(albedoSampler,vec2(uvToFrag.x, 1.0f - uvToFrag.y)).rgb : vec3(1.0f);
+
+	radiosity = albedoColor * max(radiosityToFrag, 0.0f);
 	emission = max(emissionToFrag, 0.0f);
-	reflactance = max(reflactanceToFrag, 0.0f);
-	reflactance = textured == 1 ? reflactance *  texture(albedoSampler,vec2(uvToFrag.x, 1.0f - uvToFrag.y)).rgb : reflactance;
+	reflactance =  max(reflactanceToFrag, 0.0f) * albedoColor;
 }
