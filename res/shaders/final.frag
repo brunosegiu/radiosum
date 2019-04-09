@@ -10,7 +10,6 @@ layout(location = 0) out vec3 radiosity;
 layout(location = 1) out uint id;
 layout(location = 2) out float emission;
 layout(location = 3) out vec3 reflactance;
-layout(location = 4) out vec3 albedo;
 
 uniform uint tFaces;
 uniform uint offset;
@@ -28,5 +27,5 @@ void main() {
 	radiosity = max(radiosityToFrag, 0.0f);
 	emission = max(emissionToFrag, 0.0f);
 	reflactance = max(reflactanceToFrag, 0.0f);
-	albedo = textured == 1 ? texture(albedoSampler,vec2(uvToFrag.x, 1.0f - uvToFrag.y)).rgb : vec3(.0f);
+	reflactance = textured == 1 ? reflactance *  texture(albedoSampler,vec2(uvToFrag.x, 1.0f - uvToFrag.y)).rgb : reflactance;
 }

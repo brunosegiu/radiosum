@@ -14,21 +14,7 @@ RayGenerator::RayGenerator() {
   uniformGenerator = std::uniform_real_distribution<GLfloat>(.0f, 1.0f);
 }
 
-void RayGenerator::setBaseChangeMatrix(glm::vec3 normal) {
-  glm::vec3 nt, nb;
-
-  if (std::fabs(normal.x) > std::fabs(normal.y))
-    nt = glm::vec3(normal.z, 0, -normal.x) /
-         sqrtf(normal.x * normal.x + normal.z * normal.z);
-  else
-    nt = glm::vec3(.0f, -normal.z, normal.y) /
-         sqrtf(normal.y * normal.y + normal.z * normal.z);
-  nb = glm::cross(normal, nt);
-
-  this->baseChangeMaxtrix = glm::mat3(nb, normal, nt);
-}
-
-glm::vec3 RayGenerator::getDir(glm::vec3 &origDir) {
+glm::vec3 RayGenerator::getHemisphereDir(glm::vec3 &origDir) {
   glm::vec3 dir;
 
   glm::vec2 rand(uniformGenerator(rng), uniformGenerator(rng));
@@ -38,5 +24,5 @@ glm::vec3 RayGenerator::getDir(glm::vec3 &origDir) {
   GLfloat x = sinTheta * cosf(phi);
   GLfloat z = sinTheta * sinf(phi);
 
-  return this->baseChangeMaxtrix * glm::vec3(x, rand.x, z);
+  return glm::vec3(x, rand.x, z);
 }

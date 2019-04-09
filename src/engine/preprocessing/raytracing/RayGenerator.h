@@ -10,11 +10,9 @@
 class RayGenerator {
  public:
   RayGenerator();
-  glm::vec3 getDir(glm::vec3 &origDir);
-  void setBaseChangeMatrix(glm::vec3 normal);
+  glm::vec3 getHemisphereDir(glm::vec3 &origDir);
 
  private:
   std::mt19937_64 rng;
   std::uniform_real_distribution<GLfloat> uniformGenerator;
-  glm::mat3 baseChangeMaxtrix;
 };

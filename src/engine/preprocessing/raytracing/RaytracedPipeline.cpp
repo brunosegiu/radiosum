@@ -1,26 +1,7 @@
 #include "preprocessing/raytracing/RaytracedPipeline.h"
 
 #include "EngineStore.h"
-
-RTCRay getRay(const glm::vec3& orig, const glm::vec3& dir) {
-  RTCRay ray;
-
-  ray.org_x = orig.x;
-  ray.org_y = orig.y;
-  ray.org_z = orig.z;
-
-  ray.dir_x = dir.x;
-  ray.dir_y = dir.y;
-  ray.dir_z = dir.z;
-
-  ray.tfar = 5000.0f;
-  ray.tnear = 0.01f;
-  ray.time = 0;
-
-  ray.flags = 0;
-
-  return ray;
-}
+#include "preprocessing/raytracing/RaytracingUtils.h"
 
 RaytracedPipeline::RaytracedPipeline(Scene* scene, GLuint resolution)
     : Pipeline(scene, resolution) {
@@ -102,14 +83,13 @@ void RaytracedPipeline::runWr(std::vector<Face> faces) {
       Face face = faces[i];
       glm::vec3 orig = face.getBarycenter();
       glm::vec3 normal = face.getNormal();
-      generator.setBaseChangeMatrix(normal);
+      glm::mat3 base = getBase(normal);
       ffLock.lock();
       triplets.push_back(std::tuple<GLuint, GLuint, GLfloat>(i, i, 1.0f));
       ffLock.unlock();
       EngineStore::ffProgress += i / GLfloat(scene->size());
       for (GLuint samples = 0; samples < nRays; samples++) {
-        glm::vec3 dir = generator.getDir(normal);
-        float cos = glm::dot(normal, dir);
+        glm::vec3 dir = base * generator.getHemisphereDir(normal);
         RTCRay ray = getRay(orig, dir);
         std::pair<GLuint, GLfloat> ff = this->renderRay(ray);
         if (ff.second > .0f) {
