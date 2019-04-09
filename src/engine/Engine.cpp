@@ -65,9 +65,10 @@ void Engine::step() {
   if (this->preprocessor != nullptr) {
     this->preprocessor->pollState();
   }
-  if (this->mode == PREPROCESS && this->preprocessor != nullptr) {
+  if (this->preprocessor != nullptr) {
     this->preprocessor->runStep();
-  } else {
+  }
+  if (this->mode != PREPROCESS) {
     this->sceneRenderer->setScene(scene);
     this->sceneRenderer->render();
     this->sceneRenderer->read();

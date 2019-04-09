@@ -11,6 +11,5 @@ class PickingBuffer : public Buffer {
   virtual ~PickingBuffer();
 
  private:
-  GLuint GLDepthId, GLPickingTextureId, GLEmissionsId, GLReflactanceId,
-      GLAlbedoId;
+  GLuint GLDepthId, GLPickingTextureId, GLEmissionsId, GLReflactanceId;
 };

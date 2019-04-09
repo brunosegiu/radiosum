@@ -8,31 +8,25 @@
 HemicubeCorrector::HemicubeCorrector(GLuint width) {
   std::vector<GLfloat> topData(width * width, 0.0f);
   const double halfWidth = (.5 * GLdouble(width));
-  const double normalizeTerm = 1.0 / GLdouble(width * width * 3);
-  double acum = .0;
+  const double normalizationFactor = 1.0 / GLdouble(width * width * 3);
   for (GLuint ix = 0; ix < width; ix++) {
     for (GLuint iy = 0; iy < width; iy++) {
-      GLdouble x = (GLdouble(ix) - halfWidth) / halfWidth;
-      GLdouble y = (GLdouble(iy) - halfWidth) / halfWidth;
+      GLdouble x = 2.0 * ((GLdouble(ix) / GLdouble(width)) - .5);
+      GLdouble y = 2.0 * ((GLdouble(iy) / GLdouble(width)) - .5);
       GLdouble sqrtDiv = (x * x + y * y + 1.0);
       GLfloat term = 1.0 / (M_PI * (sqrtDiv * sqrtDiv));
-      term = normalizeTerm * term;
-      topData[ix * width + iy] = normalizeTerm;
-      acum += term;
+      topData[ix * width + iy] = normalizationFactor * term;
     }
   }
-  EngineStore::logger.log(std::to_string(acum));
 
   std::vector<GLfloat> sideData(width * (width / 2), 0.0f);
   for (GLuint iy = 0; iy < width; iy++) {
     for (GLuint iz = 0; iz < GLuint(halfWidth); iz++) {
-      GLdouble y = (GLdouble(iy) - halfWidth) / halfWidth;
-      GLdouble z = (GLdouble(iz) - halfWidth * .5) / (halfWidth * .5);
+      GLdouble y = 2.0 * ((GLdouble(iy) / GLdouble(width)) - .5);
+      GLdouble z = 2.0 * ((GLdouble(iz) / GLdouble(width)) - .5);
       GLdouble sqrtDiv = (y * y + z * z + 1.0);
       GLfloat term = (abs(z) / (M_PI * (sqrtDiv * sqrtDiv)));
-      term = normalizeTerm * term;
-      sideData[iy * halfWidth + iz] = normalizeTerm;
-      acum += term;
+      sideData[iy * halfWidth + iz] = normalizationFactor * term;
     }
   }
 

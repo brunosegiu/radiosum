@@ -150,9 +150,9 @@
     <ClCompile Include="src\engine\preprocessing\raytracing\RayGenerator.cpp" />
     <ClCompile Include="src\engine\geometry\Material.cpp" />
     <ClCompile Include="src\engine\preprocessing\Pipeline.cpp" />
-    <ClCompile Include="src\engine\preprocessing\raytracing\RaytracedPipeline.cpp" />
     <ClCompile Include="src\engine\preprocessing\EigenSolver.cpp" />
     <ClCompile Include="src\engine\preprocessing\opengl\OpenGLPipeline.cpp" />
+    <ClCompile Include="src\engine\preprocessing\raytracing\RaytracedPipeline.cpp" />
     <ClCompile Include="src\ui\components\left\SceneEditor.cpp" />
     <ClCompile Include="src\engine\Engine.cpp" />
     <ClCompile Include="src\common\ConfigurationManager.cpp" />
@@ -208,9 +208,9 @@
     <ClInclude Include="src\engine\preprocessing\raytracing\RayGenerator.h" />
     <ClInclude Include="src\engine\geometry\Material.h" />
     <ClInclude Include="src\engine\preprocessing\Pipeline.h" />
-    <ClInclude Include="src\engine\preprocessing\raytracing\RaytracedPipeline.h" />
     <ClInclude Include="src\engine\preprocessing\EigenSolver.h" />
     <ClInclude Include="src\engine\preprocessing\opengl\OpenGLPipeline.h" />
+    <ClInclude Include="src\engine\preprocessing\raytracing\RaytracedPipeline.h" />
     <ClInclude Include="src\ui\components\left\SceneEditor.h" />
     <ClInclude Include="src\engine\Engine.h" />
     <ClInclude Include="src\common\ConfigurationManager.h" />
@@ -272,7 +272,6 @@
     <None Include="res\shaders\id.vert" />
     <None Include="res\shaders\renderHemicube.frag" />
     <None Include="res\shaders\renderFromText.vert" />
-    <None Include="res\shaders\renderSceneAlbedo.frag" />
     <None Include="res\shaders\renderSceneEmissions.frag" />
     <None Include="res\shaders\renderSceneFaces.frag" />
     <None Include="res\shaders\renderSceneRadiosity.frag" />

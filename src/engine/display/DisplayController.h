@@ -20,7 +20,6 @@ class DisplayController {
   TextureRenderer* emissionsRenderer;
   TextureRenderer* facesRenderer;
   TextureRenderer* reflactancesRenderer;
-  TextureRenderer* albedoRenderer;
 
   Camera* userCamera;
 

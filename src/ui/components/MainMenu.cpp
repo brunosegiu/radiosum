@@ -128,10 +128,6 @@ void MainMenu::render() {
                             UIStore::engine->getMode() == REFLACTANCE)) {
           UIStore::engine->setMode(REFLACTANCE);
         }
-        if (ImGui::MenuItem("Albedo", nullptr,
-                            UIStore::engine->getMode() == ALBEDO)) {
-          UIStore::engine->setMode(ALBEDO);
-        }
 
         if (ImGui::MenuItem("Faces", nullptr,
                             UIStore::engine->getMode() == FACES)) {

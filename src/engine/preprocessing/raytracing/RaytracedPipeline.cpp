@@ -77,7 +77,7 @@ std::pair<GLuint, GLfloat> RaytracedPipeline::renderRay(RTCRay ray) {
   rtcIntersect1(this->eScene, &context, &query);
   if (query.hit.geomID != RTC_INVALID_GEOMETRY_ID) {
     GLuint face = query.hit.primID;
-    return std::pair<GLuint, GLfloat>(face, 1.0f / this->nRays);
+    return std::pair<GLuint, GLfloat>(face, 1.0f / GLfloat(this->nRays));
     if (this->reflactances[face] > .0f) {
       glm::vec3 rayDir =
           glm::vec3(query.ray.dir_x, query.ray.dir_y, query.ray.dir_z);
@@ -108,8 +108,8 @@ void RaytracedPipeline::runWr(std::vector<Face> faces) {
       ffLock.unlock();
       EngineStore::ffProgress += i / GLfloat(scene->size());
       for (GLuint samples = 0; samples < nRays; samples++) {
-        glm::vec3 dir = normal;
-        // generator.getDir(normal);
+        glm::vec3 dir = generator.getDir(normal);
+        float cos = glm::dot(normal, dir);
         RTCRay ray = getRay(orig, dir);
         std::pair<GLuint, GLfloat> ff = this->renderRay(ray);
         if (ff.second > .0f) {

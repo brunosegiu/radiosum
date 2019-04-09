@@ -67,8 +67,8 @@
     <ClCompile Include="src\engine\preprocessing\opengl\HemicubeCorrector.cpp" />
     <ClCompile Include="src\engine\preprocessing\opengl\IDRenderer.cpp" />
     <ClCompile Include="src\engine\preprocessing\opengl\OpenGLPipeline.cpp" />
-    <ClCompile Include="src\engine\preprocessing\raytracing\RaytracedPipeline.cpp" />
     <ClCompile Include="src\engine\preprocessing\raytracing\RayGenerator.cpp" />
+    <ClCompile Include="src\engine\preprocessing\raytracing\RaytracedPipeline.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source">
@@ -159,8 +159,8 @@
     <ClInclude Include="src\engine\preprocessing\opengl\HemicubeCorrector.h" />
     <ClInclude Include="src\engine\preprocessing\opengl\IDRenderer.h" />
     <ClInclude Include="src\engine\preprocessing\opengl\OpenGLPipeline.h" />
-    <ClInclude Include="src\engine\preprocessing\raytracing\RaytracedPipeline.h" />
     <ClInclude Include="src\engine\preprocessing\raytracing\RayGenerator.h" />
+    <ClInclude Include="src\engine\preprocessing\raytracing\RaytracedPipeline.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.ini">
@@ -195,7 +195,6 @@
     <None Include="res\shaders\renderSceneFaces.frag" />
     <None Include="res\shaders\renderSceneRadiosity.frag" />
     <None Include="res\shaders\renderSceneReflactances.frag" />
-    <None Include="res\shaders\renderSceneAlbedo.frag" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resrource.rc" />

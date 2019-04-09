@@ -5,10 +5,12 @@
 LightingEditor::LightingEditor() : Component() {
   this->emission = .0f;
   this->enable();
+  this->lastSelected = 0;
 }
 
 void LightingEditor::render() {
-  if (UIStore::selectedFace > 0) {
+  if (UIStore::selectedFace > 0 && lastSelected != UIStore::selectedFace) {
+    this->lastSelected = UIStore::selectedFace;
     this->emission =
         UIStore::engine->getScene()->getEmission(UIStore::selectedFace);
     glm::vec3 ref =

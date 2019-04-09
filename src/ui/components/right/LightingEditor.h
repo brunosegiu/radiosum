@@ -14,4 +14,5 @@ class LightingEditor : public Component {
  private:
   GLfloat emission;
   GLfloat reflactance[3];
+  GLuint lastSelected;
 };

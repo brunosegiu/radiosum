@@ -54,16 +54,6 @@ PickingBuffer::PickingBuffer(GLuint width, GLuint height)
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
 
-  // Generate albedo texture
-  glGenTextures(1, &this->GLAlbedoId);
-  glBindTexture(GL_TEXTURE_2D, this->GLAlbedoId);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB,
-               GL_UNSIGNED_BYTE, 0);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-
   // Generate depth buffer (so that depth test works)
   glGenRenderbuffers(1, &this->GLDepthId);
   glBindRenderbuffer(GL_RENDERBUFFER, this->GLDepthId);
@@ -80,8 +70,6 @@ PickingBuffer::PickingBuffer(GLuint width, GLuint height)
                        this->GLEmissionsId, 0);
   glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3,
                        this->GLReflactanceId, 0);
-  glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT4, this->GLAlbedoId,
-                       0);
 
   GLenum buffers[5] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1,
                        GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3,
@@ -103,8 +91,7 @@ GLuint PickingBuffer::read() {
   glBindTexture(GL_TEXTURE_2D, this->GLEmissionsId);
   glActiveTexture(GL_TEXTURE4);
   glBindTexture(GL_TEXTURE_2D, this->GLReflactanceId);
-  glActiveTexture(GL_TEXTURE5);
-  glBindTexture(GL_TEXTURE_2D, this->GLAlbedoId);
+
   return GLTextureId;
 }
 
@@ -131,5 +118,4 @@ PickingBuffer::~PickingBuffer() {
   glDeleteTextures(1, &this->GLPickingTextureId);
   glDeleteTextures(1, &this->GLTextureId);
   glDeleteTextures(1, &this->GLReflactanceId);
-  glDeleteTextures(1, &this->GLAlbedoId);
 }

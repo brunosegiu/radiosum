@@ -6,7 +6,7 @@
 
 #include <GL/glew.h>
 
-#define LOG_MAX_BUFFER_S 20
+#define LOG_MAX_BUFFER_S 200
 #define VAR_MAX_BUFFER_S 100
 
 class Logger {
