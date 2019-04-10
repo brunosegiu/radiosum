@@ -3,13 +3,13 @@
 #include "EngineStore.h"
 #include "preprocessing/raytracing/RaytracingUtils.h"
 
+#define MAX_LEVELS 5
+
 RaytracedPipeline::RaytracedPipeline(Scene* scene, GLuint resolution)
     : Pipeline(scene, resolution) {
   this->nRays = resolution * resolution * 3;
-  this->reflactances = this->scene->getEmission();
   this->device = rtcNewDevice("threads=0");
   this->eScene = rtcNewScene(this->device);
-  this->reflactances = reflactances;
   auto geometry = scene->getGeometry();
   GLuint currentOffset = 0;
   for (auto& mesh : geometry) {
@@ -55,22 +55,39 @@ RaytracedPipeline::RaytracedPipeline(Scene* scene, GLuint resolution)
   rtcCommitScene(this->eScene);
 }
 
-std::pair<GLuint, GLfloat> RaytracedPipeline::renderRay(RTCRay ray) {
+GLuint RaytracedPipeline::renderRayOnce(RTCRay& ray, RTCRayHit& query) {
   RTCIntersectContext context;
   rtcInitIntersectContext(&context);
 
-  RTCRayHit query;
   query.ray = ray;
   query.hit.geomID = RTC_INVALID_GEOMETRY_ID;
   query.hit.primID = RTC_INVALID_GEOMETRY_ID;
 
   rtcIntersect1(this->eScene, &context, &query);
+
   if (query.hit.geomID != RTC_INVALID_GEOMETRY_ID) {
-    GLuint face = offsetMap[query.hit.geomID] + query.hit.primID;
-    return std::pair<GLuint, GLfloat>(face, 1.0f / GLfloat(this->nRays));
-    if (this->reflactances[face] > .0f) {
-      glm::vec3 rayDir =
-          glm::vec3(query.ray.dir_x, query.ray.dir_y, query.ray.dir_z);
+    return offsetMap[query.hit.geomID] + query.hit.primID;
+  }
+  return RTC_INVALID_GEOMETRY_ID;
+}
+
+std::map<GLuint, GLfloat> RaytracedPipeline::renderRay(RTCRay ray) {
+  std::map<GLuint, GLfloat> ffs;
+  RTCRayHit query;
+
+  GLuint face = renderRayOnce(ray, query);
+
+  GLfloat norm = 1.0f / GLfloat(this->nRays);
+  GLfloat ffMultiplier = norm;
+
+  GLuint iterationCount = 0;
+  while (face != RTC_INVALID_GEOMETRY_ID && iterationCount <= MAX_LEVELS) {
+    iterationCount++;
+    GLfloat reflactance = .0f;
+    ffs[face] = (1.0f - reflactance) * norm;
+    ffMultiplier *= reflactance * norm;
+    if (reflactance > .0f) {
+      glm::vec3 rayDir = glm::vec3(ray.dir_x, query.ray.dir_y, query.ray.dir_z);
       glm::vec3 orig =
           glm::vec3(query.ray.org_x, query.ray.org_y, query.ray.org_z) +
           query.ray.tfar * rayDir;
@@ -78,12 +95,11 @@ std::pair<GLuint, GLfloat> RaytracedPipeline::renderRay(RTCRay ray) {
           glm::vec3(query.hit.Ng_x, query.hit.Ng_y, query.hit.Ng_z));
       glm::vec3 dir = 2 * glm::dot(hitNormal, -rayDir) * hitNormal + rayDir;
       RTCRay reflected = getRay(orig, dir);
-      std::pair<GLuint, GLfloat> ff = renderRay(reflected);
-      ff.second = this->reflactances[face] * ff.second;
-      return ff;
+
+      face = renderRayOnce(reflected, query);
     }
   }
-  return std::pair<GLuint, GLfloat>(0, .0f);
+  return ffs;
 }
 
 void RaytracedPipeline::runWr(std::vector<Face> faces) {
@@ -99,10 +115,11 @@ void RaytracedPipeline::runWr(std::vector<Face> faces) {
       for (GLuint samples = 0; samples < nRays; samples++) {
         glm::vec3 dir = base * generator.getHemisphereDir(normal);
         RTCRay ray = getRay(orig, dir);
-        std::pair<GLuint, GLfloat> ff = this->renderRay(ray);
-        if (ff.second > .0f)
-          row[ff.first] =
-              ff.second + (row.count(ff.first) > 0 ? row[ff.first] : .0f);
+        std::map<GLuint, GLfloat> ff = this->renderRay(ray);
+        for (auto& pair : ff) {
+          row[pair.first] =
+              pair.second + (row.count(pair.first) > 0 ? row[pair.first] : .0f);
+        }
       }
       ffLock.lock();
       for (auto& pair : row) {

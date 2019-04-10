@@ -22,9 +22,8 @@ class RaytracedPipeline : public Pipeline {
 
  private:
   void runWr(std::vector<Face> faces);
-  std::pair<GLuint, GLfloat> renderRay(RTCRay ray);
-
-  std::vector<GLfloat> reflactances;
+  std::map<GLuint, GLfloat> renderRay(RTCRay ray);
+  GLuint renderRayOnce(RTCRay& ray, RTCRayHit& query);
 
   RTCDevice device;
   RTCScene eScene;
