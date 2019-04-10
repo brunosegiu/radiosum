@@ -165,6 +165,19 @@ void Mesh::setEmission(std::vector<GLfloat> emission) {
   this->material->setEmission(emission);
 }
 
+void Mesh::setSpecularReflactance(GLuint faceIndex,
+                                  GLfloat specularReflactance) {
+  this->material->setSpecularReflactance(faceIndex, specularReflactance);
+}
+
+void Mesh::setSpecularReflactance(GLfloat specularReflactance) {
+  this->material->setSpecularReflactance(specularReflactance);
+}
+
+void Mesh::setSpecularReflactance(std::vector<GLfloat> specularReflactance) {
+  this->material->setSpecularReflactance(specularReflactance);
+}
+
 void Mesh::setReflactance(GLuint faceIndex, glm::vec3 reflactance) {
   this->material->setReflactance(faceIndex, reflactance);
 }
@@ -206,6 +219,14 @@ std::vector<GLfloat> Mesh::getEmission() {
 
 GLfloat Mesh::getEmission(GLuint faceIndex) {
   return this->material->getEmission(faceIndex);
+}
+
+std::vector<GLfloat> Mesh::getSpecularReflactance() {
+  return this->material->getSpecularReflactance();
+}
+
+GLfloat Mesh::getSpecularReflactance(GLuint faceIndex) {
+  return this->material->getSpecularReflactance(faceIndex);
 }
 
 std::vector<glm::vec3> Mesh::getReflactance() {

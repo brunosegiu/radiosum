@@ -29,6 +29,12 @@ class Scene {
   void setReflactance(GLuint faceIndex, glm::vec3 reflactance,
                       bool full = false);
 
+  GLfloat getSpecularReflactance(GLuint faceIndex);
+  std::vector<GLfloat> getSpecularReflactance();
+  void setSpecularReflactance(std::vector<GLfloat> specularReflactance);
+  void setSpecularReflactance(GLuint faceIndex, GLfloat specularReflactance,
+                              bool full = false);
+
   std::vector<glm::vec3> getRadiosity();
   void setRadiosity(std::vector<glm::vec3> radiosity);
   void setRadiosity(std::vector<glm::vec3>& radiosity, bool smooth);

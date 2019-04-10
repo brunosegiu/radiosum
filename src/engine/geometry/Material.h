@@ -19,7 +19,7 @@
 class Material {
  public:
   Material(glm::vec3 reflactance = glm::vec3(.1f), GLfloat emission = .0f,
-           Texture* texture = nullptr);
+           Texture* texture = nullptr, GLfloat specularReflactance = .0f);
 
   void instance(GLuint faceCount, GLuint vertexCount, GLuint tFaces, VAO* vao);
   void bind();
@@ -39,6 +39,12 @@ class Material {
   void setReflactance(glm::vec3 reflactance);
   void setReflactance(std::vector<glm::vec3> reflactance);
 
+  std::vector<GLfloat> getSpecularReflactance();
+  GLfloat getSpecularReflactance(GLuint faceIndex);
+  void setSpecularReflactance(GLuint faceIndex, GLfloat specularReflactance);
+  void setSpecularReflactance(GLfloat specularReflactance);
+  void setSpecularReflactance(std::vector<GLfloat> specularReflactance);
+
   ~Material();
 
  private:
@@ -46,6 +52,8 @@ class Material {
   GLfloat emission;
   std::vector<glm::vec3> reflactances;
   glm::vec3 reflactance;
+  std::vector<GLfloat> specularReflactances;
+  GLfloat specularReflactance;
   Texture* texture;
   GLuint faceCount, vertexCount, tFaces;
   VAO* vao;

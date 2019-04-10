@@ -33,6 +33,12 @@ class Mesh {
   void setReflactance(glm::vec3 reflactance);
   void setReflactance(std::vector<glm::vec3> reflactance);
 
+  std::vector<GLfloat> getSpecularReflactance();
+  GLfloat getSpecularReflactance(GLuint faceIndex);
+  void setSpecularReflactance(GLuint faceIndex, GLfloat specularReflactance);
+  void setSpecularReflactance(GLfloat specularReflactance);
+  void setSpecularReflactance(std::vector<GLfloat> specularReflactance);
+
   std::vector<glm::vec3> getRadiosity();
   void setRadiosity(std::vector<glm::vec3> radiosity, bool smooth = true);
 

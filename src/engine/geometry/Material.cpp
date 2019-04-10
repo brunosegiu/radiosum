@@ -1,10 +1,12 @@
 #include "geometry/Material.h"
 
-Material::Material(glm::vec3 reflactance, GLfloat emission, Texture* texture) {
+Material::Material(glm::vec3 reflactance, GLfloat emission, Texture* texture,
+                   GLfloat specularReflactance) {
   this->reflactance = reflactance;
   this->emission = emission;
   this->texture = texture;
   this->faceCount = this->vertexCount = this->tFaces = 0;
+  this->specularReflactance = specularReflactance;
 }
 
 void Material::instance(GLuint faceCount, GLuint vertexCount, GLuint tFaces,
@@ -19,10 +21,12 @@ void Material::instance(GLuint faceCount, GLuint vertexCount, GLuint tFaces,
 
   this->emissions.reserve(faceCount);
   this->reflactances.reserve(faceCount);
+  this->specularReflactances.reserve(faceCount);
 
   for (GLuint i = 0; i < faceCount; i++) {
-    this->emissions.push_back(.0f);
-    this->reflactances.push_back(glm::vec3(1.0f));
+    this->emissions.push_back(this->emission);
+    this->reflactances.push_back(this->reflactance);
+    this->specularReflactances.push_back(this->specularReflactance);
   }
 
   std::vector<GLfloat> perVertexEmission;
@@ -35,6 +39,7 @@ void Material::instance(GLuint faceCount, GLuint vertexCount, GLuint tFaces,
     perVertexEmission.push_back(emission);
     perVertexReflactance.push_back(reflactance);
   }
+
   this->vao->addAttribute(sizeof(GLfloat) * perVertexEmission.size(),
                           &perVertexEmission[0], 1, GL_FLOAT, EMISSION_ID,
                           GL_DYNAMIC_DRAW);
@@ -132,10 +137,33 @@ void Material::setReflactance(std::vector<glm::vec3> reflactance) {
                              &perVertex[0].x, REFLACTANCE_ID);
 }
 
+void Material::setSpecularReflactance(GLuint faceIndex,
+                                      GLfloat specularReflactance) {
+  this->specularReflactances[faceIndex] = specularReflactance;
+}
+
+void Material::setSpecularReflactance(GLfloat specularReflactance) {
+  this->specularReflactances = std::vector<GLfloat>(
+      this->specularReflactances.size(), specularReflactance);
+}
+
+void Material::setSpecularReflactance(
+    std::vector<GLfloat> specularReflactance) {
+  this->specularReflactances = specularReflactance;
+}
+
 std::vector<GLfloat> Material::getEmission() { return this->emissions; }
 
 GLfloat Material::getEmission(GLuint faceIndex) {
   return this->emissions[faceIndex];
+}
+
+std::vector<GLfloat> Material::getSpecularReflactance() {
+  return this->specularReflactances;
+}
+
+GLfloat Material::getSpecularReflactance(GLuint faceIndex) {
+  return this->specularReflactances[faceIndex];
 }
 
 std::vector<glm::vec3> Material::getReflactance() { return this->reflactances; }

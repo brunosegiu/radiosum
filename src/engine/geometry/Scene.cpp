@@ -35,6 +35,18 @@ std::vector<GLfloat> Scene::getEmission() {
   return emissions;
 }
 
+std::vector<GLfloat> Scene::getSpecularReflactance() {
+  std::vector<GLfloat> specularReflactance;
+  for (auto mesh : meshes) {
+    std::vector<GLfloat> meshSpecularReflactance =
+        mesh->getSpecularReflactance();
+    specularReflactance.insert(specularReflactance.end(),
+                               meshSpecularReflactance.begin(),
+                               meshSpecularReflactance.end());
+  }
+  return specularReflactance;
+}
+
 std::vector<IndexedBuffers> Scene::getGeometry() {
   std::vector<IndexedBuffers> geom;
   for (auto &mesh : meshes) {
@@ -68,6 +80,16 @@ GLfloat Scene::getEmission(GLuint faceIndex) {
   if (_size > 0) {
     Mesh *mesh = this->getMeshWithIndex(faceIndex, meshIndex);
     return mesh->getEmission(meshIndex);
+  } else {
+    return .0f;
+  }
+}
+
+GLfloat Scene::getSpecularReflactance(GLuint faceIndex) {
+  GLuint meshIndex = 0;
+  if (_size > 0) {
+    Mesh *mesh = this->getMeshWithIndex(faceIndex, meshIndex);
+    return mesh->getSpecularReflactance(meshIndex);
   } else {
     return .0f;
   }
@@ -113,6 +135,16 @@ void Scene::setEmission(GLuint faceIndex, GLfloat emission, bool full) {
   }
 }
 
+void Scene::setSpecularReflactance(GLuint faceIndex,
+                                   GLfloat specularReflactance, bool full) {
+  if (_size > 0) {
+    GLuint meshIndex = 0;
+    Mesh *mesh = this->getMeshWithIndex(faceIndex, meshIndex);
+    full ? mesh->setSpecularReflactance(specularReflactance)
+         : mesh->setSpecularReflactance(meshIndex, specularReflactance);
+  }
+}
+
 void Scene::setReflactance(GLuint faceIndex, glm::vec3 reflactance, bool full) {
   if (_size > 0) {
     GLuint meshIndex = 0;
@@ -129,6 +161,17 @@ void Scene::setEmission(std::vector<GLfloat> emission) {
         emission.begin() + offset, emission.begin() + offset + mesh->size());
     offset += mesh->size();
     mesh->setEmission(meshEm);
+  }
+}
+
+void Scene::setSpecularReflactance(std::vector<GLfloat> specularReflactance) {
+  GLuint offset = 0;
+  for (auto &mesh : meshes) {
+    std::vector<GLfloat> meshSR = std::vector<GLfloat>(
+        specularReflactance.begin() + offset,
+        specularReflactance.begin() + offset + mesh->size());
+    offset += mesh->size();
+    mesh->setSpecularReflactance(meshSR);
   }
 }
 
