@@ -1,5 +1,6 @@
 #include "components/right/LightingEditor.h"
 
+#include "EngineStore.h"
 #include "UIStore.h"
 
 LightingEditor::LightingEditor() : Component() {
@@ -28,7 +29,7 @@ void LightingEditor::render() {
       ImGui::Spacing();
       ImGui::Spacing();
 
-      ImGui::SliderFloat("Emission", &this->emission, 0.0f, 1.0f);
+      ImGui::SliderFloat("Emission", &this->emission, 0.0f, 100.0f);
       if (ImGui::Button("Save emission")) {
         if (UIStore::selectedFace >= 0)
           UIStore::engine->getScene()->setEmission(
@@ -48,6 +49,9 @@ void LightingEditor::render() {
                         this->reflactance[2]),
               !UIStore::selectFace);
       }
+
+      ImGui::SliderFloat("Radiosity scale", &EngineStore::radiosityScale, .0f,
+                         10.0f);
 
       ImGui::EndChild();
     }

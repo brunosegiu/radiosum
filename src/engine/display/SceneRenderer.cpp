@@ -22,6 +22,9 @@ void SceneRenderer::render() {
         glGetUniformLocation(shader->getID(), "worldTransform");
     glm::mat4 toWorldCoords = this->camera->getMVPMatrix();
     glUniformMatrix4fv(worldTransformID, 1, GL_FALSE, &toWorldCoords[0][0]);
+    GLuint radiosityScaleID =
+        glGetUniformLocation(shader->getID(), "radiosityScale");
+    glUniform1f(radiosityScaleID, EngineStore::radiosityScale);
     this->scene->draw(this->shader->getID());
   }
 }

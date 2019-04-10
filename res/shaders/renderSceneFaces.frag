@@ -8,7 +8,8 @@ layout(binding=2) uniform usampler2D idScreenSampler;
 
 void main() {
 	vec3 color;
-	uint id = texture(idScreenSampler,uv).r;
+	uint rawId = texture(idScreenSampler,uv).r;
+	uint id = rawId > 0 ? ~rawId : 0;
 	float r = float( (id >> 16) & uint(0xFF)) / 255.0f;
 	float g = float( (id >> 8)  & uint(0xFF)) / 255.0f;
 	float b = float(  id        & uint(0xFF)) / 255.0f;

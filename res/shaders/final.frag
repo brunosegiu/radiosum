@@ -14,6 +14,7 @@ layout(location = 3) out vec3 reflactance;
 uniform uint tFaces;
 uniform uint offset;
 uniform uint textured = 0;
+uniform float radiosityScale = 1.0f;
 layout(location = 0) uniform sampler2D albedoSampler;
 
 uint correrctID(uint vertexID){
@@ -27,7 +28,7 @@ void main() {
 
 	vec3 albedoColor = textured == 1 ? texture(albedoSampler,vec2(uvToFrag.x, 1.0f - uvToFrag.y)).rgb : vec3(1.0f);
 
-	radiosity = albedoColor * max(radiosityToFrag, 0.0f);
+	radiosity = radiosityScale * albedoColor * max(radiosityToFrag, 0.0f);
 	emission = max(emissionToFrag, 0.0f);
 	reflactance =  max(reflactanceToFrag, 0.0f) * albedoColor;
 }
