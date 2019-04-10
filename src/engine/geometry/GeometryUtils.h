@@ -17,16 +17,17 @@
 #define TEXTURES 1
 #define NORMALS 2
 
-inline std::map<std::string, Material *> loadMtl(std::string path) {
+inline std::map<std::string, Material> loadMtl(std::string path) {
   std::ifstream input(path);
   std::string line;
 
   std::string currentMTL;
   glm::vec3 currentReflactance;
   GLfloat currentEmission = .0f;
+  GLfloat currentSpecularReflection = .0f;
   std::string currentTexturePath;
 
-  std::map<std::string, Material *> materials;
+  std::map<std::string, Material> materials;
 
   bool run = false;
 
@@ -37,8 +38,8 @@ inline std::map<std::string, Material *> loadMtl(std::string path) {
         Texture *texture = nullptr;
         if (currentTexturePath != "")
           texture = Texture::load(currentTexturePath);
-        Material *mat =
-            new Material(currentReflactance, currentEmission, texture);
+        Material mat = Material(currentReflactance, currentEmission, texture,
+                                currentSpecularReflection);
         materials[currentMTL] = mat;
 
         currentReflactance = glm::vec3(.0f);
@@ -54,6 +55,12 @@ inline std::map<std::string, Material *> loadMtl(std::string path) {
       line.erase(0, 2);
       sscanf_s(line.c_str(), "%f %f %f ", &currentReflactance.x,
                &currentReflactance.y, &currentReflactance.z);
+    }
+
+    else if (line[0] != 'm' && line.find("Ks ") != std::string::npos) {
+      line.erase(0, 2);
+      GLfloat _0, _1;
+      sscanf_s(line.c_str(), "%f %f %f", &currentSpecularReflection, &_0, &_1);
     } else if (line[0] == 'e') {
       line.erase(0, 2);
       sscanf_s(line.c_str(), "%f ", &currentEmission);
@@ -65,7 +72,8 @@ inline std::map<std::string, Material *> loadMtl(std::string path) {
   if (currentMTL != "") {
     Texture *texture = nullptr;
     if (currentTexturePath != "") texture = Texture::load(currentTexturePath);
-    Material *mat = new Material(currentReflactance, currentEmission, texture);
+    Material mat = Material(currentReflactance, currentEmission, texture,
+                            currentSpecularReflection);
     materials[currentMTL] = mat;
   }
   return materials;
@@ -90,7 +98,7 @@ inline std::vector<Mesh *> loadOBJ(std::string path) {
   std::ifstream input(path);
   std::string mtlPath = path;
   mtlPath.replace(mtlPath.end() - 3, mtlPath.end(), "mtl");
-  std::map<std::string, Material *> materials = loadMtl(mtlPath);
+  std::map<std::string, Material> materials = loadMtl(mtlPath);
 
   std::vector<glm::vec3> indexedVertices, indexedNormals;
   std::vector<glm::vec2> indexedTextures;
@@ -140,7 +148,7 @@ inline std::vector<Mesh *> loadOBJ(std::string path) {
       }
       if (vectorizedMaterials.size() < objects.size())
         vectorizedMaterials.push_back(materials.count(material) > 0
-                                          ? materials[material]
+                                          ? new Material(materials[material])
                                           : new Material());
       line.erase(0, 2);
       std::vector<std::string> verticesRaw = split(line, " ");
