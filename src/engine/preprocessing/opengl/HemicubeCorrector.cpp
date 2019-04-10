@@ -6,27 +6,34 @@
 #include "EngineStore.h"
 
 HemicubeCorrector::HemicubeCorrector(GLuint width) {
-  std::vector<GLfloat> topData(width * width, 0.0f);
-  const double halfWidth = (.5 * GLdouble(width));
-  const double normalizationFactor = 1.0 / GLdouble(width * width * 3);
+  std::vector<GLfloat> topData(width * width, 0.0);
+  const GLuint halfWidth = GLdouble(width) / 2;
+  const double deltaA = 1.0 / GLdouble(width * width);
+
+  GLdouble acum = 0;
+  GLdouble center = 0;
   for (GLuint ix = 0; ix < width; ix++) {
     for (GLuint iy = 0; iy < width; iy++) {
-      GLdouble x = 2.0 * ((GLdouble(ix) / GLdouble(width)) - .5);
-      GLdouble y = 2.0 * ((GLdouble(iy) / GLdouble(width)) - .5);
+      GLdouble x = ((ix - halfWidth) / GLdouble(halfWidth));
+      GLdouble y = ((iy - halfWidth) / GLdouble(halfWidth));
       GLdouble sqrtDiv = (x * x + y * y + 1.0);
-      GLfloat term = 1.0 / (M_PI * (sqrtDiv * sqrtDiv));
-      topData[ix * width + iy] = normalizationFactor * term;
+      GLdouble term = 1.0 / (M_PI * (sqrtDiv * sqrtDiv));
+      term = term * deltaA;
+      acum += term;
+      topData[ix * width + iy] = term;
     }
   }
 
-  std::vector<GLfloat> sideData(width * (width / 2), 0.0f);
+  std::vector<GLfloat> sideData(width * halfWidth, 0.0);
   for (GLuint iy = 0; iy < width; iy++) {
-    for (GLuint iz = 0; iz < GLuint(halfWidth); iz++) {
-      GLdouble y = 2.0 * ((GLdouble(iy) / GLdouble(width)) - .5);
-      GLdouble z = 2.0 * ((GLdouble(iz) / GLdouble(width)) - .5);
+    for (GLuint iz = 0; iz < halfWidth; iz++) {
+      GLdouble y = ((iy - halfWidth) / GLdouble(halfWidth));
+      GLdouble z = (iz / GLdouble(halfWidth));
       GLdouble sqrtDiv = (y * y + z * z + 1.0);
-      GLfloat term = (abs(z) / (M_PI * (sqrtDiv * sqrtDiv)));
-      sideData[iy * halfWidth + iz] = normalizationFactor * term;
+      GLdouble term = (z / (M_PI * (sqrtDiv * sqrtDiv)));
+      term = term * deltaA;
+      acum += 4.0 * term;
+      sideData[iy * halfWidth + iz] = term;
     }
   }
 
@@ -34,7 +41,7 @@ HemicubeCorrector::HemicubeCorrector(GLuint width) {
   this->top = new Texture(width, width, GL_TEXTURE_2D, GL_R32F, GL_RED,
                           GL_FLOAT, &topData[0]);
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-  this->side = new Texture(width, width / 2, GL_TEXTURE_2D, GL_R32F, GL_RED,
+  this->side = new Texture(width, halfWidth, GL_TEXTURE_2D, GL_R32F, GL_RED,
                            GL_FLOAT, &sideData[0]);
 }
 

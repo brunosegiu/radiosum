@@ -47,8 +47,8 @@ void RenderWindow::update() {
     }
   } else if (ImGui::IsMouseDoubleClicked(1)) {
     GLuint picked = UIStore::engine->pick(mousePos.x, mousePos.y);
-    if (picked > 0 && picked < UIStore::engine->getScene()->size()) {
-      Face face = UIStore::engine->getScene()->getFace(picked);
+    if (picked > 0 && picked < UIStore::engine->getScene()->size() + 1) {
+      Face face = UIStore::engine->getScene()->getFace(picked - 1);
       UIStore::camera->goTo(face);
     }
   }
