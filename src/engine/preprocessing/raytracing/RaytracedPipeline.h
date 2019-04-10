@@ -35,4 +35,6 @@ class RaytracedPipeline : public Pipeline {
   RayGenerator generator;
 
   std::vector<GLuint> offsetMap;
+
+  std::vector<GLfloat> reflactances;
 };

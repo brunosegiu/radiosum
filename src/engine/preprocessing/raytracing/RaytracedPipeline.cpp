@@ -11,6 +11,7 @@ RaytracedPipeline::RaytracedPipeline(Scene* scene, GLuint resolution)
   this->device = rtcNewDevice("threads=0");
   this->eScene = rtcNewScene(this->device);
   auto geometry = scene->getGeometry();
+  this->reflactances = scene->getSpecularReflactance();
   GLuint currentOffset = 0;
   for (auto& mesh : geometry) {
     RTCBuffer vertices =
@@ -83,11 +84,12 @@ std::map<GLuint, GLfloat> RaytracedPipeline::renderRay(RTCRay ray) {
   GLuint iterationCount = 0;
   while (face != RTC_INVALID_GEOMETRY_ID && iterationCount <= MAX_LEVELS) {
     iterationCount++;
-    GLfloat reflactance = .0f;
+    GLfloat reflactance = reflactances[face];
     ffs[face] = (1.0f - reflactance) * norm;
     ffMultiplier *= reflactance * norm;
     if (reflactance > .0f) {
-      glm::vec3 rayDir = glm::vec3(ray.dir_x, query.ray.dir_y, query.ray.dir_z);
+      glm::vec3 rayDir =
+          glm::vec3(query.ray.dir_x, query.ray.dir_y, query.ray.dir_z);
       glm::vec3 orig =
           glm::vec3(query.ray.org_x, query.ray.org_y, query.ray.org_z) +
           query.ray.tfar * rayDir;

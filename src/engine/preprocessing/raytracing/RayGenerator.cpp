@@ -19,10 +19,11 @@ glm::vec3 RayGenerator::getHemisphereDir(glm::vec3 &origDir) {
 
   glm::vec2 rand(uniformGenerator(rng), uniformGenerator(rng));
 
-  GLfloat sinTheta = sqrtf(1 - rand.x * rand.x);
-  GLfloat phi = 2 * M_PI * rand.y;
-  GLfloat x = sinTheta * cosf(phi);
-  GLfloat z = sinTheta * sinf(phi);
+  const GLfloat r = sqrtf(rand.x);
+  const GLfloat theta = 2.0f * M_PI * rand.y;
 
-  return glm::vec3(x, rand.x, z);
+  const GLfloat x = r * cosf(theta);
+  const GLfloat y = r * sinf(theta);
+
+  return glm::vec3(x, sqrtf(1.0f - rand.x), y);
 }
