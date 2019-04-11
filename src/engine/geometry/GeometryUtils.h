@@ -44,6 +44,7 @@ inline std::map<std::string, Material> loadMtl(std::string path) {
 
         currentReflactance = glm::vec3(.0f);
         currentEmission = .0f;
+        currentSpecularReflection = .0f;
         currentTexturePath = "";
         currentMTL = "";
       } else {

@@ -4,7 +4,6 @@ in smooth float emissionToFrag;
 in smooth vec3 radiosityToFrag;
 in smooth vec3 reflactanceToFrag;
 in smooth vec2 uvToFrag;
-in smooth float phongFactorToFrag;
 
 layout(location = 0) out vec3 radiosity;
 layout(location = 1) out uint id;
@@ -28,7 +27,8 @@ void main() {
 
 	vec3 albedoColor = textured == 1 ? texture(albedoSampler,vec2(uvToFrag.x, 1.0f - uvToFrag.y)).rgb : vec3(1.0f);
 
-	radiosity = radiosityScale * albedoColor * max(radiosityToFrag, 0.0f);
+	vec3 radiosityInPoint = max(radiosityToFrag, 0.0f);
+	radiosity = radiosityScale * albedoColor * radiosityInPoint;
 	emission = max(emissionToFrag, 0.0f);
-	reflactance =  max(reflactanceToFrag, 0.0f) * albedoColor;
+	reflactance = max(reflactanceToFrag, 0.0f) * albedoColor;
 }

@@ -13,6 +13,7 @@
 #define RADIOSITY_ID 3
 #define TEXTURES_ID 4
 #define NORMALS_ID 5
+#define PHONG_NORMALS_ID 6
 
 // Tied to geometry
 

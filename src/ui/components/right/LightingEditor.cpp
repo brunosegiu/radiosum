@@ -5,12 +5,13 @@
 
 LightingEditor::LightingEditor() : Component() {
   this->emission = .0f;
+  this->specularReflactance = .0f;
   this->enable();
-  this->lastSelected = 0;
+  this->lastSelected = -1;
 }
 
 void LightingEditor::render() {
-  if (UIStore::selectedFace > 0 && lastSelected != UIStore::selectedFace) {
+  if (UIStore::selectedFace >= 0 && lastSelected != UIStore::selectedFace) {
     this->lastSelected = UIStore::selectedFace;
     this->emission =
         UIStore::engine->getScene()->getEmission(UIStore::selectedFace);
@@ -19,6 +20,9 @@ void LightingEditor::render() {
     this->reflactance[0] = ref.x;
     this->reflactance[1] = ref.y;
     this->reflactance[2] = ref.z;
+    this->specularReflactance =
+        UIStore::engine->getScene()->getSpecularReflactance(
+            UIStore::selectedFace);
   }
 
   if (enabled && ImGui::BeginTabItem("Lighting")) {
@@ -30,7 +34,7 @@ void LightingEditor::render() {
       ImGui::Spacing();
 
       ImGui::SliderFloat("Emission", &this->emission, 0.0f, 100.0f);
-      if (ImGui::Button("Save emission")) {
+      if (ImGui::Button("Set")) {
         if (UIStore::selectedFace >= 0)
           UIStore::engine->getScene()->setEmission(
               UIStore::selectedFace, this->emission, !UIStore::selectFace);
@@ -39,9 +43,10 @@ void LightingEditor::render() {
       ImGui::Spacing();
       ImGui::Spacing();
       ImGui::Spacing();
+      ImGui::Spacing();
 
-      ImGui::ColorPicker3("Reflactance", this->reflactance);
-      if (ImGui::Button("Save reflactance")) {
+      ImGui::ColorPicker3("Diffuse", this->reflactance);
+      if (ImGui::Button("Set")) {
         if (UIStore::selectedFace >= 0)
           UIStore::engine->getScene()->setReflactance(
               UIStore::selectedFace,
@@ -49,6 +54,22 @@ void LightingEditor::render() {
                         this->reflactance[2]),
               !UIStore::selectFace);
       }
+
+      ImGui::Spacing();
+      ImGui::Spacing();
+      ImGui::Spacing();
+
+      ImGui::SliderFloat("Specular", &this->specularReflactance, 0.0f, 1.0f);
+      if (ImGui::Button("Set")) {
+        if (UIStore::selectedFace >= 0)
+          UIStore::engine->getScene()->setSpecularReflactance(
+              UIStore::selectedFace, this->specularReflactance,
+              !UIStore::selectFace);
+      }
+
+      ImGui::Spacing();
+      ImGui::Spacing();
+      ImGui::Spacing();
 
       ImGui::SliderFloat("Radiosity scale", &EngineStore::radiosityScale, .0f,
                          10.0f);

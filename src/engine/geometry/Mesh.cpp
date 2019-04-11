@@ -35,18 +35,23 @@ Mesh::Mesh(IndexedBuffers geometry, Material *material) {
       getFlattened<IndexedBuffer<glm::vec3>, glm::vec3>(geometry.vertices);
   std::vector<glm::vec2> textures =
       getFlattened<IndexedBuffer<glm::vec2>, glm::vec2>(geometry.textures);
-  std::vector<glm::vec3> normals =
-      getFlattened<IndexedBuffer<glm::vec3>, glm::vec3>(geometry.normals);
-  std::vector<GLfloat> factors = std::vector<GLfloat>(normals.size(), 1.0f);
-  if (normals.size()) {
-    for (GLuint i = 0; i < triangles.size(); i += 3) {
-      Face f = Face(triangles[i], triangles[i + 1], triangles[i + 2]);
-      auto normal = f.getNormal();
-      factors[i + 0] = glm::dot(normal, normals[i + 0]);
-      factors[i + 1] = glm::dot(normal, normals[i + 1]);
-      factors[i + 2] = glm::dot(normal, normals[i + 2]);
-    }
-  }
+
+  /*
+     std::vector<glm::vec3> normals =
+         getFlattened<IndexedBuffer<glm::vec3>, glm::vec3>(geometry.normals);
+     std::vector<glm::vec3> faceNormals =
+         std::vector<glm::vec3>(normals.size(), glm::vec3(.0f, 1.0f, .0f));
+
+     if (normals.size()) {
+       for (GLuint i = 0; i < triangles.size(); i += 3) {
+         Face f = Face(triangles[i], triangles[i + 1], triangles[i + 2]);
+         auto normal = f.getNormal();
+         faceNormals[i + 0] = normal;
+         faceNormals[i + 1] = normal;
+         faceNormals[i + 2] = normal;
+       }
+     }
+ */
 
   this->vao = new VAO();
 
@@ -68,9 +73,14 @@ Mesh::Mesh(IndexedBuffers geometry, Material *material) {
   if (textures.size())
     this->vao->addAttribute(sizeof(glm::vec2) * textures.size(), &textures[0].x,
                             2, GL_FLOAT, TEXTURES_ID);
-  if (factors.size())
-    this->vao->addAttribute(sizeof(GLfloat) * factors.size(), &factors[0], 1,
-                            GL_FLOAT, NORMALS_ID);
+  /*
+  if (faceNormals.size())
+    this->vao->addAttribute(sizeof(glm::vec3) * faceNormals.size(),
+                            &faceNormals[0].x, 3, GL_FLOAT, NORMALS_ID);
+  if (normals.size())
+    this->vao->addAttribute(sizeof(glm::vec3) * normals.size(), &normals[0].x,
+                            3, GL_FLOAT, PHONG_NORMALS_ID);
+  */
 
   this->simpleGeometry = new VBO();
   this->simpleGeometry->addVertices(geometry.vertices.data);

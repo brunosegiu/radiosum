@@ -13,6 +13,7 @@ class LightingEditor : public Component {
 
  private:
   GLfloat emission;
+  GLfloat specularReflactance;
   GLfloat reflactance[3];
-  GLuint lastSelected;
+  GLint lastSelected;
 };
