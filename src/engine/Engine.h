@@ -49,7 +49,7 @@ class Engine {
   void importFFMatrix(std::string path);
   void importEmission(std::string path);
   void importReflactance(std::string path);
-  void importRadiosity(std::string path);
+  void importRadiosity(std::string path, bool smooth);
 
   virtual ~Engine();
 

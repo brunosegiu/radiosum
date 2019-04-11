@@ -29,10 +29,16 @@ void MainMenu::render() {
           std::string path = selectFile();
           if (path != "") UIStore::engine->importReflactance(path);
         }
+        if (ImGui::MenuItem("Form factor matrix", nullptr, false,
+                            UIStore::engine->getScene()->size() > 0)) {
+          std::string path = selectFile(true);
+          if (path != "") UIStore::engine->importFFMatrix(path);
+        }
         if (ImGui::MenuItem("Radiosity", nullptr, false,
                             UIStore::engine->getScene()->size() > 0)) {
           std::string path = selectFile();
-          if (path != "") UIStore::engine->importRadiosity(path);
+          if (path != "")
+            UIStore::engine->importRadiosity(path, UIStore::shading == GOURAUD);
         }
         ImGui::EndMenu();
       }
@@ -52,7 +58,7 @@ void MainMenu::render() {
         }
         if (ImGui::IsItemHovered()) {
           ImGui::BeginTooltip();
-          ImGui::Text("Outputs a text file, format is: Row Col Emission eol");
+          ImGui::Text("Outputs a text file, format is: Row Emission eol");
           ImGui::EndTooltip();
         }
         if (ImGui::MenuItem("Reflactance")) {
@@ -61,8 +67,7 @@ void MainMenu::render() {
         }
         if (ImGui::IsItemHovered()) {
           ImGui::BeginTooltip();
-          ImGui::Text(
-              "Outputs a text file, format is: Row Col RefR RefG RefB eol");
+          ImGui::Text("Outputs a text file, format is: Row RefR RefG RefB eol");
           ImGui::EndTooltip();
         }
         if (ImGui::MenuItem("Form factor matrix")) {
@@ -80,8 +85,7 @@ void MainMenu::render() {
         }
         if (ImGui::IsItemHovered()) {
           ImGui::BeginTooltip();
-          ImGui::Text(
-              "Outputs a text file, format is: Row Col RadR RadG RadB eol");
+          ImGui::Text("Outputs a text file, format is: Row RadR RadG RadB eol");
           ImGui::EndTooltip();
         }
         ImGui::EndMenu();
@@ -107,15 +111,6 @@ void MainMenu::render() {
               UIStore::engine->setRadiosity(true);
               UIStore::shading = GOURAUD;
             }
-          }
-          if (ImGui::MenuItem("Phong", nullptr,
-                              enabled && UIStore::shading == PHONG)) {
-            UIStore::engine->setMode(RADIOSITY);
-            if (EngineStore::pipelineStage == RADIOSITY_READY) {
-              UIStore::engine->setRadiosity(false);
-              UIStore::shading = PHONG;
-            }
-            // Enable normals
           }
           ImGui::EndMenu();
         }

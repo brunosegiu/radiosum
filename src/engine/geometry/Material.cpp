@@ -96,7 +96,7 @@ void Material::setEmission(std::vector<GLfloat> emission) {
   for (GLuint i = tFaces * 3; i < (vertexCount - tFaces * 3); i++) {
     perVertex[i] = emission[tFaces + i / 6];
   }
-  this->vao->updateAttribute(0, sizeof(glm::vec3) * perVertex.size(),
+  this->vao->updateAttribute(0, sizeof(GLfloat) * perVertex.size(),
                              &perVertex[0], EMISSION_ID);
 }
 

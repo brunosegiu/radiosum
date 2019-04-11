@@ -117,6 +117,7 @@ void Scene::addMesh(Mesh *mesh) {
 }
 
 void Scene::setRadiosity(std::vector<glm::vec3> &radiosity, bool smooth) {
+  EngineStore::pipelineStage = RADIOSITY_READY;
   GLuint currentIndex = 0;
   for (auto &mesh : this->meshes) {
     mesh->setRadiosity(
@@ -183,16 +184,6 @@ void Scene::setReflactance(std::vector<glm::vec3> reflactance) {
                                reflactance.begin() + offset + mesh->size());
     offset += mesh->size();
     mesh->setReflactance(meshRef);
-  }
-}
-
-void Scene::setRadiosity(std::vector<glm::vec3> radiosity) {
-  GLuint offset = 0;
-  for (auto &mesh : meshes) {
-    std::vector<glm::vec3> meshRad = std::vector<glm::vec3>(
-        radiosity.begin() + offset, radiosity.begin() + offset + mesh->size());
-    offset += mesh->size();
-    mesh->setRadiosity(meshRad);
   }
 }
 

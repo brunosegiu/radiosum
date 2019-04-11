@@ -17,7 +17,7 @@ Engine::Engine() {
   this->displayer = new DisplayController(this->mode);
 
   glEnable(GL_DEPTH_TEST);
-  // glEnable(GL_CULL_FACE);
+  glEnable(GL_CULL_FACE);
 }
 
 // Main camera
@@ -196,7 +196,7 @@ void Engine::importReflactance(std::string path) {
   this->scene->setReflactance(reflactance);
 }
 
-void Engine::importRadiosity(std::string path) {
+void Engine::importRadiosity(std::string path, bool smooth) {
   std::ifstream input(path);
   std::string line;
   std::vector<glm::vec3> radiosity(this->scene->size(), glm::vec3(.0f));
@@ -211,7 +211,7 @@ void Engine::importRadiosity(std::string path) {
       EngineStore::logger.log("Unable to add reflactance " +
                               std::to_string(index) + ", out of range.");
   }
-  this->scene->setRadiosity(radiosity);
+  this->scene->setRadiosity(radiosity, smooth);
 }
 
 Engine::~Engine() {

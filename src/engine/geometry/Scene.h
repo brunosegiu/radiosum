@@ -36,7 +36,6 @@ class Scene {
                               bool full = false);
 
   std::vector<glm::vec3> getRadiosity();
-  void setRadiosity(std::vector<glm::vec3> radiosity);
   void setRadiosity(std::vector<glm::vec3>& radiosity, bool smooth);
 
   virtual ~Scene();

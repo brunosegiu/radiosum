@@ -4,7 +4,7 @@
 #include "Engine.h"
 #include "Logger.h"
 
-enum ShadingModel { FLAT, GOURAUD, PHONG };
+enum ShadingModel { FLAT, GOURAUD };
 
 class UIStore {
  public:

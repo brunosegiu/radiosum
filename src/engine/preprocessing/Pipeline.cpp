@@ -85,7 +85,8 @@ std::vector<std::tuple<GLuint, GLuint, GLfloat>> Pipeline::getTriplets() {
   return this->triplets;
 }
 
-void Pipeline::setTriplets(std::vector<std::tuple<GLuint, GLuint, GLfloat>>) {
+void Pipeline::setTriplets(
+    std::vector<std::tuple<GLuint, GLuint, GLfloat>> triplets) {
   this->triplets = triplets;
   this->setStage(FF_READY);
 }
