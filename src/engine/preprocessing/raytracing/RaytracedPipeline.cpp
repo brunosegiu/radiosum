@@ -95,7 +95,7 @@ std::map<GLuint, GLfloat> RaytracedPipeline::renderRay(RTCRay ray) {
           query.ray.tfar * rayDir;
       glm::vec3 hitNormal = glm::normalize(
           glm::vec3(query.hit.Ng_x, query.hit.Ng_y, query.hit.Ng_z));
-      glm::vec3 dir = 2 * glm::dot(hitNormal, -rayDir) * hitNormal + rayDir;
+      glm::vec3 dir = 2.0f * glm::dot(hitNormal, -rayDir) * hitNormal + rayDir;
       RTCRay reflected = getRay(orig, dir);
 
       face = renderRayOnce(reflected, query);
