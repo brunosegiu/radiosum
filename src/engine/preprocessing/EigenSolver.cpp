@@ -1,5 +1,7 @@
 #include "preprocessing/EigenSolver.h"
 
+#include "EngineStore.h"
+
 void EigenSolver::init(
     GLuint size, std::vector<std::tuple<GLuint, GLuint, GLfloat>> triplets) {
   matrix = Eigen::SparseMatrix<GLfloat>(size, size);
@@ -49,8 +51,7 @@ void EigenSolverSparseLU::initSolver() {
   solver.factorize(matrix);
 
   if (solver.info() != Eigen::Success) {
-    throw std::runtime_error(
-        "Cannot compute radiosity from form factor matrix");
+    EngineStore::logger.log("Cannot init from form factor matrix");
   }
 }
 
@@ -58,8 +59,7 @@ Eigen::VectorXf EigenSolverSparseLU::solve(
     Eigen::Map<Eigen::VectorXf, Eigen::Unaligned> &vector) {
   auto res = solver.solve(vector);
   if (solver.info() != Eigen::Success) {
-    throw std::runtime_error(
-        "Cannot compute radiosity from form factor matrix");
+    EngineStore::logger.log("Cannot init from form factor matrix");
   }
   return res;
 }
@@ -69,8 +69,7 @@ void EigenSolverSimplicialLDLT::initSolver() {
   solver.factorize(matrix);
 
   if (solver.info() != Eigen::Success) {
-    throw std::runtime_error(
-        "Cannot compute radiosity from form factor matrix");
+    EngineStore::logger.log("Cannot init from form factor matrix");
   }
 }
 
@@ -79,8 +78,7 @@ Eigen::VectorXf EigenSolverSimplicialLDLT::solve(
   solver.solve(vector);
   auto res = solver.solve(vector);
   if (solver.info() != Eigen::Success) {
-    throw std::runtime_error(
-        "Cannot compute radiosity from form factor matrix");
+    EngineStore::logger.log("Cannot init from form factor matrix");
   }
   return res;
 }
@@ -89,8 +87,7 @@ void EigenSolverConjugateGradient::initSolver() {
   solver.compute(matrix);
 
   if (solver.info() != Eigen::Success) {
-    throw std::runtime_error(
-        "Cannot compute radiosity from form factor matrix");
+    EngineStore::logger.log("Cannot init from form factor matrix");
   }
 }
 
@@ -98,8 +95,7 @@ Eigen::VectorXf EigenSolverConjugateGradient::solve(
     Eigen::Map<Eigen::VectorXf, Eigen::Unaligned> &vector) {
   auto res = solver.solve(vector);
   if (solver.info() != Eigen::Success) {
-    throw std::runtime_error(
-        "Cannot compute radiosity from form factor matrix");
+    EngineStore::logger.log("Cannot solve radiosity from form factor matrix");
   }
   return res;
 }
@@ -108,8 +104,7 @@ void EigenSolverBiCGSTAB::initSolver() {
   solver.compute(matrix);
 
   if (solver.info() != Eigen::Success) {
-    throw std::runtime_error(
-        "Cannot compute radiosity from form factor matrix");
+    EngineStore::logger.log("Cannot solve radiosity from form factor matrix");
   }
 }
 
@@ -117,8 +112,7 @@ Eigen::VectorXf EigenSolverBiCGSTAB::solve(
     Eigen::Map<Eigen::VectorXf, Eigen::Unaligned> &vector) {
   auto res = solver.solve(vector);
   if (solver.info() != Eigen::Success) {
-    throw std::runtime_error(
-        "Cannot compute radiosity from form factor matrix");
+    EngineStore::logger.log("Cannot solve radiosity from form factor matrix");
   }
   return res;
 }

@@ -83,23 +83,25 @@ std::map<GLuint, GLfloat> RaytracedPipeline::renderRay(RTCRay ray) {
 
   GLuint iterationCount = 0;
   while (face != RTC_INVALID_GEOMETRY_ID && iterationCount <= MAX_LEVELS) {
-    iterationCount++;
     GLfloat reflactance = reflactances[face];
-    ffs[face] = (1.0f - reflactance) * norm;
-    ffMultiplier *= reflactance * norm;
+    ffs[face] = (1.0f - reflactance) * ffMultiplier;
     if (reflactance > .0f) {
-      glm::vec3 rayDir =
+      ffMultiplier *= reflactance;
+      glm::vec3 originalDir =
           glm::vec3(query.ray.dir_x, query.ray.dir_y, query.ray.dir_z);
-      glm::vec3 orig =
-          glm::vec3(query.ray.org_x, query.ray.org_y, query.ray.org_z) +
-          query.ray.tfar * rayDir;
       glm::vec3 hitNormal = glm::normalize(
           glm::vec3(query.hit.Ng_x, query.hit.Ng_y, query.hit.Ng_z));
-      glm::vec3 dir = 2.0f * glm::dot(hitNormal, -rayDir) * hitNormal + rayDir;
+
+      glm::vec3 dir =
+          2.0f * glm::dot(hitNormal, -originalDir) * hitNormal + originalDir;
+      glm::vec3 orig =
+          glm::vec3(query.ray.org_x, query.ray.org_y, query.ray.org_z) +
+          query.ray.tfar * originalDir + dir * 1e-5f;
       RTCRay reflected = getRay(orig, dir);
 
       face = renderRayOnce(reflected, query);
     }
+    iterationCount++;
   }
   return ffs;
 }
@@ -112,7 +114,6 @@ void RaytracedPipeline::runWr(std::vector<Face> faces) {
       glm::vec3 normal = face.getNormal();
       glm::vec3 orig = face.getBarycenter() + normal * 1e-5f;
       glm::mat3 base = getBase(normal);
-      EngineStore::ffProgress += i / GLfloat(scene->size());
       std::map<GLuint, GLfloat> row;
       for (GLuint samples = 0; samples < nRays; samples++) {
         glm::vec3 dir = base * generator.getHemisphereDir(normal);
@@ -129,6 +130,7 @@ void RaytracedPipeline::runWr(std::vector<Face> faces) {
             std::tuple<GLuint, GLuint, GLfloat>(i, pair.first, pair.second));
       }
       ffLock.unlock();
+      EngineStore::ffProgress += i / GLfloat(scene->size());
     }
   }
   done = true;
