@@ -54,6 +54,8 @@ RaytracedPipeline::RaytracedPipeline(Scene* scene, GLuint resolution)
   }
 
   rtcCommitScene(this->eScene);
+
+  this->generator = new RayGenerator(this->nRays);
 }
 
 GLuint RaytracedPipeline::renderRayOnce(RTCRay& ray, RTCRayHit& query) {
@@ -115,8 +117,8 @@ void RaytracedPipeline::runWr(std::vector<Face> faces) {
       glm::vec3 orig = face.getBarycenter() + normal * 1e-5f;
       glm::mat3 base = getBase(normal);
       std::map<GLuint, GLfloat> row;
-      for (GLuint samples = 0; samples < nRays; samples++) {
-        glm::vec3 dir = base * generator.getHemisphereDir(normal);
+      for (GLuint sample = 0; sample < nRays; sample++) {
+        glm::vec3 dir = base * generator->getHemisphereDir(sample);
         RTCRay ray = getRay(orig, dir);
         std::map<GLuint, GLfloat> ff = this->renderRay(ray);
         for (auto& pair : ff) {
@@ -158,4 +160,5 @@ RaytracedPipeline::~RaytracedPipeline() {
   this->mainThread.join();
   rtcReleaseScene(this->eScene);
   rtcReleaseDevice(this->device);
+  delete this->generator;
 }

@@ -5,25 +5,27 @@
 
 #include <gtx/rotate_vector.hpp>
 
-RayGenerator::RayGenerator() {
-  // https://stackoverflow.com/questions/9878965/rand-between-0-and-1
-  uint64_t timeSeed =
-      std::chrono::high_resolution_clock::now().time_since_epoch().count();
-  std::seed_seq ss{uint32_t(timeSeed & 0xffffffff), uint32_t(timeSeed >> 32)};
-  rng.seed(ss);
-  uniformGenerator = std::uniform_real_distribution<GLfloat>(.0f, 1.0f);
+RayGenerator::RayGenerator(GLuint &nRays) {
+  GLfloat tilespering = 1;
+  GLfloat rings = ceil((-1 + sqrt(nRays)) / 2);
+  nRays = 1 + 4 * rings * (rings + 1);
+  GLfloat dRho = 1 / (2 * rings + 1);
+  this->directions.reserve(nRays);
+  for (GLfloat ring = 1; ring <= 2 * rings + 1; ring += 2) {
+    GLfloat dTheta = 2 * M_PI / tilespering;
+    GLfloat rho = (ring - 1.0) * dRho;
+    for (GLfloat k = 1; k <= tilespering; k++) {
+      GLfloat theta = (k - 0.5) * dTheta;
+      GLfloat x = rho * cos(theta);
+      GLfloat y = rho * sin(theta);
+      GLfloat z = sqrt(1.0 - x * x - y * y);
+
+      this->directions.push_back(glm::vec3(x, z, y));
+    }
+    tilespering = (ring + 1) * 4;
+  }
 }
 
-glm::vec3 RayGenerator::getHemisphereDir(glm::vec3 &origDir) {
-  glm::vec3 dir;
-
-  glm::vec2 rand(uniformGenerator(rng), uniformGenerator(rng));
-
-  const GLfloat r = sqrtf(rand.x);
-  const GLfloat theta = 2.0f * M_PI * rand.y;
-
-  const GLfloat x = r * cosf(theta);
-  const GLfloat y = r * sinf(theta);
-
-  return glm::vec3(x, sqrtf(1.0f - rand.x), y);
+glm::vec3 RayGenerator::getHemisphereDir(GLuint step) {
+  return this->directions[step];
 }

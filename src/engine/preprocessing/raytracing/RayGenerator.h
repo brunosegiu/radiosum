@@ -9,10 +9,9 @@
 
 class RayGenerator {
  public:
-  RayGenerator();
-  glm::vec3 getHemisphereDir(glm::vec3 &origDir);
+  RayGenerator(GLuint &nRays);
+  glm::vec3 getHemisphereDir(GLuint step);
 
  private:
-  std::mt19937_64 rng;
-  std::uniform_real_distribution<GLfloat> uniformGenerator;
+  std::vector<glm::vec3> directions;
 };

@@ -68,6 +68,7 @@
     <ClCompile Include="src\engine\preprocessing\opengl\IDRenderer.cpp" />
     <ClCompile Include="src\engine\preprocessing\opengl\OpenGLPipeline.cpp" />
     <ClCompile Include="src\engine\preprocessing\raytracing\RaytracedPipeline.cpp" />
+    <ClCompile Include="src\engine\preprocessing\raytracing\RayGenerator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source">
@@ -160,6 +161,7 @@
     <ClInclude Include="src\engine\preprocessing\opengl\OpenGLPipeline.h" />
     <ClInclude Include="src\engine\preprocessing\raytracing\RaytracedPipeline.h" />
     <ClInclude Include="src\engine\preprocessing\raytracing\RaytracingUtils.h" />
+    <ClInclude Include="src\engine\preprocessing\raytracing\RayGenerator.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.ini">

@@ -32,7 +32,7 @@ class RaytracedPipeline : public Pipeline {
   std::mutex ffLock;
 
   GLuint nRays;
-  RayGenerator generator;
+  RayGenerator* generator;
 
   std::vector<GLuint> offsetMap;
 
