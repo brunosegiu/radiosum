@@ -147,7 +147,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\engine\preprocessing\raytracing\RayGenerator.cpp" />
     <ClCompile Include="src\engine\geometry\Material.cpp" />
     <ClCompile Include="src\engine\preprocessing\Pipeline.cpp" />
     <ClCompile Include="src\engine\preprocessing\EigenSolver.cpp" />
@@ -205,7 +204,6 @@
     <ClCompile Include="src\engine\geometry\VBO.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\engine\preprocessing\raytracing\RayGenerator.h" />
     <ClInclude Include="src\engine\geometry\Material.h" />
     <ClInclude Include="src\engine\preprocessing\Pipeline.h" />
     <ClInclude Include="src\engine\preprocessing\EigenSolver.h" />
