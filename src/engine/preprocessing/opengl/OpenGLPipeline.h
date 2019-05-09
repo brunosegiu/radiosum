@@ -21,7 +21,7 @@ class OpenGLPipeline : public Pipeline {
   ComputeShader* reducer;
   RowBuffer* row;
   HemicubeCorrector* corrector;
-  GLuint instances;
+  GLuint resolution;
 
   // Storage
 
@@ -32,7 +32,8 @@ class OpenGLPipeline : public Pipeline {
 
   // FF
   void setUpRenderer();
-  std::vector<GLfloat> getMatrixRow(GLuint face);
+  std::vector<GLfloat> getMatrixRowGPU();
+  std::vector<GLfloat> getMatrixRowCPU();
   void processRow(std::vector<GLfloat> faceFactors, GLuint faceIndex);
   void waitForFFWorkers();
 };

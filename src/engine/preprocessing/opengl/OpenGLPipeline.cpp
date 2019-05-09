@@ -1,6 +1,7 @@
 #include "preprocessing/opengl/OpenGLPipeline.h"
 
 #include "EngineStore.h"
+#include "buffers/HemicubeBuffer.h"
 #include "preprocessing/EigenSolver.h"
 
 OpenGLPipeline::OpenGLPipeline(Scene* scene, GLuint resolution)
@@ -8,8 +9,8 @@ OpenGLPipeline::OpenGLPipeline(Scene* scene, GLuint resolution)
   this->renderer = new IDRenderer(scene);
   this->reducer = new ComputeShader("computeRow.comp");
   this->row = new RowBuffer(scene->size() + 1);  // Padding for 0 (void)
-  this->instances = resolution;
-  this->corrector = new HemicubeCorrector(this->instances);
+  this->resolution = resolution;
+  this->corrector = new HemicubeCorrector(this->resolution);
 
   // Thread flags
   threadsReady = 0;
@@ -34,13 +35,58 @@ void OpenGLPipeline::setUpRenderer() {
   }
 }
 
-std::vector<GLfloat> OpenGLPipeline::getMatrixRow(GLuint face) {
+std::vector<GLfloat> OpenGLPipeline::getMatrixRowGPU() {
   this->reducer->bind();
   this->row->bind();
   this->row->clean();
   this->corrector->read();
-  this->reducer->run(this->instances, this->instances, 1);
+  this->reducer->run(this->resolution, this->resolution, 1);
   return this->row->getBuffer();
+}
+
+std::vector<GLfloat> OpenGLPipeline::getMatrixRowCPU() {
+  HemicubeBuffer* buffer =
+      dynamic_cast<HemicubeBuffer*>(this->renderer->getBuffer());
+  std::vector<std::vector<GLuint>> data = buffer->getData();
+  GLuint rowSize = scene->size() + 1;
+
+  std::vector<GLfloat> topCorrector = this->corrector->topData;
+  std::vector<GLfloat> rowTopFace = std::vector<GLfloat>(rowSize, 0.0f);
+
+  for (GLuint i = 0; i < resolution; i++) {
+    for (GLuint j = 0; j < resolution; j++) {
+      GLuint index = i * resolution + j;
+      GLuint seenFace = data[0][index];
+      if (seenFace > 0) {
+        GLfloat addition = topCorrector[index];
+        rowTopFace[seenFace] += addition;
+      }
+    }
+  }
+
+  std::vector<GLfloat> sideCorrector = this->corrector->sideData;
+  std::vector<std::vector<GLfloat>> rowPerSideFace =
+      std::vector<std::vector<GLfloat>>(HEMICUBE_FACES - 1,
+                                        std::vector<GLfloat>(rowSize, 0.0f));
+  GLuint readOffset = resolution * resolution / 2;
+#pragma omp parallel for
+  for (GLint face = 1; face < HEMICUBE_FACES - 1; face++) {
+    for (GLuint i = 0; i < resolution; i++) {
+      for (GLuint j = 0; j < resolution / 2; j++) {
+        GLuint index = i * resolution / 2 + j;
+        GLuint seenFace = data[0][readOffset + index];
+        GLfloat addition = sideCorrector[index];
+        rowPerSideFace[face][seenFace] += addition;
+      }
+    }
+  }
+
+  for (GLint face = 1; face < FACES - 1; face++) {
+    for (GLuint i = 0; i < rowSize; i++) {
+      rowTopFace[i] += rowPerSideFace[face][i];
+    }
+  }
+  return rowTopFace;
 }
 
 void OpenGLPipeline::processRow(std::vector<GLfloat> faceFactors,
@@ -74,7 +120,7 @@ void OpenGLPipeline::computeFormFactors() {
 
     // Process hemicube and compute row
     {
-      std::vector<GLfloat> faceFactors = this->getMatrixRow(index);
+      std::vector<GLfloat> faceFactors = this->getMatrixRowCPU();
       this->formFactorWorkers.push_back(
           std::thread(&OpenGLPipeline::processRow, this, faceFactors, index));
     }

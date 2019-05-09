@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 #include "Texture.h"
 
 class HemicubeCorrector {
@@ -7,6 +9,7 @@ class HemicubeCorrector {
   HemicubeCorrector(GLuint width);
   void read();
   virtual ~HemicubeCorrector();
+  std::vector<GLfloat> topData, sideData;
 
  private:
   Texture *top, *side;

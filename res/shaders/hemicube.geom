@@ -3,13 +3,13 @@
 layout(triangles) in;
 layout(triangle_strip, max_vertices = 15) out;
 
-#define FACES 5
+#define HEMICUBE_FACES 5
 
-uniform mat4 worldTransform[FACES];
+uniform mat4 worldTransform[HEMICUBE_FACES];
 uniform vec4 clipPlane;
 
 void main() {
-	for (int face = 0; face < FACES; face++) {
+	for (int face = 0; face < HEMICUBE_FACES; face++) {
 		mat4 transform = worldTransform[face];
 		for (int vertex = 0; vertex < 3; vertex++) {
 			vec4 position = gl_in[vertex].gl_Position;
