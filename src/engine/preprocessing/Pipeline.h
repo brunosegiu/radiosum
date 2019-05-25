@@ -40,8 +40,6 @@ class Pipeline {
   PipelineStage currentStage;
 
   // Geometry, math...
-  GLuint index;
-  Face* face;
   Scene* scene;
 
  private:

@@ -11,8 +11,7 @@ enum RendererType { OPENGL, RAYTRACING };
 class PreprocessingController {
  public:
   PreprocessingController(Scene* scene, RendererType = OPENGL);
-  GLuint runStep();
-  void runUnsafe(bool full = false);
+  void computeFormFactors();
   void computeRadiosity(std::set<Channel> channels,
                         EigenSolverType solver = SLU, bool smooth = false);
   void pollState();
@@ -21,6 +20,5 @@ class PreprocessingController {
   virtual ~PreprocessingController();
 
  private:
-  SceneIterator* iterator;
   Pipeline* pipeline;
 };

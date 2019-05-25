@@ -8,7 +8,6 @@
 
 PreprocessingController::PreprocessingController(Scene* scene,
                                                  RendererType renderer) {
-  this->iterator = new SceneIterator(scene);
   GLuint nSamples = std::stoi(ConfigurationManager::get("INTERNAL_WIDTH"));
 
   this->pipeline = renderer == RAYTRACING
@@ -16,31 +15,8 @@ PreprocessingController::PreprocessingController(Scene* scene,
                        : (Pipeline*)new OpenGLPipeline(scene, nSamples);
 }
 
-GLuint PreprocessingController::runStep() {
-  GLuint index = this->iterator->faceIndex();
-  if (!iterator->end()) {
-    if (EngineStore::pipelineStage == FF_LOADING ||
-        EngineStore::pipelineStage == INIT) {
-      Face* face = new Face(this->iterator->get());
-      this->pipeline->configureFaceIndex(index);
-      this->pipeline->configureFace(face);
-      this->pipeline->computeFormFactors();
-      iterator->nextFace();
-    }
-  }
-  return index;
-}
-
-void PreprocessingController::runUnsafe(bool full) {
-  while (!this->iterator->end()) {
-    GLuint index = this->iterator->faceIndex();
-    Face* face = new Face(this->iterator->get());
-    this->pipeline->configureFaceIndex(index);
-    this->pipeline->configureFace(face);
-    this->pipeline->computeFormFactors();
-    iterator->nextFace();
-  }
-  if (full) this->pipeline->computeRadiosity();
+void PreprocessingController::computeFormFactors() {
+  this->pipeline->computeFormFactors();
 }
 
 void PreprocessingController::pollState() {
@@ -66,7 +42,4 @@ void PreprocessingController::setTriplets(
   this->pipeline->setTriplets(triplets);
 }
 
-PreprocessingController::~PreprocessingController() {
-  delete this->iterator;
-  delete this->pipeline;
-}
+PreprocessingController::~PreprocessingController() { delete this->pipeline; }

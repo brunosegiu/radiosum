@@ -15,8 +15,6 @@ IDRenderer::IDRenderer(Scene* scene) {
 }
 
 void IDRenderer::render() {
-  this->shader->bind();
-  this->buffer->bind();
   this->buffer->clean();
   GLuint worldTransformId =
       glGetUniformLocation(shader->getID(), "worldTransform");
@@ -30,13 +28,9 @@ void IDRenderer::render() {
 
   this->scene->draw(this->shader->getID(), true);
   glDisable(GL_CLIP_DISTANCE0);
-  this->buffer->unbind();
 }
 
-void IDRenderer::read() {
-  glFlush();
-  this->buffer->read();
-}
+void IDRenderer::read() { this->buffer->read(); }
 
 void IDRenderer::setClipPlane(glm::vec4 plane) { this->clipPlane = plane; }
 

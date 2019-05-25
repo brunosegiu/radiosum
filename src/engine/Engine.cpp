@@ -39,7 +39,7 @@ void Engine::preprocess(bool withOutput, RendererType renderer) {
   if (this->preprocessor) delete this->preprocessor;
   this->preprocessor = new PreprocessingController(this->scene, renderer);
   this->setMode(PREPROCESS);
-  if (!withOutput) this->preprocessor->runUnsafe(false);
+  this->preprocessor->computeFormFactors();
 }
 
 void Engine::computeRadiosity(std::vector<Channel> channels,
@@ -65,16 +65,13 @@ void Engine::step() {
   if (this->preprocessor != nullptr) {
     this->preprocessor->pollState();
   }
-  if (this->preprocessor != nullptr) {
-    this->preprocessor->runStep();
-  }
   if (this->mode != PREPROCESS) {
     this->sceneRenderer->setScene(scene);
     this->sceneRenderer->render();
     this->sceneRenderer->read();
+    this->displayer->render();
+    this->outputTexture = this->displayer->read();
   }
-  this->displayer->render();
-  this->outputTexture = this->displayer->read();
 }
 
 GLuint Engine::pick(GLint x, GLint y) {

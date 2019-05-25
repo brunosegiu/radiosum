@@ -19,10 +19,6 @@ Pipeline::Pipeline(Scene* scene, GLuint resolution) {
   solverType = SLU;
 }
 
-void Pipeline::configureFace(Face* face) { this->face = face; }
-
-void Pipeline::configureFaceIndex(GLuint index) { this->index = index; }
-
 void Pipeline::configureReflections(bool enable) {
   this->enableReflections = enable;
 }

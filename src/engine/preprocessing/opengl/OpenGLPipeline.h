@@ -31,7 +31,7 @@ class OpenGLPipeline : public Pipeline {
   GLuint threadsReady;
 
   // FF
-  void setUpRenderer();
+  void setUpRenderer(Face& face);
   std::vector<GLfloat> getMatrixRowGPU();
   std::vector<GLfloat> getMatrixRowCPU();
   void processRow(std::vector<GLfloat> faceFactors, GLuint faceIndex);

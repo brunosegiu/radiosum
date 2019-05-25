@@ -17,10 +17,30 @@ OpenGLPipeline::OpenGLPipeline(Scene* scene, GLuint resolution)
 }
 
 // Form factor
-void OpenGLPipeline::setUpRenderer() {
+void OpenGLPipeline::computeFormFactors() {
+  this->setStage(FF_LOADING);
+  SceneIterator iterator(this->scene);
+  this->renderer->start();
+  while (!iterator.end()) {
+    Face face = iterator.get();
+    GLuint index = iterator.faceIndex();
+    this->setUpRenderer(face);
+    this->renderer->render();
+
+    // Process hemicube and compute row
+    {
+      std::vector<GLfloat> faceFactors = this->getMatrixRowCPU();
+      this->formFactorWorkers.push_back(
+          std::thread(&OpenGLPipeline::processRow, this, faceFactors, index));
+    }
+    iterator.nextFace();
+  }
+  EngineStore::ffProgress = 1.0f;
+}
+
+void OpenGLPipeline::setUpRenderer(Face& face) {
   // Get camera configuration and prepare for render
   {
-    Face face = *this->face;
     glm::vec3 origin, normal, up;
     glm::vec4 plane = face.getPlane();
     origin = face.getBarycenter();
@@ -104,27 +124,6 @@ void OpenGLPipeline::processRow(std::vector<GLfloat> faceFactors,
   ffLock.lock();
   threadsReady++;
   ffLock.unlock();
-}
-
-void OpenGLPipeline::computeFormFactors() {
-  if (this->index < this->scene->size()) {
-    this->setStage(FF_LOADING);
-    EngineStore::ffProgress = this->index / GLfloat(this->scene->size());
-    this->renderer->start();
-    this->setUpRenderer();
-    // Render hemicube and read results
-    {
-      this->renderer->render();
-      this->renderer->read();
-    }
-
-    // Process hemicube and compute row
-    {
-      std::vector<GLfloat> faceFactors = this->getMatrixRowCPU();
-      this->formFactorWorkers.push_back(
-          std::thread(&OpenGLPipeline::processRow, this, faceFactors, index));
-    }
-  }
 }
 
 bool OpenGLPipeline::ready() {
