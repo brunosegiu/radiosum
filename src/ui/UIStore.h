@@ -12,6 +12,7 @@ class UIStore {
   static bool selectFace;
   static int selectedFace;
   static bool enablePreprocessRendering;
+  static bool enableReflections;
   static ShadingModel shading;
   static CameraController* camera;
 };

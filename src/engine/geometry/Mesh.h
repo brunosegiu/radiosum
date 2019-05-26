@@ -20,6 +20,7 @@ class Mesh {
 
   void draw(GLuint shaderID);
   void drawGeometry(GLuint shaderID);
+  void drawFace(GLuint faceIndex);
 
   std::vector<GLfloat> getEmission();
   GLfloat getEmission(GLuint faceIndex);

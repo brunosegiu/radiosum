@@ -27,6 +27,7 @@ void Preprocess::render() {
     ImGui::ProgressBar(progress);
     if (ImGui::Button("Compute form factors")) {
       UIStore::engine->preprocess(UIStore::enablePreprocessRendering,
+                                  UIStore::enableReflections,
                                   (RendererType)this->renderer);
     }
 

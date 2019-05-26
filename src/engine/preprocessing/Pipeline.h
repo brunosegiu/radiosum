@@ -42,7 +42,6 @@ class Pipeline {
   // Geometry, math...
   Scene* scene;
 
- private:
   // Config
 
   // Flags

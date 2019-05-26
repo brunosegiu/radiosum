@@ -22,7 +22,7 @@ class Engine {
   void step();
 
   // Lighting
-  void preprocess(bool withOutput = true,
+  void preprocess(bool withOutput = true, bool enableReflections = false,
                   RendererType renderer =
                       OPENGL);  // if withOutput == false run preprocessor until
                                 // it finishes, without rendering steps

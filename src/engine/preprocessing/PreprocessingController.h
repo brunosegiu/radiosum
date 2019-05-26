@@ -11,7 +11,7 @@ enum RendererType { OPENGL, RAYTRACING };
 class PreprocessingController {
  public:
   PreprocessingController(Scene* scene, RendererType = OPENGL);
-  void computeFormFactors();
+  void computeFormFactors(bool reflections = false);
   void computeRadiosity(std::set<Channel> channels,
                         EigenSolverType solver = SLU, bool smooth = false);
   void pollState();

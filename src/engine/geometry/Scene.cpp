@@ -17,6 +17,12 @@ void Scene::draw(GLuint shaderID, bool justGeometry) {
   }
 }
 
+void Scene::drawFace(GLuint faceIndex) {
+  GLuint meshIndex = 0;
+  Mesh *mesh = getMeshWithIndex(faceIndex, meshIndex);
+  mesh->drawFace(meshIndex);
+}
+
 GLuint Scene::size() { return this->_size; }
 
 Face Scene::getFace(GLuint index) {

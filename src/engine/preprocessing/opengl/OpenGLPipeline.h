@@ -4,7 +4,10 @@
 #include "preprocessing/Pipeline.h"
 #include "preprocessing/opengl/HemicubeCorrector.h"
 #include "preprocessing/opengl/IDRenderer.h"
+#include "preprocessing/opengl/ReflectionsRenderer.h"
 #include "shaders/ComputeShader.h"
+
+typedef std::set<std::pair<GLuint, GLfloat>> ReflectionsSet;
 
 class OpenGLPipeline : public Pipeline {
  public:
@@ -18,6 +21,7 @@ class OpenGLPipeline : public Pipeline {
  private:
   // Internal
   IDRenderer* renderer;
+  ReflectionsRenderer* reflectionsRenderer;
   ComputeShader* reducer;
   RowBuffer* row;
   HemicubeCorrector* corrector;
@@ -33,7 +37,7 @@ class OpenGLPipeline : public Pipeline {
   // FF
   void setUpRenderer(Face& face);
   std::vector<GLfloat> getMatrixRowGPU();
-  std::vector<GLfloat> getMatrixRowCPU();
+  std::vector<GLfloat> getMatrixRowCPU(Face& face, GLuint index);
   void processRow(std::vector<GLfloat> faceFactors, GLuint faceIndex);
   void waitForFFWorkers();
 };

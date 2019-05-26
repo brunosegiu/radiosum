@@ -131,14 +131,11 @@ void MainMenu::render() {
 
         ImGui::EndMenu();
       }
-      if (ImGui::BeginMenu("Debug")) {
-        if (ImGui::MenuItem("Render preprocess pass", nullptr,
-                            UIStore::enablePreprocessRendering)) {
-          UIStore::enablePreprocessRendering =
-              !UIStore::enablePreprocessRendering;
-        }
-        ImGui::EndMenu();
+      if (ImGui::MenuItem("Specular reflections", nullptr,
+                          UIStore::enableReflections)) {
+        UIStore::enableReflections = !UIStore::enableReflections;
       }
+
       ImGui::EndMenu();
     }
     ImGui::EndMainMenuBar();

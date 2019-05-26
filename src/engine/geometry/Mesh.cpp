@@ -221,6 +221,29 @@ void Mesh::drawGeometry(GLuint shaderID) {
   this->simpleGeometry->unbind();
 }
 
+void Mesh::drawFace(GLuint faceIndex) {
+  this->simpleGeometry->bind();
+  faceIndex = faceIndex % this->size();
+  if (faceIndex < this->tFaces) {
+    std::vector<GLuint> indices(3);
+    indices[0] = this->geometry.vertices.triangles[3 * faceIndex];
+    indices[1] = this->geometry.vertices.triangles[3 * faceIndex + 1];
+    indices[2] = this->geometry.vertices.triangles[3 * faceIndex + 2];
+    glDrawElements(GL_TRIANGLES, 1, GL_UNSIGNED_INT, indices.data());
+  } else {
+    std::vector<GLuint> indices(4);
+    GLuint inQuad = faceIndex - tFaces;
+    indices[0] = this->geometry.vertices.quads[4 * faceIndex + 0];
+    indices[1] = this->geometry.vertices.quads[4 * faceIndex + 1];
+    indices[2] = this->geometry.vertices.quads[4 * faceIndex + 2];
+    indices[3] = this->geometry.vertices.quads[4 * faceIndex + 3];
+    std::vector<GLuint> triangulated = triangulate(indices);
+    glDrawElements(GL_TRIANGLES, 2, GL_UNSIGNED_INT, triangulated.data());
+  }
+
+  this->simpleGeometry->unbind();
+}
+
 IndexedBuffers Mesh::getGeometry() { return this->geometry; }
 
 std::vector<GLfloat> Mesh::getEmission() {

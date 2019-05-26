@@ -46,9 +46,7 @@
     <ClCompile Include="src\engine\buffers\HemicubeBuffer.cpp" />
     <ClCompile Include="src\engine\buffers\PickingBuffer.cpp" />
     <ClCompile Include="src\engine\buffers\RowBuffer.cpp" />
-    <ClCompile Include="src\engine\buffers\UIntBuffer.cpp" />
     <ClCompile Include="src\engine\Engine.cpp" />
-    <ClCompile Include="src\ui\Window.cpp" />
     <ClCompile Include="src\ui\components\BottomPanel.cpp" />
     <ClCompile Include="src\ui\components\LeftPanel.cpp" />
     <ClCompile Include="src\ui\components\MainMenu.cpp" />
@@ -69,6 +67,9 @@
     <ClCompile Include="src\engine\preprocessing\opengl\OpenGLPipeline.cpp" />
     <ClCompile Include="src\engine\preprocessing\raytracing\RaytracedPipeline.cpp" />
     <ClCompile Include="src\engine\preprocessing\raytracing\RayGenerator.cpp" />
+    <ClCompile Include="src\ui\Window.cpp" />
+    <ClCompile Include="src\engine\preprocessing\opengl\ReflectionsRenderer.cpp" />
+    <ClCompile Include="src\engine\buffers\IDBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source">
@@ -135,9 +136,7 @@
     <ClInclude Include="src\engine\buffers\HemicubeBuffer.h" />
     <ClInclude Include="src\engine\buffers\PickingBuffer.h" />
     <ClInclude Include="src\engine\buffers\RowBuffer.h" />
-    <ClInclude Include="src\engine\buffers\UIntBuffer.h" />
     <ClInclude Include="src\engine\Engine.h" />
-    <ClInclude Include="src\ui\Window.h" />
     <ClInclude Include="src\engine\EngineStore.h" />
     <ClInclude Include="src\ui\UIStore.h" />
     <ClInclude Include="src\ui\EventListener.h" />
@@ -162,6 +161,9 @@
     <ClInclude Include="src\engine\preprocessing\raytracing\RaytracedPipeline.h" />
     <ClInclude Include="src\engine\preprocessing\raytracing\RaytracingUtils.h" />
     <ClInclude Include="src\engine\preprocessing\raytracing\RayGenerator.h" />
+    <ClInclude Include="src\ui\Window.h" />
+    <ClInclude Include="src\engine\preprocessing\opengl\ReflectionsRenderer.h" />
+    <ClInclude Include="src\engine\buffers\IDBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.ini">
@@ -175,12 +177,6 @@
     </None>
     <None Include="res\shaders\final.vert">
       <Filter>Source\Shaders\Final</Filter>
-    </None>
-    <None Include="res\shaders\id.vert">
-      <Filter>Source\Shaders\Preprocessing</Filter>
-    </None>
-    <None Include="res\shaders\id.frag">
-      <Filter>Source\Shaders\Preprocessing</Filter>
     </None>
     <None Include="res\shaders\hemicube.vert">
       <Filter>Source\Shaders\Preprocessing</Filter>
@@ -196,6 +192,10 @@
     <None Include="res\shaders\renderSceneFaces.frag" />
     <None Include="res\shaders\renderSceneRadiosity.frag" />
     <None Include="res\shaders\renderSceneReflactances.frag" />
+    <None Include="res\shaders\reflections.frag" />
+    <None Include="res\shaders\reflections.vert" />
+    <None Include="res\shaders\reflectionsStencil.frag" />
+    <None Include="res\shaders\reflectionsStencil.vert" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resrource.rc" />

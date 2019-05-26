@@ -1,6 +1,5 @@
 #version 450 core
-
-out uint id;
+layout(location = 0) out uint id;
 
 uniform uint tFaces;
 uniform uint offset;

@@ -1,12 +1,17 @@
 #include "preprocessing/opengl/OpenGLPipeline.h"
 
+#include <set>
+
 #include "EngineStore.h"
 #include "buffers/HemicubeBuffer.h"
 #include "preprocessing/EigenSolver.h"
 
+#define MAX_REFLECTION_DEPTH 5
+
 OpenGLPipeline::OpenGLPipeline(Scene* scene, GLuint resolution)
     : Pipeline(scene, resolution) {
   this->renderer = new IDRenderer(scene);
+  this->reflectionsRenderer = new ReflectionsRenderer(scene);
   this->reducer = new ComputeShader("computeRow.comp");
   this->row = new RowBuffer(scene->size() + 1);  // Padding for 0 (void)
   this->resolution = resolution;
@@ -24,12 +29,15 @@ void OpenGLPipeline::computeFormFactors() {
   while (!iterator.end()) {
     Face face = iterator.get();
     GLuint index = iterator.faceIndex();
+    if (this->enableReflections) {
+      this->renderer->start();
+    }
     this->setUpRenderer(face);
     this->renderer->render();
 
     // Process hemicube and compute row
     {
-      std::vector<GLfloat> faceFactors = this->getMatrixRowCPU();
+      std::vector<GLfloat> faceFactors = this->getMatrixRowCPU(face, index);
       this->formFactorWorkers.push_back(
           std::thread(&OpenGLPipeline::processRow, this, faceFactors, index));
     }
@@ -64,7 +72,7 @@ std::vector<GLfloat> OpenGLPipeline::getMatrixRowGPU() {
   return this->row->getBuffer();
 }
 
-std::vector<GLfloat> OpenGLPipeline::getMatrixRowCPU() {
+std::vector<GLfloat> OpenGLPipeline::getMatrixRowCPU(Face& face, GLuint index) {
   HemicubeBuffer* buffer =
       dynamic_cast<HemicubeBuffer*>(this->renderer->getBuffer());
   std::vector<std::vector<GLuint>> data = buffer->getData();
@@ -73,13 +81,23 @@ std::vector<GLfloat> OpenGLPipeline::getMatrixRowCPU() {
   std::vector<GLfloat> topCorrector = this->corrector->topData;
   std::vector<GLfloat> rowTopFace = std::vector<GLfloat>(rowSize, 0.0f);
 
+  std::vector<GLfloat> reflactances = this->scene->getSpecularReflactance();
+  std::vector<ReflectionsSet> reflectionsSteps =
+      std::vector<ReflectionsSet>(MAX_REFLECTION_DEPTH);
+
   for (GLuint i = 0; i < resolution; i++) {
     for (GLuint j = 0; j < resolution; j++) {
       GLuint index = i * resolution + j;
       GLuint seenFace = data[0][index];
       if (seenFace > 0) {
+        seenFace = seenFace - 1;
         GLfloat addition = topCorrector[index];
-        rowTopFace[seenFace] += addition;
+        GLfloat reflactance = reflactances[seenFace];
+        rowTopFace[seenFace] += (1.0f - reflactance) * addition;
+        if (reflactance > 0) {
+          reflectionsSteps[0].insert(
+              std::pair<GLuint, GLfloat>(seenFace, reflactance * addition));
+        }
       }
     }
   }
@@ -94,9 +112,43 @@ std::vector<GLfloat> OpenGLPipeline::getMatrixRowCPU() {
     for (GLuint i = 0; i < resolution; i++) {
       for (GLuint j = 0; j < resolution / 2; j++) {
         GLuint index = i * resolution / 2 + j;
-        GLuint seenFace = data[0][readOffset + index];
+        GLuint seenFace = data[face][readOffset + index];
         GLfloat addition = sideCorrector[index];
-        rowPerSideFace[face][seenFace] += addition;
+        if (seenFace > 0) {
+          seenFace = seenFace - 1;
+          GLfloat reflactance = reflactances[seenFace];
+          rowPerSideFace[face][seenFace] += (1.0f - reflactance) * addition;
+          if (reflactance > 0) {
+            reflectionsSteps[0].insert(
+                std::pair<GLuint, GLfloat>(seenFace, reflactance * addition));
+          }
+        }
+      }
+    }
+  }
+
+  if (this->enableReflections) {
+    for (GLuint step = 0; step < reflectionsSteps.size(); step++) {
+      ReflectionsSet reflectionSet = reflectionsSteps[step];
+      for (std::pair<GLuint, GLfloat> pair : reflectionSet) {
+        GLuint reflectiveIndex = pair.first;
+        GLfloat addition = pair.second;
+        Face reflectiveFace = this->scene->getFace(reflectiveIndex);
+        this->reflectionsRenderer->render(face, index, reflectiveFace,
+                                          reflectiveIndex);
+        std::vector<GLuint> seenFaces = this->reflectionsRenderer->getData();
+        GLfloat normalizer = GLfloat(seenFaces.size());
+        for (auto& seenFace : seenFaces) {
+          if (seenFace > 0 && step + 1 < reflectionsSteps.size()) {
+            seenFace = seenFace - 1;
+            GLfloat reflactance = reflactances[seenFace];
+            rowTopFace[seenFace] += reflactance * addition / normalizer;
+            if (reflactance > 0) {
+              reflectionsSteps[step + 1].insert(std::pair<GLuint, GLfloat>(
+                  seenFace, ((1.0f - reflactance) * addition) / normalizer));
+            }
+          }
+        }
       }
     }
   }

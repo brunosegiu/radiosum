@@ -1,13 +1,11 @@
 #version 450 core
 
 layout (location = 0) in vec3 position;
-layout (location = 1) in uint id;
-
-flat out uint idToFrag;
 
 uniform mat4 worldTransform;
+uniform vec4 clipPlane;
 
 void main(){
 	gl_Position =  worldTransform * vec4(position,1.0f);
-	idToFrag = id;
+	gl_ClipDistance[0] = dot(gl_Position, clipPlane);
 }
