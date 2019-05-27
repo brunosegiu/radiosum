@@ -8,7 +8,6 @@ class ReflectionsRenderer : public Renderer {
   void render();
   void render(Face &face, GLuint faceIndex, Face &reflectiveFace,
               GLuint reflectiveFaceIndex);
-  void read();
   std::vector<GLuint> getData();
   virtual ~ReflectionsRenderer();
 

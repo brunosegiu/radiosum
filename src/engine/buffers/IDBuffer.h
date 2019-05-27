@@ -8,11 +8,10 @@
 class IDBuffer : public Buffer {
  public:
   IDBuffer(GLuint width);
-  GLuint read();
   std::vector<GLuint> getData();
-  void cleanStencil();
+  void clean();
   virtual ~IDBuffer();
 
  private:
-  GLuint GLId, GLTextureId, GLDepthId, GLStencilId;
+  GLuint GLDepthId;
 };

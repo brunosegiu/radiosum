@@ -142,10 +142,11 @@ std::vector<GLfloat> OpenGLPipeline::getMatrixRowCPU(Face& face, GLuint index) {
           if (seenFace > 0 && step + 1 < reflectionsSteps.size()) {
             seenFace = seenFace - 1;
             GLfloat reflactance = reflactances[seenFace];
-            rowTopFace[seenFace] += reflactance * addition / normalizer;
+            rowTopFace[seenFace] +=
+                (1.0f - reflactance) * addition / normalizer;
             if (reflactance > 0) {
               reflectionsSteps[step + 1].insert(std::pair<GLuint, GLfloat>(
-                  seenFace, ((1.0f - reflactance) * addition) / normalizer));
+                  seenFace, (reflactance * addition) / normalizer));
             }
           }
         }

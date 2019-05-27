@@ -30,6 +30,11 @@ void Preprocess::render() {
                                   UIStore::enableReflections,
                                   (RendererType)this->renderer);
     }
+    if (ImGui::IsItemHovered()) {
+      ImGui::BeginTooltip();
+      ImGui::Text("Rendering with OpenGL will lock the UI until finished");
+      ImGui::EndTooltip();
+    }
 
     ImGui::Spacing();
     ImGui::Spacing();

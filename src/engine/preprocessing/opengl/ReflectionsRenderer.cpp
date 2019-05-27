@@ -20,7 +20,6 @@ void ReflectionsRenderer::render(Face &face, GLuint faceIndex,
                                  Face &reflectiveFace,
                                  GLuint reflectiveFaceIndex) {
   this->buffer->bind();
-  dynamic_cast<IDBuffer *>(this->buffer)->cleanStencil();
 
   glm::vec3 viewPoint = face.getBarycenter();
   glm::vec3 reflectiveCenter = reflectiveFace.getBarycenter();
@@ -31,44 +30,55 @@ void ReflectionsRenderer::render(Face &face, GLuint faceIndex,
   glm::vec3 up = reflectiveFace.getUp();
 
   Camera reflectionCamera =
-      Camera(1.0f, 90.0f, 0.5f, 5000.0f, origin, direction, up);
+      Camera(1.0f, 120.0f, 0.5f, 5000.0f, origin, direction, up);
 
   // Render stencil buffer
+  glDisable(GL_CULL_FACE);
   glEnable(GL_STENCIL_TEST);
+  glDisable(GL_DEPTH_TEST);
+
+  glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+  glDepthMask(GL_FALSE);
+  glStencilMask(0xFF);
+  glClear(GL_STENCIL_BUFFER_BIT);
+
   glStencilFunc(GL_ALWAYS, 1, 0xFF);
   glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
-  glStencilMask(0xFF);
-  glDepthMask(GL_FALSE);
+
   this->stencilShader->bind();
   GLuint worldTransformId =
-      glGetUniformLocation(shader->getID(), "worldTransform");
+      glGetUniformLocation(stencilShader->getID(), "worldTransform");
   glUniformMatrix4fv(worldTransformId, 1, GL_FALSE,
                      glm::value_ptr(reflectionCamera.getMVPMatrix()));
-
-  this->scene->drawFace(faceIndex);
+  // this->scene->drawFace(faceIndex);
 
   // Render scene
   this->shader->bind();
-  this->buffer->clean();
+  glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
   glDepthMask(GL_TRUE);
-  glStencilFunc(GL_EQUAL, 1, 0xFF);
   glStencilMask(0x00);
-  glm::vec4 clipAt = reflectiveFace.getPlane();
+  glEnable(GL_DEPTH_TEST);
+  glDisable(GL_STENCIL_TEST);
+  glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+
+  glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+  glStencilFunc(GL_ALWAYS, 1, 0xFF);
 
   worldTransformId = glGetUniformLocation(shader->getID(), "worldTransform");
   glUniformMatrix4fv(worldTransformId, 1, GL_FALSE,
                      glm::value_ptr(reflectionCamera.getMVPMatrix()));
 
   glEnable(GL_CLIP_DISTANCE0);
+  glm::vec4 clipAt = reflectiveFace.getPlane();
   GLuint clipPlaneId = glGetUniformLocation(shader->getID(), "clipPlane");
   glUniform4fv(clipPlaneId, 1, glm::value_ptr(clipAt));
 
   this->scene->draw(this->shader->getID(), true);
   glDisable(GL_CLIP_DISTANCE0);
+  glEnable(GL_CULL_FACE);
   glDisable(GL_STENCIL_TEST);
+  this->buffer->unbind();
 }
-
-void ReflectionsRenderer::read() { this->buffer->read(); }
 
 std::vector<GLuint> ReflectionsRenderer::getData() {
   return dynamic_cast<IDBuffer *>(this->buffer)->getData();

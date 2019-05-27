@@ -223,7 +223,6 @@ void Mesh::drawGeometry(GLuint shaderID) {
 
 void Mesh::drawFace(GLuint faceIndex) {
   this->simpleGeometry->bind();
-  faceIndex = faceIndex % this->size();
   if (faceIndex < this->tFaces) {
     std::vector<GLuint> indices(3);
     indices[0] = this->geometry.vertices.triangles[3 * faceIndex];

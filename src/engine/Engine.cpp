@@ -86,6 +86,9 @@ GLuint Engine::pick(GLint x, GLint y) {
 void Engine::resetScene() {
   Scene* old = this->scene;
   this->scene = new Scene();
+  EngineStore::ffProgress = 0;
+  EngineStore::pipelineStage = INIT;
+  EngineStore::radiosityProgress = 0;
   delete old;
 }
 
