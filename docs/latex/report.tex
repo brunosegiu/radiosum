@@ -1,0 +1,77 @@
+\documentclass[msc,oneside,a4paper]{udelar}
+
+\bibliographystyle{unsrtnat}
+
+% ===== FIN DEL PREÁMBULO =====
+
+% ===== INICIO DEL DOCUMENTO =====
+
+\begin{document}
+
+
+  \title{Tesis de grado}
+  \subtitle{Iluminación global con superficies especulares}
+  \institutelogo{1} 
+  \institutelogo{2} 
+  \author{Bruno}{Sena}
+  \escritura{en} 
+  
+  \director{}{José}{Aguerre}{}
+  \director{}{Eduardo}{Fernández}{}
+  
+  \examiner{}{NombreTribunal1}{ApellidoTribunal1}{}
+  \examiner{}{NombreTribunal2}{ApellidoTribunal2}{}
+  \examiner{}{NombreTribunal3}{ApellidoTribunal3}{}
+  
+  \graduatename{Ingeniería en Computación}
+  \institute{Facultad de Ingeniería}{FIng}
+
+  \graduatelocation{Montevideo}{Uruguay}
+  
+  \date{\the\day}{\the\month}{\the\year}
+
+
+  \keyword{iluminación global}
+  \keyword{radiosidad}
+  \keyword{reflexión especular}
+
+        
+  \maketitle 
+    
+  \frontmatter 
+  \afterpage{\blankpage}
+  \include{summary/abstract}
+
+  \tableofcontents          
+  \afterpage{\blankpage}  
+ 
+  \mainmatter
+
+  	\afterpage{\blankpage} 
+  \include{chapters/chap01}
+
+  \include{chapters/chap02}
+% \include{chapters/chap03}
+% \include{chapters/chap04}
+% \include{chapters/chap05}
+  	\afterpage{\blankpage}
+
+  \listoffigures	        
+  \listoftables	         	
+  
+  \backmatter 
+  
+  \apenarabicnumbering
+  \apenmatter
+  	\afterpage{\blankpage}
+
+  \input{appendix/appendix_C}
+
+   \bibliography{bibliography/bibliography} 
+  \bibend
+
+  
+\end{document}
+
+% ===== FIN DEL DOCUMENTO =====
+
