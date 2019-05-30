@@ -25,7 +25,9 @@ void ReflectionsRenderer::render(Face &face, GLuint faceIndex,
   glm::vec3 reflectiveCenter = reflectiveFace.getBarycenter();
   GLfloat distance = glm::distance(viewPoint, reflectiveCenter);
 
-  glm::vec3 direction = reflectiveFace.getNormal();
+  glm::vec3 direction =
+      2 * glm::dot(-face.getNormal(), reflectiveFace.getNormal()) -
+      face.getNormal();
   glm::vec3 origin = reflectiveCenter - direction * distance;
   glm::vec3 up = reflectiveFace.getUp();
 
@@ -33,7 +35,6 @@ void ReflectionsRenderer::render(Face &face, GLuint faceIndex,
       Camera(1.0f, 120.0f, 0.5f, 5000.0f, origin, direction, up);
 
   // Render stencil buffer
-  glDisable(GL_CULL_FACE);
   glEnable(GL_STENCIL_TEST);
   glDisable(GL_DEPTH_TEST);
 
@@ -41,6 +42,7 @@ void ReflectionsRenderer::render(Face &face, GLuint faceIndex,
   glDepthMask(GL_FALSE);
   glStencilMask(0xFF);
   glClear(GL_STENCIL_BUFFER_BIT);
+  glDisable(GL_CULL_FACE);
 
   glStencilFunc(GL_ALWAYS, 1, 0xFF);
   glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
@@ -50,7 +52,9 @@ void ReflectionsRenderer::render(Face &face, GLuint faceIndex,
       glGetUniformLocation(stencilShader->getID(), "worldTransform");
   glUniformMatrix4fv(worldTransformId, 1, GL_FALSE,
                      glm::value_ptr(reflectionCamera.getMVPMatrix()));
-  // this->scene->drawFace(faceIndex);
+  this->scene->drawFace(faceIndex);
+
+  glEnable(GL_CULL_FACE);
 
   // Render scene
   this->shader->bind();
@@ -58,11 +62,10 @@ void ReflectionsRenderer::render(Face &face, GLuint faceIndex,
   glDepthMask(GL_TRUE);
   glStencilMask(0x00);
   glEnable(GL_DEPTH_TEST);
-  glDisable(GL_STENCIL_TEST);
   glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
   glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
-  glStencilFunc(GL_ALWAYS, 1, 0xFF);
+  glStencilFunc(GL_EQUAL, 1, 0xFF);
 
   worldTransformId = glGetUniformLocation(shader->getID(), "worldTransform");
   glUniformMatrix4fv(worldTransformId, 1, GL_FALSE,

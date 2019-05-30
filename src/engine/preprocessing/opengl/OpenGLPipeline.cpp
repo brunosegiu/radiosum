@@ -139,7 +139,8 @@ std::vector<GLfloat> OpenGLPipeline::getMatrixRowCPU(Face& face, GLuint index) {
         std::vector<GLuint> seenFaces = this->reflectionsRenderer->getData();
         GLfloat normalizer = GLfloat(seenFaces.size());
         for (auto& seenFace : seenFaces) {
-          if (seenFace > 0 && step + 1 < reflectionsSteps.size()) {
+          if (seenFace > 0 && seenFace < reflactances.size() &&
+              step + 1 < reflectionsSteps.size()) {
             seenFace = seenFace - 1;
             GLfloat reflactance = reflactances[seenFace];
             rowTopFace[seenFace] +=
