@@ -259,7 +259,7 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
-docs/latex/report.aux
+docs/latex/**/*.aux
 docs/latex/report.fdb_latexmk
 docs/latex/report.fls
 docs/latex/report.synctex.gz
@@ -277,3 +277,7 @@ docs/latex/bibliography/__latexindent_temp.tex
 docs/latex/summary/abstract.aux
 docs/latex/chapters/chap01.aux
 docs/latex/chapters/chap02.aux
+docs/latex/__latexindent_temp.pdf
+docs/latex/__latexindent_temp.tex
+docs/latex/__latexindent_temp.xwm
+docs/latex/__latexindent_temp.synctex.gz

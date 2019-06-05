@@ -1,6 +1,8 @@
 \documentclass[msc,oneside,a4paper]{udelar}
 
-\bibliographystyle{unsrtnat}
+\pgfplotsset{compat=1.16}
+
+\bibliographystyle{plain}
 
 % ===== FIN DEL PREÁMBULO =====
 
@@ -47,14 +49,15 @@
  
   \mainmatter
 
-  	\afterpage{\blankpage} 
+  \afterpage{\blankpage} 
   \include{chapters/chap01}
 
   \include{chapters/chap02}
-% \include{chapters/chap03}
-% \include{chapters/chap04}
-% \include{chapters/chap05}
-  	\afterpage{\blankpage}
+  \include{chapters/chap03}
+  \include{chapters/chap04}
+  \include{chapters/chap05}
+  \include{chapters/chap06}
+  \afterpage{\blankpage}
 
   \listoffigures	        
   \listoftables	         	
@@ -67,7 +70,8 @@
 
   \input{appendix/appendix_C}
 
-   \bibliography{bibliography/bibliography} 
+  \nocite{*}
+  \bibliography{bibliography/bibliography} 
   \bibend
 
   

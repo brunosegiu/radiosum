@@ -48,6 +48,7 @@
 %%   Grave accent  \`     Left brace    \{     Vertical bar  \|
 %%   Right brace   \}     Tilde         \~}
 %%
+
 \def\filename{udelar.dtx}
 \def\fileversion{v2.2.3}
 \def\filedate{2015/10/10}
