@@ -6,17 +6,17 @@
 
 El proceso de dibujado de gráficos por computadora comprende la generación automática de imágenes a partir de tres parámetros principales,
 un observador, superficies geométricas que representan objetos de la realidad y las propiedades físicas de los materiales que los componen.
+
 Trivialmente, esto puede ser reducido al problema de cálculo del valor de intensidad lumínica observada en un punto $x$ y proveniente de
-otro punto $x'$. Matemáticamente, este problema fue planteado por \citeauthor{Kajiya} en \citeyear{Kajiya}, comunmente nombrado
-denominado <<la ecuación del rendering>>:
+otro punto $x'$. Matemáticamente, este problema fue planteado por \citeauthor{Kajiya} en \citeyear{Kajiya}, comúnmente denominado <<la ecuación del rendering>>:
 
 \begin{equation}
     I(x,x') = g(x,x') \bigg[\epsilon(x,x') + \int_{S} \rho(x,x',x'')I(x',x'') \delta x''\bigg] \label{eq:rendering}
 \end{equation}
 donde:
 \begin{itemize}
-    \item $I(x,x')$ describe energía de radiación lumínica obsrvada en el punto $x$ proveniente de $x''$
-    \item $g(x,x')$ es un término geométrico, toma el valor de $0$ si existe oculsión entre $x'$ y $x$ en otro caso su valor es $\dfrac{1}{r^{2}}$ donde $r$ es la distancia entre $x'$ y $x$
+    \item $I(x,x')$ describe energía de radiación lumínica observada en el punto $x$ proveniente de $x''$
+    \item $g(x,x')$ es un término geométrico, toma el valor de $0$ si existe oclusión entre $x'$ y $x$ en otro caso su valor es $\dfrac{1}{r^{2}}$ donde $r$ es la distancia entre $x'$ y $x$
     \item $\epsilon(x,x')$ mide la energía emitida por la superficie en el punto $x'$ a $x$
     \item $\int_{S} \rho(x,x',x'')I(x',x'') \delta x''$ está compuesta por dos términos:
         \begin{itemize}
@@ -30,7 +30,7 @@ donde:
 Existen distintos métodos de resolución de la ecuación del rendering, la mayoría implican aproximaciones dado el gran costo 
 computacional requerido para calcular el valor exacto de $I(x,x')$. Estos métodos balancean el costo computacional de los algoritmos
 utilizados y la fidelidad con el valor final de la función. Dependiendo de las decisiones y simplificaciones consideradas
-existen dos clasificaciones posibles para el modelo: local y global \label{local-vs-global-img}.
+existen dos clasificaciones posibles para el modelo: local y global \ref{local-vs-global-img}.
 
 \begin{minipage}[h]{0.8\linewidth}
     \includegraphics[width=\linewidth]{assets/local_vs_global}
@@ -62,7 +62,7 @@ reflexión y refracción de la luz.
 El transporte de la luz entre superficies puede ser modelado a través de la propiedad física conocida como
 la radiosidad, definida como el flujo de energía irradiada por unidad de área. 
 
-Oroginalmente, este modelo de iluminación global fue propuesto por \citeauthor{Goral} en \citeyear{Goral} se basa en modelos matemáticos
+Originalmente, este modelo de iluminación global fue propuesto por \citeauthor{Goral} en \citeyear{Goral} se basa en modelos matemáticos
 similares a los que resuelven el problema de la transferencia de calor en sistemas cerrados, conocidos como métodos de elementos finitos.
 
 \subsection{Radiosidad en superficies lambertianas}
@@ -81,7 +81,7 @@ donde:
 
 En superficies perfectamente lambertianas, la energía reflejada puede ser expresada como: $\frac{\delta{P}}{\delta{\omega}} = k\cos{\phi}$. Donde $k$ es una constante.
 Sustituyendo en \eqref{eq:i} se obtiene: $\frac{\delta{P}}{\delta{\omega}} = \frac{k\cos{\phi}}{\cos{\phi}} = k$, esto implica que la energía percibida de un punto $x$ 
-es constante, independientemenete del punto de vista.
+es constante, independientemente del punto de vista.
 
 Es por esto que la energía total que deja una superficie ($P$) puede ser calculada integrando la energía que deja la superficie en cada dirección posible,
 esto es, se integra la energía saliente en un hemiesfera centrada en el punto estudiado:
@@ -91,8 +91,7 @@ esto es, se integra la energía saliente en un hemiesfera centrada en el punto e
 \end{equation}
 
 Por tanto, dada una superficie $S_{i}$, es posible calcular la energía lumínica que deja la superficie utilizando \eqref{eq:P}.
-Resta definir la \textit{cerradura} de una superficie, definiremos la cerradura de una superficie como los límites que definien
-los puntos internos y externos de esta. Esto hace que el problema sea resoluble utilizando métodos de elementos finitos, con esta reformulación 
+Resta definir la \textit{cerradura} de una superficie, definiremos la cerradura de una superficie como los límites que definen los puntos internos y externos de esta, llamaremos parche a cada una de estas superficies cerradas. Esto hace que el problema sea resoluble utilizando métodos de elementos finitos, con esta re-formulación 
 del problema, es fácilmente trasladable a la ecuación \eqref{eq:rendering}.
 
 \begin{equation}
@@ -111,11 +110,11 @@ Cabe destacar que la naturaleza recursiva de la ecuación anterior, implica que 
 difusas que existan en la escena. Como puede observarse, resolver el sistema de $N$ ecuaciones lineales 
 bastaría para conocer la energía emitida por cada superficie cerrada. 
 
-$\mathbf{E}$, $\mathbf{\rho}$ dependen de los materiales que compongan la escena, son parámetros dados. Sin embargo, 
-resta computar la matriz de factores de forma $\textbf{F}$ para finalmente obtener el vector de radiosidades $\textbf{B}$. 
+$E$, $\mathbf{\rho}$ dependen de los materiales que compongan la escena, son parámetros dados. Sin embargo, 
+resta computar la matriz de factores de forma $\mathbf{F}$ para finalmente obtener el vector de radiosidades $B$. 
 Para determinar una entrada de la matriz $F_{ij}$ involucrando a las superficies $i$ y $j$ de área $A(i)$, $A(j)$,
 considerando los diferenciales infinitesimales de área $\delta{A_{i}}$, $\delta{A_{j}}$ el ángulo sólido visto por
-$\delta{A_{i}}$ es $\delta{\omega} = \frac{\cos{\phi_{j}\delta{A_{j}}}}{r^{2}}$. Susituyendo en \eqref{eq:P} se obtiene:
+$\delta{A_{i}}$ es $\delta{\omega} = \frac{\cos{\phi_{j}\delta{A_{j}}}}{r^{2}}$. Sustituyendo en \eqref{eq:P} se obtiene:
 
 \begin{equation}
     \delta{P}_{i}\delta{A_{i}} = i_{i} \cos{\phi_{i}}\delta{\omega}\delta{A_{i}} = \frac{P_{i}\cos{\phi_{i}}\cos{\phi_{j}}\delta{A_{i}}\delta{A_{j}}}{\pi r^{2}}
@@ -125,7 +124,7 @@ Considerando que ${P}_{i}{A_{i}}$ es la energía que deja $i$, y que el factor d
 de dicha energía que llega a $j$ podemos observar que:
 
 \begin{equation}
-    F_{\delta{A_{i}}-\delta{A_{j}} = \frac{\frac{P_{i}\cos{\phi_{i}}\cos{\phi_{j}}\delta{A_{i}}\delta{A_{j}}}{\pi r^{2}}}{P_{i}\delta{A_{i}}} = \frac{\cos{\phi_{i}}\cos{\phi_{j}}\delta{A_{i}}}{\pi{r^{2}}}
+    F_{\delta{A_{i}}-\delta{A_{j}}} = \frac{\frac{P_{i}\cos{\phi_{i}}\cos{\phi_{j}}\delta{A_{i}}\delta{A_{j}}}{\pi r^{2}}}{P_{i}\delta{A_{i}}} = \frac{\cos{\phi_{i}}\cos{\phi_{j}}\delta{A_{i}}}{\pi{r^{2}}}
 \end{equation}
 
 Integrando, para obtener el factor de forma para el área total:
@@ -139,15 +138,70 @@ De \eqref{eq:ff} se obtienen las siguientes propiedades:
     \item $A_{i}F_{ij} = A_{j}F{ji}$
     \item $\sum_{j=1}^{N} F_{ij} = 1$
     \item $F_{ii} = 0$
+    \item $F_{ij}$ toma el valor correspondiente a la proyección de $j$ en una hemiesfera unitaria centrada en $i$, proyectándola a su vez en un disco unitario.
 \end{enumerate}
 
 \section{Rasterización}
 \label{sec:rasterizacion}
 
-\subsection{OpenGL}
-\label{sec:opengl}
+El cálculo de la matriz de factores de forma $\mathbf{F}$ supone la proyección de los parches, de aquí en más se podrá asumir que estos parches son polígonos. Por tanto, es posible aprovechar la resterización para calcularlos.
 
-\section{Raytracing}
+\section{Cálculo de $\mathbf{F}$}
+
+\subsection{Rasterización}}
+La rasterización es una técnica que consiste en la conversión de gráficos vectoriales (en este caso, polígonos) para convertirlos en imágenes compuestas por píxeles.
+
+El proceso de dibujado consiste en un conjunto de etapas bien definidas, a efectos de este informe, se considerarán aquellas que apliquen al trabajo realizado.
+
+El pipeline gráfico consiste en el procesamiento de primitivas geométricas proveídas por el usuario, la rasterización y procesamiento de píxeles.
+
+\begin{enumerate}
+	\item Procesamiento de geometría: 
+\end{enumerate}
+
+
+Esta técnica es extremadamente rápida, además la mayoría de dispositivos contienen hardware especializado capaz de acelerar estos cálculos, comúnmente conocidos como Unidades de Procesamiento Gráfico (o GPU en sus siglas en inglés). Es por este motivo que existe el método del hemicubo para el cálculo de factores de forma.
+
+\subsubsection{El método del hemicubo}
+
+El hardware optimizado para realizar operaciones de rasterización tiene la capacidad de proyectar escenas tridimensionales en imágenes bidimencionales a gran velocidad.
+
+Para utilizar el hardware eficientemente consideraremos que se calculará una fila completa de $\mathbf{F}$, esto implica que dada $S_{i]}$, una superficie, calcularemos simultáneamente los factores de forma para las superficies restantes. 
+
+El método original propone la proyección de la escena una hemiesfera centrada en $S_{i}$, sin embargo los modelos de proyección utilizados no lo permiten. Por esto es necesario proyectar la escena a un hemicubo centrado en $S_{i}$, esto supone el dibujado de cinco superficies bidimensionales, y por tanto puede ser realizada utilizando la rasterización.
+
+Este método aprovecha el buffer de profundidad (Z-buffer), tomando en cuenta los píxeles proyectados para los elementos que se encuentren más cercanos al parche $S_{i}$.
+
+El algoritmo, propuesto originalmente por \citeauthor{Cohen} en \citeyear{Cohen}, propone rasterizar la escena tridimencional en cinco texturas correspondientes al hemicubo, para cada pixel renderizado se sumará un valor diferencial del factor de forma, que dependerá de la posición del píxel en el hemicubo en relación a la hemiesfera que este aproxima. Esta suma genera una fila de la matriz $\mathbf{F}$, específicamente la fila $\mathbf{F}_{i}}$.
+
+Por tanto, podremos definir:
+
+\begin{equation}
+	$\mathbf{F}_{ij} = \sum_{q=1}^{R} \delta{F_{q}}
+	\label{eq:ffgreenberg}
+\end{equation}
+donde:
+\begin{itemize}
+	\item $R$ es la cantidad de píxeles correspondientes a la superficie $S_{j}$ que cubren el hemicubo.
+	\item $\delta{F_{q}}$ el diferencial de factor de forma asociado al píxel del hemicubo $q$.
+\end{itemize}
+
+Los diferenciales de factores de forma deben corregir la deformación introducida con el cambio de proyección desde una hemiesfera a un hemicubo, para ello, para cada píxel que compone el hemicubo es necesario calcular la proporición de área que este término ocupa en la hemiesfera unitaria.
+
+Para la cara superior, los diferenciales se calculan como:
+
+\begin{equation}
+	$\delta{F_{q}}$ = \frac{\cos{\phi_{i}}\cos{\phi_{j}}}{\pi{r^{2}}} \delta{A} = \frac{\delta{A}}{\pi{x^{2} + y^{2} + 1}}} 
+\end{equation}
+
+Para las caras laterales, la fórmula dada es:
+
+\begin{equation}
+$\delta{F_{q}}$ = \frac{\cos{\phi_{i}}\cos{\phi_{j}}}{\pi{r^{2}}} \delta{A} = \frac{z\delta{A}}{\pi{x^{2} + z^{2} + 1}}} 
+\end{equation}
+
+
+\subsection{Raytracing}
 \label{sec:raytracing}
 
 \subsection{Embree}
