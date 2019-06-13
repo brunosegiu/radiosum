@@ -38,7 +38,7 @@ existen dos clasificaciones posibles para el modelo: local y global \ref{local-v
     \label{local-vs-global-img}
 \end{minipage}
 
-\section{Iluminación local}
+\subsection{Iluminación Local}
 \label{sec:ilumlocal}
 Los modelos de iluminación local como el propuesto por \citeauthor{Phong} en \citeyear{Phong} tienen en cuenta las propiedades físicas de los materiales
 y las superficies de cada uno de los objetos de la escena de forma individual. Es decir, al dibujar uno de los
@@ -48,7 +48,7 @@ En referencia a la ecuación del rendering, el término
 geométrico nunca toma el valor 0 es decir, no se toma en cuenta las colisiones de los haces de luz con otros
 objetos, $\epsilon(x,x')$ toma un valor constante (independiente de $x'$) y $\int_{S} \rho(x,x',x'')I(x',x'') \delta x''$ toma el valor constante $1$.
 
-\section{Iluminación Global}
+\subsection{Iluminación Global}
 \label{sec:ilumglobal}
 
 El término iluminación global refiere a una modelo de
@@ -135,20 +135,20 @@ Integrando, para obtener el factor de forma para el área total:
 
 De \eqref{eq:ff} se obtienen las siguientes propiedades:
 \begin{enumerate}
+	\label{propsff}
     \item $A_{i}F_{ij} = A_{j}F{ji}$
     \item $\sum_{j=1}^{N} F_{ij} = 1$
     \item $F_{ii} = 0$
     \item $F_{ij}$ toma el valor correspondiente a la proyección de $j$ en una hemiesfera unitaria centrada en $i$, proyectándola a su vez en un disco unitario.
 \end{enumerate}
 
-\section{Rasterización}
-\label{sec:rasterizacion}
+\section{Métodos de cálculo de la matriz de Factores de Forma}
+\label{sec:calculoff}
+
+\subsection{Rasterización}
 
 El cálculo de la matriz de factores de forma $\mathbf{F}$ supone la proyección de los parches, de aquí en más se podrá asumir que estos parches son polígonos. Por tanto, es posible aprovechar la resterización para calcularlos.
 
-\section{Cálculo de $\mathbf{F}$}
-
-\subsection{Rasterización}}
 La rasterización es una técnica que consiste en la conversión de gráficos vectoriales (en este caso, polígonos) para convertirlos en imágenes compuestas por píxeles.
 
 El proceso de dibujado consiste en un conjunto de etapas bien definidas, a efectos de este informe, se considerarán aquellas que apliquen al trabajo realizado.
@@ -172,12 +172,12 @@ El método original propone la proyección de la escena una hemiesfera centrada 
 
 Este método aprovecha el buffer de profundidad (Z-buffer), tomando en cuenta los píxeles proyectados para los elementos que se encuentren más cercanos al parche $S_{i}$.
 
-El algoritmo, propuesto originalmente por \citeauthor{Cohen} en \citeyear{Cohen}, propone rasterizar la escena tridimencional en cinco texturas correspondientes al hemicubo, para cada pixel renderizado se sumará un valor diferencial del factor de forma, que dependerá de la posición del píxel en el hemicubo en relación a la hemiesfera que este aproxima. Esta suma genera una fila de la matriz $\mathbf{F}$, específicamente la fila $\mathbf{F}_{i}}$.
+El algoritmo, propuesto originalmente por \citeauthor{Cohen} en \citeyear{Cohen}, propone rasterizar la escena tridimencional en cinco texturas correspondientes al hemicubo, para cada pixel renderizado se sumará un valor diferencial del factor de forma, que dependerá de la posición del píxel en el hemicubo en relación a la hemiesfera que este aproxima. Esta suma genera una fila de la matriz $\mathbf{F}$, específicamente la fila $\mathbf{F}_{i}$.
 
 Por tanto, podremos definir:
 
 \begin{equation}
-	$\mathbf{F}_{ij} = \sum_{q=1}^{R} \delta{F_{q}}
+	\mathbf{F}_{ij} = \sum_{q=1}^{R} \delta{F_{q}}
 	\label{eq:ffgreenberg}
 \end{equation}
 donde:
@@ -191,18 +191,43 @@ Los diferenciales de factores de forma deben corregir la deformación introducid
 Para la cara superior, los diferenciales se calculan como:
 
 \begin{equation}
-	$\delta{F_{q}}$ = \frac{\cos{\phi_{i}}\cos{\phi_{j}}}{\pi{r^{2}}} \delta{A} = \frac{\delta{A}}{\pi{x^{2} + y^{2} + 1}}} 
+	\delta{F_{q}} = \frac{\cos{\phi_{i}}\cos{\phi_{j}}}{\pi{r^{2}}} \delta{A} = \frac{\delta{A}}{\pi({x^{2} + y^{2} + 1})} 
 \end{equation}
 
 Para las caras laterales, la fórmula dada es:
 
 \begin{equation}
-$\delta{F_{q}}$ = \frac{\cos{\phi_{i}}\cos{\phi_{j}}}{\pi{r^{2}}} \delta{A} = \frac{z\delta{A}}{\pi{x^{2} + z^{2} + 1}}} 
+\delta{F_{q}} = \frac{\cos{\phi_{i}}\cos{\phi_{j}}}{\pi{r^{2}}}\delta{A} = \frac{z\delta{A}}{\pi({x^{2} + z^{2} + 1})}
 \end{equation}
 
 
 \subsection{Raytracing}
 \label{sec:raytracing}
 
-\subsection{Embree}
+\subsubsection{Embree}
 \label{sec:embree}
+
+\section{Cálculo del vector de radiosidades}
+
+Luego de computar la matriz $\mathbf{F}$ y dado los vectores de emisiones $E$ y reflexiones $\rho$, resta computar el vector de radiosidades correspondiente para cada parche, denominado $B$.
+
+Recordando \eqref{eq:radiosity}, es posible deducir el problema al sistema de ecuaciones dado por:
+
+\begin{equation}
+	E = (\mathbf{I} - \mathbf{RF})B
+\end{equation}
+
+Los estudios de álgebra lineal modernos permiten la resolución de sistemas de ecuaciones de forma optimizada, dependiendo de las propiedades observadas.
+
+Recordando las propiedades en \ref{propsff}, podemos observar que:
+
+\begin{itemize}
+	\item $\sum_{j=1}^{N} \mathbf{F}_{ij} \leq 1 \forall{i \in [1,N]}$
+	\item $\rho{i} \leq 1 \rightarrow \sum_{j=1}^{N} \mathbf{R}_{ij} \leq 1 \forall{i \in [1,N]}$
+\end{itemize}
+
+Esto implica que las entradas de $\mathbf{RF}$ son siempre menores a $1$, por tanto, $(\mathbf{I} - \mathbf{RF}) = M$ es diagonal dominante ya que $\sum_{j=1}^{N}|R_{ij}F_{ij}| \le 1 \forall i \in [1, N]$ y $R_{ii}F_{ii} = 0  \forall i \in [1,N]$. Esto garantiza la convergencia del uso de métodos de resolución iterativos, como el algoritmo de Gauss-Seidel.
+
+Si bien existen maneras alternativas de resolución del sistema planteado con consideraciones específicas del problema a efectos de esta investigación se considerarán los métodos de resolución de ecuaciones lineales que requieran a lo sumo esta propiedad.
+
+Cabe aclarar, que el método planteado hasta el momento resuelve la radiosidad en un único canal. Es decir, no se toma en cuenta todo el espectro electromagnético de la luz, es por ello que puede establecerse una extensión del método. Esta extensión implica la existencia de tres vectores de reflexión, uno para cada canal \textit{RGB}. Por tanto es necesario que se resuelvan tres y no un único sistema de ecuaciones, aunque cabe destacar que la matriz $\mathbf{F}$ permanece constante, ya que las oclusiones geométricas no dependen de la longitud de onda.
