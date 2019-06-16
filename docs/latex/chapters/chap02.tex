@@ -145,22 +145,34 @@ De \eqref{eq:ff} se obtienen las siguientes propiedades:
 \section{Métodos de cálculo de la matriz de Factores de Forma}
 \label{sec:calculoff}
 
+El cálculo de la matriz de factores de forma $\mathbf{F}$ supone la proyección de los parches, de aquí en más se podrá asumir que estos parches son polígonos y por tanto es posible utilizar las técnicas de dibujado de objetos tridimensionales tradicionales.
+
 \subsection{Rasterización}
 
-El cálculo de la matriz de factores de forma $\mathbf{F}$ supone la proyección de los parches, de aquí en más se podrá asumir que estos parches son polígonos. Por tanto, es posible aprovechar la resterización para calcularlos.
+La <<tubería de renderizado>> es un proceso de dibujado estándar que consiste en un conjunto de etapas bien definidas. Los fabricantes de los dispositivos aceleradores proveen de interfaces de programación (OpenGL, Vuljan, DirectX) que se basan en este modelo para abstraer el uso del hardware.
 
-La rasterización es una técnica que consiste en la conversión de gráficos vectoriales (en este caso, polígonos) para convertirlos en imágenes compuestas por píxeles.
-
-El proceso de dibujado consiste en un conjunto de etapas bien definidas, a efectos de este informe, se considerarán aquellas que apliquen al trabajo realizado.
-
-El pipeline gráfico consiste en el procesamiento de primitivas geométricas proveídas por el usuario, la rasterización y procesamiento de píxeles.
+Si bien la <<tubería de renderizado>> es sumamente modificable por el programador, cada uno de estas etapas cuentan con pequeñas funciones, también llamadas \textit{kernels} o\textit{shaders} que son ejecutadas en la GPU y transforman los parámetros de la entrada en parámetros que recibirá la siguiente. A continuación, se describe el proceso para OpenGL 4.5 \cite{OpenGLWiki}, aunque muchas de estas etapas son trasladables a otras tecnologías.
 
 \begin{enumerate}
-	\item Procesamiento de geometría: 
+	\item Procesamiento de primitivas geométricas:
+		Inicialmente, las aplicaciones indican un conjunto de vértices a dibujar, definiendo cierto conjunto de primitivas geométricas como triángulos, cuadriláteros, puntos, líneas u otros. Luego, se procede al procesamiento de estos vértices:
+		\begin{enumerate}
+			\item Vertex shader: Esta etapa convierte los vértices de entrada suministrados por la aplicación, generalmente se realizan las transformaciones necesarias para transformar el sistema de coordenadas del objeto a un sistema global. Las coordenadas retornadas deberán corresponderse con coordenadas del espacio de recorte. Es decir, coordenadas correspondientes al frustum de vista.
+			\item Geometry shader: En esta etapa se procesan los vértices a nivel de primitiva geométrica, es decir, se recibe como parámetro una primitiva geométrica que se transforma en cero o más dependiendo de los parámetros deseados.
+			\item Recortado: Esta etapa es \textit{fija}, es decir, no es programable. Todas las primitivas calculadas anteriormente que residan fuera del frustum serán descartadas en las etapas futuras. Además, se transforma las primitivas a coordenadas de espacio de ventana.
+			\item Descarte: El proceso de descarte (en inglés \textit{culling}) consiste en la eliminación de primitivas que no cumplan ciertas condiciones, como por ejemplo el descarte de caras cuya normal tiene dirección opuesta a la del observador.
+		\end{enumerate}
+	\item Procesamiento de fragmentos (rasterización):
+		El proceso de rasterización genera un conjunto de fragmentos, que se corresponden con los píxeles finales del resultado.
+		\begin{enumerate}
+			\item Fragment shader: El procesamiento de cada fragmento se realiza a través del \textit{fragment shader} que calcula uno o más colores, un valor de profundidad, y valores de planilla (del inglés \textit{plantilla}).
+			\item Scissor test: Todos los fragmentos fuera de un área rectangular definida por la aplicación son descartados.
+			\item Stencil test: Los fragmentos que no pasan la función de planilla definida por la aplicación no son dibujados, por ejemplo, simular el \textit{scissor test} que requieran primitivas más complejas.
+			\item Depth test: En esta etapa se ejecuta el algoritmo del Z-Buffer, donde sólo se escribirá el resultado de aquellos fragmentos que tengan la menor profundidad. Es decir, los que se encuentren más cerca del observador.
+		\end{enumerate}
 \end{enumerate}
 
-
-Esta técnica es extremadamente rápida, además la mayoría de dispositivos contienen hardware especializado capaz de acelerar estos cálculos, comúnmente conocidos como Unidades de Procesamiento Gráfico (o GPU en sus siglas en inglés). Es por este motivo que existe el método del hemicubo para el cálculo de factores de forma.
+Esta técnica de dibujado es extremadamente rápida, además la mayoría de dispositivos contienen hardware especializado capaz de acelerar estos cálculos, comúnmente conocidos como Unidades de Procesamiento Gráfico (o GPU en sus siglas en inglés). Con el objetivo de aprovechar este hardware \citeauthor{Cohen} idearon el método del hemicubo para el cálculo de factores de forma.
 
 \subsubsection{El método del hemicubo}
 
@@ -201,11 +213,14 @@ Para las caras laterales, la fórmula dada es:
 \end{equation}
 
 
-\subsection{Raytracing}
+\subsection{Trazado de rayos}
 \label{sec:raytracing}
 
-\subsubsection{Embree}
-\label{sec:embree}
+Otra de las técnicas de emulación de iluminación existente es el trazado de rayos, consiste en la computación de los puntos de intersección de una semi-recta (a la que denominaremos rayo) con la geometría de la escena, cada uno de estos rayos emulará el transporte de los haces de luz emitidos.
+
+Para cada uno de los rayos emitidos, se determinará el punto de intersección más cercano, luego es posible establecer qué primitiva geométrica fue interceptada y por tanto es posible deducir distintos valores dependiendo del problema en cuestión.
+
+El trazado de rayos es una técnica efectiva \cite{Kajiya} para computar la ecuación del rendering, utilizando la técnica de trazado de camino donde el haz de luz absorbe las propiedades de los materiales con los que interacciona. Por tanto, cada uno de los rayos observados computa uno de los integrandos de la ecuación.
 
 \section{Cálculo del vector de radiosidades}
 
@@ -223,7 +238,7 @@ Recordando las propiedades en \ref{propsff}, podemos observar que:
 
 \begin{itemize}
 	\item $\sum_{j=1}^{N} \mathbf{F}_{ij} \leq 1 \forall{i \in [1,N]}$
-	\item $\rho{i} \leq 1 \rightarrow \sum_{j=1}^{N} \mathbf{R}_{ij} \leq 1 \forall{i \in [1,N]}$
+	\item $\rho_{i} \leq 1 \rightarrow \sum_{j=1}^{N} \mathbf{R}_{ij} \leq 1 \forall{i \in [1,N]}$
 \end{itemize}
 
 Esto implica que las entradas de $\mathbf{RF}$ son siempre menores a $1$, por tanto, $(\mathbf{I} - \mathbf{RF}) = M$ es diagonal dominante ya que $\sum_{j=1}^{N}|R_{ij}F_{ij}| \le 1 \forall i \in [1, N]$ y $R_{ii}F_{ii} = 0  \forall i \in [1,N]$. Esto garantiza la convergencia del uso de métodos de resolución iterativos, como el algoritmo de Gauss-Seidel.
