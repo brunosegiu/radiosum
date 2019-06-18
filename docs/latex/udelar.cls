@@ -65,7 +65,7 @@
 \RequirePackage{hyphenat}
 \RequirePackage[toc]{appendix}
 \RequirePackage{lastpage}
-\RequirePackage[english,spanish,es-nodecimaldot]{babel}
+\RequirePackage[spanish,es-nodecimaldot]{babel}
 \RequirePackage[utf8x]{inputenc}
 \RequirePackage{amsmath,amssymb}
 \RequirePackage{ifthen}
@@ -798,46 +798,6 @@ Palabra clave:\\
 \advance\count1 by 1
 \advance\count2 by 1}}
 \vspace*{\fill}}
-%=========================================
-  
-%==== Página IX, Resumen en ingles ====
-\newenvironment{foreignabstract}{ %
-  \cleardoublepage
-  \thispagestyle{plain}
-  \begin{otherlanguage}{english}
-  \begin{center}
-  	ABSTRACT
-  \end{center}
-   \vspace*{20mm}
-\end{otherlanguage}}{%
-\vspace*{20mm}
-\ifnum\value{foreignkeywords}>1
-\noindent
-Keywords:\\ 
-\else
-\noindent
-Keyword:\\
-\fi
-\count1=0
-\count2=1
-\nohyphens{\@whilenum \count1<\value{foreignkeywords} \do {%
-\ifnum\count2<4
-	\ifnum\count2<\value{foreignkeywords}
-	\csname UdelarForeignKeyword:\the\count1 \endcsname,
-	\else
-	\csname UdelarForeignKeyword:\the\count1 \endcsname.
-	\fi
-\else
-	\ifnum\count2<\value{foreignkeywords}
-	\csname UdelarForeignKeyword:\the\count1 \endcsname,
-	\else
-	\csname UdelarForeignKeyword:\the\count1 \endcsname.
-	\fi
-\fi
-\advance\count1 by 1
-\advance\count2 by 1}}
-\vspace*{\fill}}
-%========================================
 
 %==== Página X, lista de figuras, puede ir o no ====
 \renewcommand\listoffigures{%
