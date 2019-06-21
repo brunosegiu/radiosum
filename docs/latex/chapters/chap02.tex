@@ -4,7 +4,7 @@
 \section{Modelos de iluminación}
 \label{sec:dibujado}
 
-El proceso de dibujado de gráficos por computadora comprende la generación automática de imágenes a partir de modelos tridimensionales que componen una \textit{escena} o \textit{mundo} junto un conjunto de cualidades físicas que rigen las formas en la que la luz interactúa con los objetos.
+El proceso de dibujado de gráficos tridimiensionales por computadora comprende la generación automática de imágenes de cierto nivel de realismo a partir de modelos que componen una \textit{escena} o \textit{mundo} tridimencional, junto a un conjunto de cualidades físicas que rigen las formas en la que la luz interactúa con los objetos.
 
 Trivialmente, esto puede ser reducido al problema de cálculo del valor de intensidad lumínica observada en un punto $x$ y proveniente de
 otro punto $x'$. Matemáticamente, este problema fue planteado por \citeauthor{Kajiya} en \citeyear{Kajiya}, comúnmente denominado <<la ecuación del rendering>>:
@@ -39,7 +39,7 @@ Existen distintos métodos de resolución de la ecuación del rendering, la mayo
 \subsection{Iluminación Local}
 \label{sec:ilumlocal}
 Los modelos de iluminación local como el propuesto por \citeauthor{Phong} en \citeyear{Phong} tienen en cuenta las propiedades físicas de los materiales
-y las superficies de cada uno de los objetos de la escena de forma individual. Es decir, al dibujar uno de los objetos no se toman en cuenta las posibles interacciones de los haces de luz con los objetos restantes.
+y las superficies de cada uno de los objetos de la escena de forma individual. Es decir, al dibujar uno de los objetos no se toman en cuenta las posibles interacciones de los haces de luz con los objetos restantes en la escena.
 
 En referencia a la ecuación del rendering, el término geométrico nunca toma el valor 0 es decir, no se toma en cuenta las colisiones de los haces de luz con otros objetos, $\epsilon(x,x')$ toma un valor constante únicamente dependiente de $x$ y $\int_{S} \rho(x,x',x'')I(x',x'') \delta x''$ toma el valor constante $1$.
 
@@ -55,11 +55,15 @@ Dependiendo de las característica de los modelos y algoritmos empleados, pueden
 
 El método de radiosidad es un método de iluminación global \ref{sec:ilumglobal} que emula el transporte de la luz entre superficies regido por la propiedad física conocida como radiosidad, definida como el flujo de energía irradiada por unidad de área.
 
-Originalmente, este modelo de iluminación global fue propuesto por \citeauthor{Goral} en \citeyear{Goral}, se basa en modelos matemáticos similares a los que resuelven el problema de la transferencia de calor en sistemas cerrados, conocidos como métodos de elementos finitos.
+En este sentido, existen tres métodos posibles de cálculo de la ecuación de radiosidad: la integración basada en elementos finitos, la integración basada en reglas de cuadratura y la integración basada en métodos de Monte Carlo.
+
+Originalmente, este modelo de iluminación global fue propuesto por \citeauthor{Goral} en \citeyear{Goral}, se basa en modelos matemáticos similares a los que resuelven el problema de la transferencia de calor en sistemas cerrados (MEF).
 
 \subsection{Radiosidad en superficies lambertianas}
 
-La solución propuesta por \citeauthor{Goral} implica que todas las superficies son idealmente lambertianas. Además considerara que cada superficie irradia energía lumínica en todas direcciones en un diferencial de área $\delta_{A}$, para una dirección de vista $\omega$ puede ser definida como:
+La solución propuesta por \citeauthor{Goral} implica que todas las superficies son idealmente difusas, también conocidas como \textbf{lambertianas}.
+
+Adicionalmente, se considerará que cada superficie irradia energía lumínica en todas direcciones en un diferencial de área $\delta_{A}$, para una dirección de vista $\omega$ puede ser definida como:
 
 \begin{equation}
     i = \frac{\delta{P}}{\cos{\phi\delta\omega}} \label{eq:i}
@@ -75,15 +79,15 @@ Sustituyendo en \eqref{eq:i} se obtiene: $\frac{\delta{P}}{\delta{\omega}} = \fr
 es constante, independientemente del punto de vista.
 
 Es por esto que la energía total que deja una superficie ($P$) puede ser calculada integrando la energía que deja la superficie en cada dirección posible,
-esto es, se integra la energía saliente en un hemiesfera centrada en el punto estudiado:
+esto es, se integra la energía saliente en un hemi-esfera centrada en el punto estudiado:
 
 \begin{equation}
-    P = \int_{2\pi} \delta{P} = \int_{2\pi} i\cos{\phi}\delta{\omega} = i \int_{2\pi} \cos{\phi}\delta{\omega} = i\pi \label{eq:P}
+    P = \int_{2\pi} \delta{P} = \int_{2\pi} i\cos{\phi}\delta{\omega} = i \int_{2\pi} \cos{\phi}\delta{\omega} = i\pi
+    \label{eq:P}
 \end{equation}
 
 Por tanto, dada una superficie $S_{i}$, es posible calcular la energía lumínica que deja la superficie utilizando \eqref{eq:P}.
-Resta definir la \textit{cerradura} de una superficie, definiremos la cerradura de una superficie como los límites que definen los puntos internos y externos de esta, llamaremos parche a cada una de estas superficies cerradas. Esto hace que el problema sea resoluble utilizando métodos de elementos finitos, con esta re-formulación 
-del problema, es fácilmente trasladable a la ecuación \eqref{eq:rendering}.
+Resta definir la \textit{cerradura} de una superficie, definiremos la cerradura de una superficie como los límites que definen los puntos internos y externos de esta, llamaremos parche a cada una de estas superficies cerradas. Esto hace que el problema sea resoluble utilizando métodos de elementos finitos, con esta re-formulación del problema, es fácilmente trasladable a la ecuación \eqref{eq:rendering}.
 
 \begin{equation}
     B_{j} = E_{j} + \rho_{j} \sum_{i=1}{N} B_{i} F_{ij} \label{eq:radiosity}
@@ -140,6 +144,8 @@ De \eqref{eq:ff} se obtienen las siguientes propiedades:
 
 \section{Métodos de cálculo de la matriz de Factores de Forma}
 \label{sec:calculoff}
+
+El cálculo de los factores de forma a través de la ecuación \eqref{eq:ff} analíticamente es inviable en la práctica, por tanto es necesario establecer otros métodos que provean aproximaciones lo suficientemente correctas. 
 
 El cálculo de la matriz de factores de forma $\mathbf{F}$ supone la proyección de los parches, de aquí en más se podrá asumir que estos parches son polígonos y por tanto es posible utilizar las técnicas de dibujado de objetos tridimensionales tradicionales.
 
