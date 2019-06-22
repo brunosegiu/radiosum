@@ -47,4 +47,14 @@ GLfloat Face::area() {
   }
 }
 
+std::vector<glm::vec3> Face::getSamplingPoints() {
+  if (mode == TRIANGLE) {
+    std::vector<glm::vec3> points = {v0, v1, v2};
+    return points;
+  } else {
+    std::vector<glm::vec3> points = {v0, v1, v2, v3};
+    return points;
+  }
+}
+
 Face::~Face() {}

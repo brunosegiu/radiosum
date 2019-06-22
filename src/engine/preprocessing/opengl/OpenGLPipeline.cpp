@@ -11,7 +11,7 @@
 OpenGLPipeline::OpenGLPipeline(Scene* scene, GLuint resolution)
     : Pipeline(scene, resolution) {
   this->renderer = new IDRenderer(scene);
-  this->reflectionsRenderer = new ReflectionsRenderer(scene);
+  this->reflectionsRenderer = new ReflectionsRendererRT(scene);
   this->reducer = new ComputeShader("computeRow.comp");
   this->row = new RowBuffer(scene->size() + 1);  // Padding for 0 (void)
   this->resolution = resolution;

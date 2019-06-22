@@ -1,7 +1,7 @@
 #version 450 core
 
-layout(location = 0) out uint id;
+out vec4 color;
 
 void main() {
-	id = 0xFFFF;
+	color = vec4(1.0);
 }

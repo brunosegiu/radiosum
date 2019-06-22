@@ -147,6 +147,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\engine\preprocessing\opengl\ReflectionsRendererRT.cpp" />
     <ClCompile Include="src\engine\buffers\IDBuffer.cpp" />
     <ClCompile Include="src\engine\geometry\Material.cpp" />
     <ClCompile Include="src\engine\preprocessing\opengl\ReflectionsRenderer.cpp" />
@@ -206,6 +207,7 @@
     <ClCompile Include="src\ui\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\engine\preprocessing\opengl\ReflectionsRendererRT.h" />
     <ClInclude Include="src\engine\buffers\IDBuffer.h" />
     <ClInclude Include="src\engine\geometry\Material.h" />
     <ClInclude Include="src\engine\preprocessing\opengl\ReflectionsRenderer.h" />

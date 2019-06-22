@@ -70,6 +70,7 @@
     <ClCompile Include="src\ui\Window.cpp" />
     <ClCompile Include="src\engine\preprocessing\opengl\ReflectionsRenderer.cpp" />
     <ClCompile Include="src\engine\buffers\IDBuffer.cpp" />
+    <ClCompile Include="src\engine\preprocessing\opengl\ReflectionsRendererRT.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source">
@@ -164,6 +165,7 @@
     <ClInclude Include="src\ui\Window.h" />
     <ClInclude Include="src\engine\preprocessing\opengl\ReflectionsRenderer.h" />
     <ClInclude Include="src\engine\buffers\IDBuffer.h" />
+    <ClInclude Include="src\engine\preprocessing\opengl\ReflectionsRendererRT.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.ini">

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 #include <GL/glew.h>
 #include <glm.hpp>
 
@@ -14,6 +16,7 @@ class Face {
   glm::vec3 getUp();
   glm::vec4 getPlane();
   GLfloat area();
+  std::vector<glm::vec3> getSamplingPoints();
   virtual ~Face();
 
  public:

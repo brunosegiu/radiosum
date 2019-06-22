@@ -4,7 +4,7 @@
 #include "preprocessing/Pipeline.h"
 #include "preprocessing/opengl/HemicubeCorrector.h"
 #include "preprocessing/opengl/IDRenderer.h"
-#include "preprocessing/opengl/ReflectionsRenderer.h"
+#include "preprocessing/opengl/ReflectionsRendererRT.h"
 #include "shaders/ComputeShader.h"
 
 typedef std::set<std::pair<GLuint, GLfloat>> ReflectionsSet;
@@ -21,7 +21,7 @@ class OpenGLPipeline : public Pipeline {
  private:
   // Internal
   IDRenderer* renderer;
-  ReflectionsRenderer* reflectionsRenderer;
+  ReflectionsRendererRT* reflectionsRenderer;
   ComputeShader* reducer;
   RowBuffer* row;
   HemicubeCorrector* corrector;
