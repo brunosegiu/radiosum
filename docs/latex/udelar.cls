@@ -116,7 +116,8 @@ top=4cm,bottom=3cm,left=4.0cm,right=3.0cm]{geometry} %showframe para ver los mar
 \RequirePackage[a4paper]{geometry}
 \RequirePackage[mode=buildnew]{standalone}% requires -shell-escape
 \RequirePackage{tikz}
-\RequirePackage[spanish,onelanguage,ruled,vlined,algosection]{algorithm2e} 
+\RequirePackage{algorithm} 
+\RequirePackage{algpseudocode} 
 \RequirePackage{array}
 \RequirePackage{afterpage}
 \RequirePackage{smartdiagram} % Diagramas http://www.texample.net

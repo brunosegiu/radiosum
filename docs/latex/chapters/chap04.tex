@@ -19,34 +19,31 @@ Etapa 2:
 En la segunda etapa se procede al renderizado y procesado de cada uno de los hemi-cubos. Para ello, se procede como en \ref{alg:hemicube}.
 
 \begin{minipage}{\linewidth}
-\label{alg:hemicube}
-\begin{lstlisting}[language=C]
-global formFactorMatrix;
-
-void processHemicube(face, hemicube){
-	row = [0,...,0]
-	for (pixel in hemicube) {
-		factor = getHemicubeCorrection(pixel);
-		seenFace = getFaceId(pixel);
-		if (isValid(seenFace)){
-			row[seenFace] += factor
+	\label{alg:hemicube}
+	\begin{algorithmic}[H]
+		\Function{$processHemicube$}{$face, hemicube$}
+			\State $row \gets [0,...,0]$
+			\Loop{$pixel \in hemicube:$}
+				\State $factor \gets getHemicubeCorrection(pixel)$
+				\State $seenFace \gets getFaceId(pixel)$
+				\If{$isValid(seenFace)$}
+					\State $row[seenFace] \gets + factor$
+					\State $formFactorMatrix[face] \gets  row$;
+			\EndLoop
+		\EndFunction
+		
+		computeFormFactors() {
+			bindHemicube()
+			for (face in scene){
+				alignCamera(face);
+				clearBuffers();
+				render(scene);
+				hemicube = getHemicube();
+				startThread(processHemicube, face, hemicube)
+			}
 		}
-	}
-	formFactorMatrix[face] = row;
-}
-
-computeFormFactors() {
-	bindHemicube()
-	for (face in scene){
-		alignCamera(face);
-		clearBuffers();
-		render(scene);
-		hemicube = getHemicube();
-		startThread(processHemicube, face, hemicube)
-	}
-}
-
-\end{lstlisting}
+		
+	\end{algorithmic}
 \end{minipage}
 
 El proceso de renderizado del hemicubo es realizado completamente en la GPU, sin embargo tiene características particulares que diferencial el proceso de otras implementaciones del algoritmo. 

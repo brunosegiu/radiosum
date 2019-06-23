@@ -1,8 +1,21 @@
-\chapter{Alcance y diseño}
+\chapter{Solución propuesta}
 \label{ch:chap03}
 
-\section{Alcance}
+\section{Alcance y objetivos}
 \label{sec:alcance}
+
+Este proyecto se centra en la implementación completa de una aplicación capaz de calcular tanto la matriz de factores de forma utilizando los distintos métodos en \ref{ch:chap02}, en escenas compuestas por triángulos y cuadriláteros con el objetivo de comparar el rendimiento entre los distintos algoritmos propuestos. 
+
+Estos incluyen:
+
+\begin{enumerate}
+ 	\item Cálculo de factores de forma utilizando el hemi-cubo
+ 	\item  Cálculo de factores de forma utilizando trazado de rayos
+ 	\item Cálculo de factores de forma extendidos utilizando dibujado de portales
+ 	\item Cálculo de factores  de forma extendidos utilizando trazado de rayos
+\end{enumerate}
+
+Además, será necesario implementar una interfaz de usuario que facilite la edición y visualización de los materiales que componen la escena.
 
 \section{Proceso de desarrollo}
 \label{sec:procdes}
@@ -37,18 +50,39 @@ La gestión de las tareas a relizar se llevó a cabo en el respositiorio del pro
 \section{Diseño}
 \label{sec:disenio}
 
-Con la finalidad de evitar el alto acoplamiento, facilitar la extensión y evitar errores de integración se tomó la decisión de utilizar distintos paquetes que ofrezcan un conjunto de funcionalidades.
+Con la finalidad de evitar el alto acoplamiento, facilitar la extensión y reducir la cantidad de errores de integración se tomó la decisión de utilizar distintos módulos y sub-módulos que ofrezcan un conjunto de funcionalidades bien definido utilizando programación orientada a objetos. Esta decisión permite el añadido de nuevas características y la optimización de ciertas funcionalidades independientemente de los demás módulos contruidos.
 
 El diseño de la solución comprende dos componentes principales, la interfaz gráfica de usuario (GUI, en inglés) y el motor de renderizado.
 
 \subsection{Motor de renderizado}
 \label{sec:engine}
 
-El paquete del motor de renderizado se compone de un conjunto de módulos que manejan el pre-procesado de una escena, es decir, el cálculo de la radiosidad y el renderizado en tiempo real de la escena así como la carga de modelos desde el disco duro, la modificación de materiales, entre otras funcionalidades detalladas en \ref{sec:ui}.
+El paquete del motor de renderizado se compone de un conjunto de sub-módulos, el primero de ellos que maneja el pre-procesado de una escena, es decir, el cálculo de l matriz de factores de forma y la radiosidad. El siguiente conjunto de sub-módulos se ocupan del renderizado en tiempo real de la escena, así como la carga de modelos desde el disco duro, la modificación de materiales, entre otras funcionalidades detalladas en \ref{sec:ui}.
+
+\subsubsection{Módulo de geometría}
+
+El módulo de geometría encapsula la información de las escenas leídas desde el disco duro, además de adaptar y optimizar los formatos de las primitivas geométricas para ser utilizados en las APIs de dibujado de terceros. La clase \verb|Scene| \ref{img:geom} cargará distintos objetos desde el disco duro que serán manejados como una instancia de \verb|Mesh|.
+
+
+\vspace{5mm}
+\begin{minipage}[h]{0.7\linewidth}
+	\centering
+	\includegraphics[width=\linewidth]{assets/geometry}
+	\captionof{figure}{Módulo de manejo de geometría}
+	\label{img:geom}
+\end{minipage}
 
 \subsubsection{Módulo de pre-procesado}
 
-El módulo de preprocesado se compone de un controlador principal, que maneja el estado y la ejecución de  los comandos de los distintos \textit{pipelines} implementados que resuelven el cálculo de la radiosidad.
+El módulo de preprocesado se compone de un controlador principal (\verb|PreprocessController| en la figura \ref{img:procesado}), que maneja el estado y la ejecución de  los comandos de los distintos \textit{pipelines} implementados que resuelven el cálculo de la radiosidad.
+
+\vspace{5mm}
+\begin{minipage}[h]{0.8\linewidth}
+	\centering
+	\includegraphics[width=\linewidth]{assets/preprocess}
+	\captionof{figure}{Arquitectura del módulo de pre-procesado}
+	\label{img:procesado}
+\end{minipage}
 
 Un pipeline es definido a partir de un conjunto de funciones ejecutadas en el siguiente orden:
 
@@ -58,17 +92,21 @@ Un pipeline es definido a partir de un conjunto de funciones ejecutadas en el si
 	\item \verb|computeRadiosity()|
 \end{enumerate}
 
-Donde \verb|computeFormFactors()| variará dependiendo del método de cálculo elegido, donde puede utilizarse el método del hemi-cubo o el de la hemi-esfera. El primero de ellos utilizará un \textit{pipeline} configurado utilizando una API de rasterización, mientras que el segundo utilizará una API capaz de calcular intersecciones utilizando \textit{trazado de rayos}.
+Donde \verb|computeFormFactors()| variará dependiendo del método de cálculo elegido (veáse \ref{img:procesado}), donde puede utilizarse el método del hemi-cubo o el de la hemi-esfera. El primero de ellos utilizará un \textit{pipeline} configurado utilizando una API de rasterización, mientras que el segundo utilizará una API capaz de calcular intersecciones utilizando \textit{trazado de rayos}.
 
 La ejecución de \verb|computeRadiosity()| dependerá directamente de \verb|solver| seleccionará el algoritmo que calculará el vector de radiosidades para la escena.
 
 \subsubsection{Módulo de visualización}
 
-El módulo de visualización se encarga de renderizar la escena actual desde el punto de vista seleccionado por el usuario. Además, debe tener la capacidad de dibujar distintas propiedades de los materiales para facilitar la edición de las propiedades de los objetos o sus caras.
+El módulo de visualización se encarga de renderizar la escena actual desde el punto de vista seleccionado por el usuario. Además, debe tener la capacidad de mostrar las distintas propiedades de los materiales como valor de emisión inicial, valor de reflexión especular, visualización de geometría para facilitar la edición de las propiedades de los objetos o sus caras. El proceso de dibujado comienza con el dibujante de la escena que dibujará un conjunto de imágenes correspondiente a las propiedades de los materiales \verb|SceneRenderer| en la figura \ref{img:vis}, luego un dibujante de texturas \verb|TextureRenderer| seleccionará y convertirá correctamente el resultado anterior a valores tres canales (RGB). El módulo de visualización siempre tendrá una textura bidimensional como parámetro de salida.
 
-\subsubsection{Módulo de geometría}
-
-El módulo de geometría procesa los archivos que contienen la información de la geometría de los modelos que componen la escena, los materiales y, la conversión y carga en memoria en formatos compatibles con las APIs de renderizado utilizadas.
+\vspace{5mm}
+\begin{minipage}[h]{0.8\linewidth}
+	\centering
+	\includegraphics[width=\linewidth]{assets/display}
+	\captionof{figure}{Arquitectura del módulo de visualización}
+	\label{img:vis}
+\end{minipage}
 
 \subsection{Interfaz gráfica}
 
@@ -76,11 +114,11 @@ El módulo de visualización (UI) utiliza una arquitectura basada en el paradigm
 
 En alto nivel, el \textit{bucle de eventos} se compone de la siguiente forma:
 
- \begin{lstlisting}[language=C]
- 	while(queue.waitForEvent()){
- 		queue.processEvent()
- 	}
- \end{lstlisting}
+ \begin{algorithmic}
+ 	\While{$queue.waitForEvent()$}
+ 		\State $queue.processEvent()$
+ 	\EndWhile
+ \end{algorithmic}
  
  El  \textit{bucle de eventos} procesará todos los eventos de la aplicacación, lo que desencadena un conjunto de acciones que modificarán su \textbf{estado} de la interfaz de usuario. Este estado será dibujado por un conjunto de \textbf{componentes}, que no son más que presentadores del estado actual. Es decir, a partir de un conjunto de valores los presentarán en un formato gráfico adecuado y sencillo de comprender.
 

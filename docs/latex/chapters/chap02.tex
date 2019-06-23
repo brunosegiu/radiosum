@@ -145,9 +145,11 @@ De \eqref{eq:ff} se obtienen las siguientes propiedades:
 \section{Métodos de cálculo de la matriz de Factores de Forma}
 \label{sec:calculoff}
 
-El cálculo de los factores de forma a través de la ecuación \eqref{eq:ff} analíticamente es inviable en la práctica, por tanto es necesario establecer otros métodos que provean aproximaciones lo suficientemente correctas. 
+El cálculo de los factores de forma a través de la ecuación \eqref{eq:ff} analíticamente es inviable en la práctica pues supone la necesidad de calcular la visibilidad entre cada par de parches que componen la escana. Por tanto, es necesario establecer otros métodos que provean aproximaciones lo suficientemente correctas.
 
-El cálculo de la matriz de factores de forma $\mathbf{F}$ supone la proyección de los parches, de aquí en más se podrá asumir que estos parches son polígonos y por tanto es posible utilizar las técnicas de dibujado de objetos tridimensionales tradicionales.
+Geométricamente, puese establecerse una analogía para la computación de factores de forma conocida como "analogía de Nussel". Se expresará el factor de forma como la proporción de área proyectada de $S_{j}$ en una hemi-esfera centrada en $S_{i}$ y luego en un disco centrado en $S_{i}$.
+
+El cálculo de la matriz de factores de forma $\mathbf{F}$ supone la proyección de los parches, de aquí en más se asumirá que estos parches son poligonales y por tanto es posible utilizar las técnicas de dibujado de objetos tridimensionales tradicionales.
 
 \subsection{Rasterización}
 
