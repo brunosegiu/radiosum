@@ -37,12 +37,12 @@ void ReflectionsRenderer::render(Face &face, GLuint faceIndex,
   // Render stencil buffer
   glEnable(GL_STENCIL_TEST);
   glDisable(GL_DEPTH_TEST);
+  glDisable(GL_CULL_FACE);
 
   glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
   glDepthMask(GL_FALSE);
   glStencilMask(0xFF);
   glClear(GL_STENCIL_BUFFER_BIT);
-  glDisable(GL_CULL_FACE);
 
   glStencilFunc(GL_ALWAYS, 1, 0xFF);
   glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
@@ -52,7 +52,7 @@ void ReflectionsRenderer::render(Face &face, GLuint faceIndex,
       glGetUniformLocation(stencilShader->getID(), "worldTransform");
   glUniformMatrix4fv(worldTransformId, 1, GL_FALSE,
                      glm::value_ptr(reflectionCamera.getMVPMatrix()));
-  this->scene->drawFace(faceIndex);
+  this->scene->drawFace(this->stencilShader->getID(), faceIndex);
 
   glEnable(GL_CULL_FACE);
 

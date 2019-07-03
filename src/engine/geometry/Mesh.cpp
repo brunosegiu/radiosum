@@ -216,30 +216,23 @@ void Mesh::drawGeometry(GLuint shaderID) {
   GLuint tFacesLoc = glGetUniformLocation(shaderID, "tFaces");
   glUniform1ui(tFacesLoc, this->tFaces);
   this->simpleGeometry->bind();
-  glDrawElements(GL_TRIANGLES, GLsizei(3 * this->tFaces + 6 * qFaces),
+  glDrawElements(GL_TRIANGLES, GLsizei(3 * tFaces + 6 * qFaces),
                  GL_UNSIGNED_INT, (void *)(0));
   this->simpleGeometry->unbind();
 }
 
-void Mesh::drawFace(GLuint faceIndex) {
+void Mesh::drawFace(GLuint shaderID, GLuint faceIndex) {
+  GLuint tFacesLoc = glGetUniformLocation(shaderID, "tFaces");
+  glUniform1ui(tFacesLoc, this->tFaces);
   this->simpleGeometry->bind();
   if (faceIndex < this->tFaces) {
-    std::vector<GLuint> indices(3);
-    indices[0] = this->geometry.vertices.triangles[3 * faceIndex];
-    indices[1] = this->geometry.vertices.triangles[3 * faceIndex + 1];
-    indices[2] = this->geometry.vertices.triangles[3 * faceIndex + 2];
-    glDrawElements(GL_TRIANGLES, 1, GL_UNSIGNED_INT, indices.data());
+    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT,
+                   (void *)(3 * faceIndex * sizeof(GLuint)));
   } else {
-    std::vector<GLuint> indices(4);
     GLuint inQuad = faceIndex - tFaces;
-    indices[0] = this->geometry.vertices.quads[4 * faceIndex + 0];
-    indices[1] = this->geometry.vertices.quads[4 * faceIndex + 1];
-    indices[2] = this->geometry.vertices.quads[4 * faceIndex + 2];
-    indices[3] = this->geometry.vertices.quads[4 * faceIndex + 3];
-    std::vector<GLuint> triangulated = triangulate(indices);
-    glDrawElements(GL_TRIANGLES, 2, GL_UNSIGNED_INT, triangulated.data());
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT,
+                   (void *)((3 * tFaces + inQuad * 6) * sizeof(GLuint)));
   }
-
   this->simpleGeometry->unbind();
 }
 

@@ -13,3 +13,5 @@ enum PipelineStage {
   RADIOSITY_LOADING,
   RADIOSITY_READY
 };
+
+enum Reflectors { DISABLED, REMBREE, ROPENGL };

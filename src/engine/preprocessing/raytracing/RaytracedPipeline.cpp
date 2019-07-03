@@ -87,7 +87,7 @@ std::map<GLuint, GLfloat> RaytracedPipeline::renderRay(RTCRay ray) {
   while (face != RTC_INVALID_GEOMETRY_ID && iterationCount <= MAX_LEVELS) {
     GLfloat reflactance = reflactances[face];
     ffs[face] = (1.0f - reflactance) * ffMultiplier;
-    if (reflactance > .0f && this->enableReflections) {
+    if (reflactance > .0f && this->reflector != DISABLED) {
       ffMultiplier *= reflactance;
       glm::vec3 originalDir =
           glm::vec3(query.ray.dir_x, query.ray.dir_y, query.ray.dir_z);

@@ -9,7 +9,7 @@ class Scene {
   Scene();
 
   void draw(GLuint shaderID, bool justGeometry = false);
-  void drawFace(GLuint faceIndex);
+  void drawFace(GLuint shaderID, GLuint faceIndex);
 
   // Geometry
   GLuint size();

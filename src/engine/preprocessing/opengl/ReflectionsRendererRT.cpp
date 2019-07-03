@@ -85,7 +85,7 @@ void ReflectionsRendererRT::render(Face &face, GLuint faceIndex,
     RTCRay reflected = getRay(origin, direction);
     faceIndex = renderRayOnce(reflected, query);
     if (faceIndex != RTC_INVALID_GEOMETRY_ID) {
-      this->buffer.push_back(faceIndex);
+      this->buffer.push_back(faceIndex + 1);
     }
   }
 }

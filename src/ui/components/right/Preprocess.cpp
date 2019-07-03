@@ -18,16 +18,22 @@ void Preprocess::render() {
     ImGui::TextColored(ImVec4(.0f, 1.0f, .0f, 1.0f), "Step 1: ");
     ImGui::SameLine();
     ImGui::Text("Compute Form Factors");
-    ImGui::Combo("Renderer", &this->renderer, "OpenGL\0Raytracing\0");
-
     float progress = EngineStore::ffProgress;
     float radProgress = EngineStore::radiosityProgress;
+    ImGui::Combo("Renderer", &this->renderer, "OpenGL\0Embree\0");
+    if (this->renderer == 0) {
+      ImGui::Combo("Reflections", &this->reflections,
+                   "Disabled\0Embree\0OpenGL\0");
+    } else {
+      this->reflections = this->reflections > 1 ? 1 : this->reflections;
+      ImGui::Combo("Reflections", &this->reflections, "Disabled\0Embree\0");
+    }
     ImGui::Spacing();
     ImGui::Text("Progress");
     ImGui::ProgressBar(progress);
     if (ImGui::Button("Compute form factors")) {
       UIStore::engine->preprocess(UIStore::enablePreprocessRendering,
-                                  UIStore::enableReflections,
+                                  (Reflectors)UIStore::reflections,
                                   (RendererType)this->renderer);
     }
     if (ImGui::IsItemHovered()) {

@@ -131,11 +131,6 @@ void MainMenu::render() {
 
         ImGui::EndMenu();
       }
-      if (ImGui::MenuItem("Specular reflections", nullptr,
-                          UIStore::enableReflections)) {
-        UIStore::enableReflections = !UIStore::enableReflections;
-      }
-
       ImGui::EndMenu();
     }
     ImGui::EndMainMenuBar();

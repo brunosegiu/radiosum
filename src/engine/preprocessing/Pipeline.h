@@ -21,7 +21,7 @@ class Pipeline {
 
   void configureFace(Face* face);
   void configureFaceIndex(GLuint index);
-  void configureReflections(bool enable);
+  void configureReflections(Reflectors reflector);
   void configureChannels(std::set<Channel> channels);
   void configureInterpolation(bool enable);
   void configureSolver(EigenSolverType solver);
@@ -45,7 +45,7 @@ class Pipeline {
   // Config
 
   // Flags
-  bool enableReflections;
+  Reflectors reflector;
   std::set<Channel> channels;
   bool enableInterpolation;
 

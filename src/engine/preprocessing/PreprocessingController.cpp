@@ -15,7 +15,7 @@ PreprocessingController::PreprocessingController(Scene* scene,
                        : (Pipeline*)new OpenGLPipeline(scene, nSamples);
 }
 
-void PreprocessingController::computeFormFactors(bool reflections) {
+void PreprocessingController::computeFormFactors(Reflectors reflections) {
   this->pipeline->configureReflections(reflections);
   this->pipeline->computeFormFactors();
 }

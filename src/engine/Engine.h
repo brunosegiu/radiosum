@@ -22,10 +22,8 @@ class Engine {
   void step();
 
   // Lighting
-  void preprocess(bool withOutput = true, bool enableReflections = false,
-                  RendererType renderer =
-                      OPENGL);  // if withOutput == false run preprocessor until
-                                // it finishes, without rendering steps
+  void preprocess(bool withOutput = true, Reflectors reflector = DISABLED,
+                  RendererType renderer = OPENGL);
   void computeRadiosity(std::vector<Channel> channels,
                         EigenSolverType solver = SLU, bool smooth = false);
   void setRadiosity(bool smooth);

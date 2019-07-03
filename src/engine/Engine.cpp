@@ -35,12 +35,12 @@ void Engine::setMode(RenderMode mode) {
 
 RenderMode Engine::getMode() { return this->mode; }
 
-void Engine::preprocess(bool withOutput, bool enableReflections,
+void Engine::preprocess(bool withOutput, Reflectors reflector,
                         RendererType renderer) {
   if (this->preprocessor) delete this->preprocessor;
   this->preprocessor = new PreprocessingController(this->scene, renderer);
   this->setMode(PREPROCESS);
-  this->preprocessor->computeFormFactors(enableReflections);
+  this->preprocessor->computeFormFactors(reflector);
 }
 
 void Engine::computeRadiosity(std::vector<Channel> channels,

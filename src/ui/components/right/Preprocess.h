@@ -11,5 +11,5 @@ class Preprocess : public Component {
   virtual ~Preprocess();
 
  private:
-  int channelCount, solver, renderer;
+  int channelCount, solver, renderer, reflections;
 };

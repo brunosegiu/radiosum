@@ -4,7 +4,7 @@
 #include "preprocessing/EigenSolver.h"
 
 Pipeline::Pipeline(Scene* scene, GLuint resolution) {
-  this->enableReflections = false;
+  this->reflector = DISABLED;
   this->enableInterpolation = false;
 
   this->scene = scene;
@@ -19,8 +19,8 @@ Pipeline::Pipeline(Scene* scene, GLuint resolution) {
   solverType = SLU;
 }
 
-void Pipeline::configureReflections(bool enable) {
-  this->enableReflections = enable;
+void Pipeline::configureReflections(Reflectors reflectors) {
+  this->reflector = reflectors;
 }
 
 void Pipeline::configureChannels(std::set<Channel> channels) {

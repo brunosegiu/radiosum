@@ -11,7 +11,8 @@
 OpenGLPipeline::OpenGLPipeline(Scene* scene, GLuint resolution)
     : Pipeline(scene, resolution) {
   this->renderer = new IDRenderer(scene);
-  this->reflectionsRenderer = new ReflectionsRendererRT(scene);
+  this->reflectionsRenderer = new ReflectionsRenderer(scene);
+  this->reflectionsRendererRT = new ReflectionsRendererRT(scene);
   this->reducer = new ComputeShader("computeRow.comp");
   this->row = new RowBuffer(scene->size() + 1);  // Padding for 0 (void)
   this->resolution = resolution;
@@ -29,7 +30,7 @@ void OpenGLPipeline::computeFormFactors() {
   while (!iterator.end()) {
     Face face = iterator.get();
     GLuint index = iterator.faceIndex();
-    if (this->enableReflections) {
+    if (this->reflector != DISABLED) {
       this->renderer->start();
     }
     this->setUpRenderer(face);
@@ -76,14 +77,15 @@ std::vector<GLfloat> OpenGLPipeline::getMatrixRowCPU(Face& face, GLuint index) {
   HemicubeBuffer* buffer =
       dynamic_cast<HemicubeBuffer*>(this->renderer->getBuffer());
   std::vector<std::vector<GLuint>> data = buffer->getData();
-  GLuint rowSize = scene->size() + 1;
+  GLuint rowSize = scene->size();
 
   std::vector<GLfloat> topCorrector = this->corrector->topData;
   std::vector<GLfloat> rowTopFace = std::vector<GLfloat>(rowSize, 0.0f);
 
   std::vector<GLfloat> reflactances = this->scene->getSpecularReflactance();
-  std::vector<ReflectionsSet> reflectionsSteps =
-      std::vector<ReflectionsSet>(MAX_REFLECTION_DEPTH);
+
+  std::vector<std::map<GLuint, GLfloat>> reflectionsSteps =
+      std::vector<std::map<GLuint, GLfloat>>(MAX_REFLECTION_DEPTH);
 
   for (GLuint i = 0; i < resolution; i++) {
     for (GLuint j = 0; j < resolution; j++) {
@@ -92,11 +94,15 @@ std::vector<GLfloat> OpenGLPipeline::getMatrixRowCPU(Face& face, GLuint index) {
       if (seenFace > 0) {
         seenFace = seenFace - 1;
         GLfloat addition = topCorrector[index];
-        GLfloat reflactance = reflactances[seenFace];
+        GLfloat reflactance =
+            this->reflector != DISABLED ? reflactances[seenFace] : 0;
         rowTopFace[seenFace] += (1.0f - reflactance) * addition;
         if (reflactance > 0) {
-          reflectionsSteps[0].insert(
-              std::pair<GLuint, GLfloat>(seenFace, reflactance * addition));
+          if (reflectionsSteps[0].count(seenFace) > 0) {
+            reflectionsSteps[0][seenFace] += reflactance * addition;
+          } else {
+            reflectionsSteps[0][seenFace] = reflactance * addition;
+          }
         }
       }
     }
@@ -116,27 +122,38 @@ std::vector<GLfloat> OpenGLPipeline::getMatrixRowCPU(Face& face, GLuint index) {
         GLfloat addition = sideCorrector[index];
         if (seenFace > 0) {
           seenFace = seenFace - 1;
-          GLfloat reflactance = reflactances[seenFace];
+          GLfloat reflactance =
+              this->reflector != DISABLED ? reflactances[seenFace] : 0;
           rowPerSideFace[face][seenFace] += (1.0f - reflactance) * addition;
           if (reflactance > 0) {
-            reflectionsSteps[0].insert(
-                std::pair<GLuint, GLfloat>(seenFace, reflactance * addition));
+            if (reflectionsSteps[0].count(seenFace) > 0) {
+              reflectionsSteps[0][seenFace] += reflactance * addition;
+            } else {
+              reflectionsSteps[0][seenFace] = reflactance * addition;
+            }
           }
         }
       }
     }
   }
 
-  if (this->enableReflections) {
+  if (this->reflector != DISABLED) {
     for (GLuint step = 0; step < reflectionsSteps.size(); step++) {
-      ReflectionsSet reflectionSet = reflectionsSteps[step];
+      std::map<GLuint, GLfloat> reflectionSet = reflectionsSteps[step];
       for (std::pair<GLuint, GLfloat> pair : reflectionSet) {
         GLuint reflectiveIndex = pair.first;
         GLfloat addition = pair.second;
         Face reflectiveFace = this->scene->getFace(reflectiveIndex);
-        this->reflectionsRenderer->render(face, index, reflectiveFace,
-                                          reflectiveIndex);
-        std::vector<GLuint> seenFaces = this->reflectionsRenderer->getData();
+        std::vector<GLuint> seenFaces;
+        if (this->reflector == REMBREE) {
+          this->reflectionsRendererRT->render(face, index, reflectiveFace,
+                                              reflectiveIndex);
+          seenFaces = this->reflectionsRenderer->getData();
+        } else {
+          this->reflectionsRenderer->render(face, index, reflectiveFace,
+                                            reflectiveIndex);
+          seenFaces = this->reflectionsRenderer->getData();
+        }
         GLfloat normalizer = GLfloat(seenFaces.size());
         for (auto& seenFace : seenFaces) {
           if (seenFace > 0 && seenFace < reflactances.size() &&
@@ -146,8 +163,13 @@ std::vector<GLfloat> OpenGLPipeline::getMatrixRowCPU(Face& face, GLuint index) {
             rowTopFace[seenFace] +=
                 (1.0f - reflactance) * addition / normalizer;
             if (reflactance > 0) {
-              reflectionsSteps[step + 1].insert(std::pair<GLuint, GLfloat>(
-                  seenFace, (reflactance * addition) / normalizer));
+              if (reflectionsSteps[step].count(seenFace) > 0) {
+                reflectionsSteps[step][seenFace] +=
+                    reflactance * addition / normalizer;
+              } else {
+                reflectionsSteps[step][seenFace] =
+                    reflactance * addition / normalizer;
+              }
             }
           }
         }
@@ -166,8 +188,8 @@ std::vector<GLfloat> OpenGLPipeline::getMatrixRowCPU(Face& face, GLuint index) {
 void OpenGLPipeline::processRow(std::vector<GLfloat> faceFactors,
                                 GLuint faceIndex) {
   GLuint iIndex = faceIndex;
-  for (GLuint jIndex = 0; jIndex < faceFactors.size() - 1; jIndex++) {
-    GLfloat ff = GLfloat(faceFactors[jIndex + 1]);
+  for (GLuint jIndex = 0; jIndex < faceFactors.size(); jIndex++) {
+    GLfloat ff = GLfloat(faceFactors[jIndex]);
     if (ff > 0.0f) {
       ffLock.lock();
       this->triplets.push_back(
@@ -195,4 +217,8 @@ void OpenGLPipeline::waitForFFWorkers() {
   this->formFactorWorkers.clear();
 }
 
-OpenGLPipeline::~OpenGLPipeline() { this->waitForFFWorkers(); }
+OpenGLPipeline::~OpenGLPipeline() {
+  this->waitForFFWorkers();
+  delete this->reflectionsRenderer;
+  delete this->reflectionsRendererRT;
+}

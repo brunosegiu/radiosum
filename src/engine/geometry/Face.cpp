@@ -49,10 +49,28 @@ GLfloat Face::area() {
 
 std::vector<glm::vec3> Face::getSamplingPoints() {
   if (mode == TRIANGLE) {
-    std::vector<glm::vec3> points = {v0, v1, v2};
+    std::vector<glm::vec3> points = {
+        v0,
+        v1,
+        v2,
+        (v0 + v1) / 2.0f,
+        (v1 + v2) / 2.0f,
+        (v0 + v2) / 2.0f,
+        this->getBarycenter(),
+    };
     return points;
   } else {
-    std::vector<glm::vec3> points = {v0, v1, v2, v3};
+    std::vector<glm::vec3> points = {v0,
+                                     v1,
+                                     v2,
+                                     v3,
+                                     (v0 + v1) / 2.0f,
+                                     (v0 + v2) / 2.0f,
+                                     (v0 + v3) / 2.0f,
+                                     (v1 + v2) / 2.0f,
+                                     (v1 + v3) / 2.0f,
+                                     (v2 + v3) / 2.0f,
+                                     this->getBarycenter()};
     return points;
   }
 }
