@@ -1,6 +1,7 @@
 #include "preprocessing/Pipeline.h"
 
 #include "EngineStore.h"
+#include "preprocessing/CustomSolver.h"
 #include "preprocessing/EigenSolver.h"
 
 Pipeline::Pipeline(Scene* scene, GLuint resolution) {
@@ -16,7 +17,7 @@ Pipeline::Pipeline(Scene* scene, GLuint resolution) {
   radiosityReady[GREEN] = false;
   radiosityReady[BLUE] = false;
 
-  solverType = SLU;
+  solverType = CUSTOM;
 }
 
 void Pipeline::configureReflections(Reflectors reflectors) {
@@ -31,9 +32,7 @@ void Pipeline::configureInterpolation(bool enable) {
   this->enableInterpolation = enable;
 }
 
-void Pipeline::configureSolver(EigenSolverType solver) {
-  this->solverType = solver;
-}
+void Pipeline::configureSolver(SolverType solver) { this->solverType = solver; }
 
 PipelineStage Pipeline::pollState() {
   if (this->currentStage == INIT) {
@@ -88,9 +87,12 @@ void Pipeline::setTriplets(
 }
 
 void Pipeline::crWrapped(Channel channel) {
-  EigenSolver* solver;
+  Solver* solver;
 
   switch (this->solverType) {
+    case CUSTOM:
+      solver = new CustomSolver();
+      break;
     case SLU:
       solver = new EigenSolverSparseLU();
       break;

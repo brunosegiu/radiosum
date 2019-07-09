@@ -25,7 +25,7 @@ void PreprocessingController::pollState() {
 }
 
 void PreprocessingController::computeRadiosity(std::set<Channel> channels,
-                                               EigenSolverType solver,
+                                               SolverType solver,
                                                bool smooth) {
   this->pipeline->configureInterpolation(smooth);
   this->pipeline->configureChannels(std::set<Channel>(channels));

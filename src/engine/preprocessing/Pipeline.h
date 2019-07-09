@@ -10,7 +10,7 @@
 #include "geometry/Scene.h"
 #include "preprocessing/Pipeline.h"
 
-enum EigenSolverType { SLU, SLDLT, CG, BICGSTAB };
+enum SolverType { CUSTOM, SLU, SLDLT, CG, BICGSTAB };
 
 class Pipeline {
  public:
@@ -24,7 +24,7 @@ class Pipeline {
   void configureReflections(Reflectors reflector);
   void configureChannels(std::set<Channel> channels);
   void configureInterpolation(bool enable);
-  void configureSolver(EigenSolverType solver);
+  void configureSolver(SolverType solver);
 
   std::vector<std::tuple<GLuint, GLuint, GLfloat>> getTriplets();
   void setTriplets(std::vector<std::tuple<GLuint, GLuint, GLfloat>> triplets);
@@ -60,7 +60,7 @@ class Pipeline {
   std::vector<std::thread> radiosityWorkers;
   std::vector<GLfloat> radiosity[N_CHANNELS];
   bool radiosityReady[N_CHANNELS];
-  EigenSolverType solverType;
+  SolverType solverType;
 
   void waitForRadiosityWorkers();
   void crWrapped(Channel channel);

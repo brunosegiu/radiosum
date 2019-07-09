@@ -25,7 +25,7 @@ class Engine {
   void preprocess(bool withOutput = true, Reflectors reflector = DISABLED,
                   RendererType renderer = OPENGL);
   void computeRadiosity(std::vector<Channel> channels,
-                        EigenSolverType solver = SLU, bool smooth = false);
+                        SolverType solver = SLU, bool smooth = false);
   void setRadiosity(bool smooth);
   Camera* getCamera();
 

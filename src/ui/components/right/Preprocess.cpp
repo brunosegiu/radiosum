@@ -57,7 +57,7 @@ void Preprocess::render() {
     }
     ImGui::Combo("Channels", &this->channelCount, "Single\0Double\0Triple");
     ImGui::Combo("Solver", &this->solver,
-                 "Eigen: SparseLU\0Eigen: SimplicialLDLT\0Eigen: "
+                 "Custom\0Eigen: SparseLU\0Eigen: SimplicialLDLT\0Eigen: "
                  "ConjugateGradient\0Eigen: BiCGSTAB");
     ImGui::Text("Progress");
     ImGui::ProgressBar(radProgress);
@@ -66,7 +66,7 @@ void Preprocess::render() {
       UIStore::engine->computeRadiosity(
           std::vector<Channel>(channels.begin(),
                                channels.begin() + this->channelCount + 1),
-          (EigenSolverType)this->solver, UIStore::shading == GOURAUD);
+          (SolverType)this->solver, UIStore::shading == GOURAUD);
     }
     if (!enableStep2) {
       ImGui::PopItemFlag();

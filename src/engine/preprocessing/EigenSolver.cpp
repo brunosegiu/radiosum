@@ -2,6 +2,8 @@
 
 #include "EngineStore.h"
 
+#define ITERATIVE_MAX_ITERATIONS 100
+
 void EigenSolver::init(
     GLuint size, std::vector<std::tuple<GLuint, GLuint, GLfloat>> triplets) {
   matrix = Eigen::SparseMatrix<GLfloat>(size, size);
@@ -84,6 +86,7 @@ Eigen::VectorXf EigenSolverSimplicialLDLT::solve(
 }
 
 void EigenSolverConjugateGradient::initSolver() {
+  solver.setMaxIterations(ITERATIVE_MAX_ITERATIONS);
   solver.compute(matrix);
 
   if (solver.info() != Eigen::Success) {
@@ -101,6 +104,7 @@ Eigen::VectorXf EigenSolverConjugateGradient::solve(
 }
 
 void EigenSolverBiCGSTAB::initSolver() {
+  solver.setMaxIterations(ITERATIVE_MAX_ITERATIONS);
   solver.compute(matrix);
 
   if (solver.info() != Eigen::Success) {

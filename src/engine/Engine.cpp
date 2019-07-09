@@ -44,7 +44,7 @@ void Engine::preprocess(bool withOutput, Reflectors reflector,
 }
 
 void Engine::computeRadiosity(std::vector<Channel> channels,
-                              EigenSolverType solver, bool smooth) {
+                              SolverType solver, bool smooth) {
   std::set<Channel> sChannels;
   for (auto& channel : channels) {
     sChannels.insert(channel);

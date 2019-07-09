@@ -156,6 +156,7 @@
     <ClCompile Include="src\engine\preprocessing\opengl\OpenGLPipeline.cpp" />
     <ClCompile Include="src\engine\preprocessing\raytracing\RayGenerator.cpp" />
     <ClCompile Include="src\engine\preprocessing\raytracing\RaytracedPipeline.cpp" />
+    <ClCompile Include="src\engine\preprocessing\CustomSolver.cpp" />
     <ClCompile Include="src\ui\components\left\SceneEditor.cpp" />
     <ClCompile Include="src\engine\Engine.cpp" />
     <ClCompile Include="src\common\ConfigurationManager.cpp" />
@@ -207,6 +208,7 @@
     <ClCompile Include="src\ui\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\engine\preprocessing\CustomSolver.h" />
     <ClInclude Include="src\engine\preprocessing\opengl\ReflectionsRendererRT.h" />
     <ClInclude Include="src\engine\buffers\IDBuffer.h" />
     <ClInclude Include="src\engine\geometry\Material.h" />
@@ -217,6 +219,7 @@
     <ClInclude Include="src\engine\preprocessing\raytracing\RayGenerator.h" />
     <ClInclude Include="src\engine\preprocessing\raytracing\RaytracedPipeline.h" />
     <ClInclude Include="src\engine\preprocessing\raytracing\RaytracingUtils.h" />
+    <ClInclude Include="src\engine\preprocessing\Solver.h" />
     <ClInclude Include="src\ui\components\left\SceneEditor.h" />
     <ClInclude Include="src\engine\Engine.h" />
     <ClInclude Include="src\common\ConfigurationManager.h" />

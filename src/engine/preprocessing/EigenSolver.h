@@ -9,13 +9,15 @@
 #include <SparseLU>
 #include <SparseQR>
 
+#include "preprocessing/Solver.h"
+
 typedef Eigen::SparseLU<Eigen::SparseMatrix<GLfloat>> SparseLU;
 typedef Eigen::SimplicialLDLT<Eigen::SparseMatrix<GLfloat>> SimplicialLDLT;
 typedef Eigen::ConjugateGradient<Eigen::SparseMatrix<GLfloat>>
     ConjugateGradient;
 typedef Eigen::BiCGSTAB<Eigen::SparseMatrix<GLfloat>> BiCGSTAB;
 
-class EigenSolver {
+class EigenSolver : public Solver {
  public:
   void init(GLuint size,
             std::vector<std::tuple<GLuint, GLuint, GLfloat>> triplets);
