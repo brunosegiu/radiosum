@@ -1,0 +1,37 @@
+# Blender MTL File: 'None'
+# Material Count: 1
+
+newmtl Cube
+Kd 1 0 0.5
+Ks 0 0 0
+e 0
+
+newmtl Stand
+Kd 0.3 0.5 0.1
+Ks 0 0 0
+e 0
+
+newmtl Box
+Kd 0.1 0.1 0.1
+Ks 0 0 0
+e 0
+
+newmtl Suzanne
+Kd 1 0 0
+Ks 0 0 0
+e 0
+
+newmtl Torus
+Kd 0 0.4 1
+Ks 0 0 0
+e 0
+
+newmtl Mirror
+Kd 0 0.1 0.1
+Ks 0.9 0 0
+e 0
+
+newmtl Sphere
+Kd 1 1 1
+Ks 0 0 0
+e 15
