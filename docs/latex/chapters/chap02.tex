@@ -177,11 +177,19 @@ De \eqref{eq:ff} se obtienen las siguientes propiedades:
 
 El cálculo de los factores de forma a través de la ecuación \eqref{eq:ff} analíticamente es inviable en la práctica pues supone la necesidad de calcular la visibilidad entre cada par de parches que componen la escana. Por tanto, es necesario establecer otros métodos que provean aproximaciones lo suficientemente correctas.
 
-Geométricamente, puese establecerse una analogía para la computación de factores de forma conocida como <<analogía de Nussel>>. Se expresará el factor de forma como la proporción de área proyectada de $S_{j}$ en una hemi-esfera centrada en $S_{i}$ y luego en un disco centrado en $S_{i}$.
+Geométricamente, puese establecerse una analogía para la computación de factores de forma conocida como <<analogía de Nusselt>> (ver Figura \ref{img:nusselt}). Se expresará el factor de forma como la proporción de área proyectada de $S_{j}$ en una hemi-esfera centrada en $S_{i}$ y luego en un disco centrado en $S_{i}$.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.55\linewidth]{assets/nusselt}
+	\captionof{figure}{La analogía de Nusslet}
+	\label{img:nusselt}
+\end{figure}
 
 El cálculo de la matriz de factores de forma $\mathbf{F}$ supone la proyección de los parches, de aquí en más se asumirá que estos parches son poligonales y por tanto es posible utilizar las técnicas de dibujado de objetos tridimensionales tradicionales.
 
 \subsection{Rasterización}
+\label{sec:rasterizacion}
 
 El <<\textit{rendering pipeline}>> es un proceso de dibujado estandarizado que consiste en un conjunto de etapas cuyo cometido es la generación de un \textit{frame buffer}. Los fabricantes de los dispositivos aceleradores gráficos y/o sistemas operativos proveen de interfaces de programación (OpenGL, Vulkan, DirectX) que se basan en este modelo para abstraer el uso del hardware.
 
@@ -252,7 +260,7 @@ donde:
 
 Los diferenciales de factores de forma deben corregir la deformación introducida con el cambio de proyección desde una hemiesfera a un hemi-cubo, para ello, para cada píxel que compone el hemi-cubo es necesario calcular la proporición de área que este término ocupa en la hemiesfera unitaria.
 
-Para la cara superior, los diferenciales se calculan como:
+Para la cara superior, los diferenciales se calculan como (ver referencias en la Figura \ref{img:deltaff}):
 
 \begin{equation}
 	\delta{F_{q}} = \frac{\cos{\phi_{i}}\cos{\phi_{j}}}{\pi{r^{2}}} \delta{A} = \frac{\delta{A}}{\pi({x^{2} + y^{2} + 1})} 
@@ -263,6 +271,13 @@ Para las caras laterales, la fórmula dada es:
 \begin{equation}
 \delta{F_{q}} = \frac{\cos{\phi_{i}}\cos{\phi_{j}}}{\pi{r^{2}}}\delta{A} = \frac{z\delta{A}}{\pi({x^{2} + z^{2} + 1})}
 \end{equation}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.6\linewidth]{assets/deltaff}
+	\captionof{figure}{Representación gráfica de los ejes considerados para el factor de corrección de los factores de forma}
+	\label{img:deltaff}
+\end{figure}
 
 
 \subsection{Trazado de rayos}
@@ -297,6 +312,10 @@ $\beta(r, S_{x})$ toma el valor $1$ si el rayo $ray(S_{i},d)$ interseca a $S_{j}
 	\captionof{figure}{Representación gráfica del método de método de trazado de rayos}
 	\label{img:ff}
 \end{figure}
+
+Sin embargo, no es necesario utilizar una distribución de probabilidad con valores aleatorios o pseudo-aleatorios, sino que si la cantidad de rayos utilizados es la suficiente y además se utiliza una función que distribuya correctamente cada rayo, entonces los resultados obtenidos serán similares.
+
+Por esto, pueden utilizare otras distribuciones para la dirección de traza. Particularmente, una de ellas es la propuesta por \citeauthor{Beckers}, los autores presentaron un método general de teselación de discos y hemi-esferas. En particular, la propuesta para hemiesferas genera un conjunto de celdas de igual área con cuatro lados que comparten la misma relación de aspecto. Esto hace que el método presente una calidad adecuada para la elección de las direcciones en la que se trazaran los rayos.
 
 \section{Superficies especulares}
 
@@ -342,3 +361,47 @@ Aunque los algoritmos clásicos de resolución de sistema de ecuaciones aplican 
 \end{equation}
 
 Cabe aclarar, que el método planteado hasta el momento resuelve la radiosidad en un único canal. Es decir, no se toma en cuenta todo el espectro electromagnético de la luz, es por ello que puede establecerse una extensión del método. Esta extensión implica la existencia de tres vectores de reflexión, uno para cada canal \textit{RGB} (del inglés \textit{Red - Green - Blue}. Por tanto es necesario que se resuelvan tres y no un único sistema de ecuaciones, aunque es posible destacar que la matriz $\mathbf{F}$ permanece constante pues depende únicamente del coeficiente de reflexión especular y la geometría de la escena, el único cambio en el sistema surge en la matriz $\mathbf{R}$ que pasará a depender del canal seleccionado: $\mathbf{R}_{c}$.
+
+\section{OpenGL}
+OpenGL es una especificación de una Interfaz de Programación de Aplicación (API por sus siglas en inglés) diseñada por la organizción Khronos Group. Su cometido es el dibujado de gráficos bidimensionales o tridimensionales utilizando el método de rasterización \ref{sec:rasterizacion}. Los distintos fabricantes de Sistemas Operativos y tarjetas gráficas proporcionan implementaciones que se ajusten al hardware específico. Esta abstracción facilita la compatibilidad de las aplicaciones independientemente del hardware donde sean ejecutadas.
+
+\subsection{Arquitectura}
+La arquitectura base de la bibliotecta es de cliente/servidor \ref{img:gpucpugl} El cliente es la aplicación que invoca funciones para el dibujado de gráficos y es ejecutado en la CPU. El servidor, que es ejecutado en la GPU, que almacena los distintos buffers y ejecuta las funciones necesarias.
+
+El cliente modifica los atributos a través de invocaciones a las funciones de prefijo \verb|gl|, identificando el recurso afectado con valores enumerados (por ejemplo, \verb|GL_TEXTURE_2D| representa un conjunto de imágenes bidimencionales). Dado que la biblioteca es implementada como una máquina de estado, los atributos son recordados hasta que sean modificados nuevamente.
+
+Estas invocaciones no son ejecutadas inmediatamente, sino que de forma similar a un buffer de entrada/salida son almacenados para ser ejecutados cuando sea necesario, es decir, cuando se requiera el dibujo de una nueva imagen. Esto hace que la ejecución de comandos sea asíncrona, y por tanto mejora el rendimiento previniendo la sincronización entre la CPU y GPU.
+
+\vspace{5mm}
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=.7\linewidth]{assets/cpu_gpu}
+	\caption{Vista general de la arquitectura de OpenGL}
+	\label{img:gpucpugl}
+\end{figure}
+
+\subsection{Extensiones}
+La inicialización de la máquina de estados depende directamente de la creación de un \textbf{contexto} que será utilizado para almacenar los datos. Este proceso depende fuertemente de la plataforma donde se ejecute la aplicación, que depende entre otros del sistema operativo y el hardware utilizado. Por este motivo, existen bibliotecas que manejan la creación del contexto en diversas plataformas como SDL y GLFW.
+	
+\section{Embree}
+Embree es una biblioteca que expone un conjunto de funciones para realizar el trazado de rayos acelerado a través de componentes de hardware y software mediante la utilización del conjunto de instrucciones del paradigma SIMD (del inglés Single Instruction - Multiple Data), donde una única instrucción es ejecutada sobre un gran conjunto de datos (por ejemplo, la ejecución concurrente de un conjunto de multiplicaciones en punto flotante a nivel de CPU) y la generación de estructuras de aceleración, como las BVH (del inglés \textit{Bounding Volume Hirarchies}).
+
+La biblioteca resuelve un conjunto de dificultades normalmente encontradas en todas las aplicaciones de algoritmos que involucren el trazado de rayos, entre ellas:
+
+\begin{itemize}
+	\item \textbf{Multi-hilo:} Con el objetivo de ejecutar distintos kernels de traza de rayos de forma concurrente, la biblioteca provee de funciones \textit{thread-safe} para el dibujado y la generación de estructuras de aceleración.
+	\item \textbf{Vectorización:} Con el objetivo de optimizar el uso de la CPU, la biblioteca vectoriza los cálculos necesarios para aprovechar las instrucciones SIMD.
+	\item \textbf{Soporte para múltiples CPUs:} La biblioteca provee de una capa de abstracción independiente del hardware donde se utilice.
+	\item \textbf{Conocimiento del dominio extenso:} Dado que la biblioteca implementa las estructuras de aceleración y los algoritmos de intersección no es necesario tener un conocimiento completo del dominio para construir aplicaciones utilizando trazado de rayos.
+	\item \textbf{Manejo eficiente de la memoria:} Para la visualización de escenas con gran cantidad de primitivas.
+\end{itemize} 
+
+\vspace{5mm}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=.8\linewidth]{assets/embree}
+	\caption{Vista general de la arquitectura de Embree}
+	\label{img:embree}
+\end{figure}
+
+\section{Trabajos relacionados}
