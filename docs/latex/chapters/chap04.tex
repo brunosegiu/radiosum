@@ -97,8 +97,6 @@ El algoritmo de la hemi-esfera fue implementado utilizando la biblioteca de traz
 	\end{algorithmic}
 \end{algorithm}
 
-\subsection{Cálculo de factores de forma de la componente difusa}
-
 De forma similar a \ref{sec:hemicubehgl} es necesario posicionar el origen de cada rayo a trazar en el baricentro de la superficie. Luego, recordando \eqref{ffhemiesfera}, es necesario generar un conjunto de direcciones utilizando la distribución del coseno o similar. Si bien originalmente se utilizó la generación de números pseudo-aleatorios para generar rayos correctamente distribuidos, el uso de números aleatorios perjudicó el rendimiento del algoritmo dada la complejidad de los algoritmos que lo computan. Es por esto que se decidió utilizar otro algoritmo de generación de direcciones determinísticas en una hemi-esfera, en este caso la \textit{regla general de particionado de una hemi-esfera en celdas de área equitativa} propuesta por \citeauthor{Becker}. Estas direcciones son pre-calculadas y almacenadas pues previo al procesamiento de se conoce la definición (o cantidad de rayos) que se utilizarán en el cálculo.
 
 Luego se procede a la traza de rayos, $\mathbf{F}_{ij}$ se calculará como $\frac{nIntersecciones_{ij}}{nMuestras}$, esto significa que por cada rayo que parta de la superficie $S_{i}$ impactando $S_{j}$ se adiciona $\frac{1}{nMuestras}$ al valor de la entrada correspondiente en $\mathbf{F}$.
@@ -109,7 +107,7 @@ El muestreo de puntos partiendo del origen de la hemi-esfera en las direcciones 
 
 El cálculo de factores de forma extendido en fue implementado en dos variantes para el método del hemi-cubo, y de una única manera para el algoritmo de trazado de rayos.
 
-\subsection{Extensión del método del hemicubo}
+\subsection{Extensión del método del hemi-cubo}
 Ambas variantes son métodos de "dos pasadas", es decir, se dibujará el hemicubo normalmente y luego de determinar cuales de las caras visibles son reflectivas se proyectará nuevamente la escena para determinar qué parches son visibles debido al fenómeno de reflexión.
 
 Los métodos utilizados son heurísticos y su factor de error depende drásticamente del área de los parches, ya que al contrario de la técnica de trazado de rayos se desconoce el punto exacto en que los rayos emitidos desde el hemicubo colisionan con los parches del entorno.
