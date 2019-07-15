@@ -316,7 +316,6 @@ $\beta(r, S_{x})$ toma el valor $1$ si el rayo $ray(S_{i},d)$ interseca a $S_{j}
 Sin embargo, no es necesario utilizar una distribución de probabilidad con valores aleatorios o pseudo-aleatorios, sino que si la cantidad de rayos utilizados es la suficiente y además se utiliza una función que distribuya correctamente cada rayo, entonces los resultados obtenidos serán similares.
 
 Por esto, pueden utilizare otras distribuciones para la dirección de traza. Particularmente, una de ellas es la propuesta por \citeauthor{Beckers}, los autores presentaron un método general de teselación de discos y hemi-esferas. En particular, la propuesta para hemiesferas genera un conjunto de celdas de igual área con cuatro lados que comparten la misma relación de aspecto. Esto hace que el método presente una calidad adecuada para la elección de las direcciones en la que se trazaran los rayos.
-
 \section{Superficies especulares}
 
 Originalmente, el método de cálculo de la radiosidad asume que todas las superficies son reflectores lambertianos, lo que supone que solo existirán reflexiones difusas cuando la luz interactúa con ellas. Sin embargo, es necesario simular reflexiones especulares correctamente para obtener resultados que se asemejen a la realidad.
@@ -333,6 +332,7 @@ Esto modifica completamente los algoritmos de cálculo de factores de forma, loa
 \end{figure}
 
 \section{Cálculo del vector de radiosidades}
+\label{sec:vrad}
 
 Luego de computar la matriz $\mathbf{F}$ y dado los vectores de emisiones $E$ y reflexiones $\rho$, resta computar el vector de radiosidades correspondiente para cada parche, denominado $B$.
 
@@ -405,3 +405,29 @@ La biblioteca resuelve un conjunto de dificultades normalmente encontradas en to
 \end{figure}
 
 \section{Trabajos relacionados}
+
+En esta sección se discuten alternativas propuestas para resolver el cálculo de la iluminación global en escenas con materiales difusos y especulares.
+
+\subsection{Un método de trazado de rayos para el cálculo de iluminación es escenas difusas-especulares}
+
+El algoritmo propuesto por \citeauthor{Shirley} en \citeyear{Shirley} calcula la iluminación difusa utilizando dos pasadas. Este algoritmo difiere del propuesto por \citeauthor{Sillion} en el sentido que se consideran distintos modelos de fuentes luminosas con propiedades particulares (luces puntuales, direccionales, de área).
+
+En la primer pasada, el algoritmo calcula la componente difusa de todos los rayos que rebotan en al menos una superficie especular utilizando el método de Arvo. Este método considera calcula los caminos que seguirán los rayos de luz provenientes de fuentes luminosas, es decir, se discretiza la cantidad de rayos emitidos por una fuente luminosa, cada rayo representa una fracción de la energía emitida.
+
+Cuando existe una intersección, se divide la energía entre los cuatro nodos más cercanos (estos nodos almacenan la radiosidad) a través de una estimación para calcular qué área ocupa cada uno de ellos, de esta manera es posible generar un mapa de radiosidad para la superficie. Dado que la iluminación directa (es decir, aquellos rayos que no se intersecan con superficies especulares) es calculada en la etapa de vista, solo es necesario computar los rebotes especulares, para ello se traza un número bajo de rayos distribuidos de forma uniforme para encontrar las zonas donde existan superficies especulares, luego se trazan rayos en esa dirección de forma "densa", que implica trazar una cantidad de rayos considerable en una dirección que no varía demasiado.
+
+El segundo paso utiliza el método de radiosidad para calcular la iluminación difusa que involucra al menos dos superficies, nuevamente se omite la iluminación directa pues se calculará en la etapa de vista. Para ello, se emiten rayos desde cada supeficie utilizando la distribución del coseno de manera equivalente a la propuesta por \citeauthor{Malley}. 
+
+Finalmente, cuando se dibuja la imagen final también se calcula la iluminación directa de forma estándar (ver \cite{Whitted}) sustituyendo el término de ambiente por el calculado en las pasadas anteriores.
+
+\subsection{Iluminación especular rápida incluyendo efectos especulares}
+
+Otro acercamiento a la emulación de efectos de reflexiones especulares implica el uso de sistemas de partículas o fotones para seguir el camino de la luz cuando interacciona con este tipo de superficies. El algoritmo propuesto por \citeauthor{Granier} implica la construcción de un grafo jerárquico representando la geometría de la escena, cada nodo del árbol representa un subespacio donde se calculará la radiosidad, el refinamiento (cantidad de niveles) incide directamente en el error observado.
+
+Al observar al transferencia de luz entre los nodos que componen la escena, las transferencias difusas-especulares son computadas a través de trazado de fotones entre el subconjunto de objetos seleccionado. Esto significa que las partículas dejarán trazas de energía dependiendo del tipo de superficie donde incidan, además rebotarán en función de distribución asignada a la superficie.
+
+\subsection{Un método de dos pasadas para el cálculo de radiosidad en parches de Bezier}
+
+El método propuesto por \citeauthor{Kok} es una extensión para parches que están formados por superficies de Bézier, estas son superficies delimitadas por curvas de nombre homónimo que para una superficie definida con $m$ puntos siguen la ecuación $c(u,v) = \sum_{i=0}^{m} c_{i}(v)B_{i}^{m}(u)$ donde $c$ es el vector de desplazamientos, y $B$ una función que genera la curva.
+
+Los autores proponen la discretización de las superficies en puntos de muestreo dependiendo del área, luego simplemente se calcula el factor de forma de la superficie utilizando el método de la hemi-esfera, agregando los resultados para cada punto. En caso de que un rayo interseque una superficie especular, los autores proponen un método similar al de \citeauthor{Sillion} donde se seguirá el camino del rayo mientras rebote en superficies especulares y arribe en una difusa, distribuyendo el factor de forma entre las superficies involucradas dependiendo del coeficiente de reflexión especular.

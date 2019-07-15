@@ -77,7 +77,7 @@ El módulo de geometría encapsula la información de las escenas leídas desde 
 El módulo de preprocesado se compone de un controlador principal (\verb|PreprocessController| en la figura \ref{img:procesado}), que maneja el estado y la ejecución de  los comandos de los distintos \textit{pipelines} implementados que resuelven el cálculo de la radiosidad.
 
 \vspace{5mm}
-\begin{minipage}[h]{0.8\linewidth}
+\begin{minipage}[h]{\linewidth}
 	\centering
 	\includegraphics[width=\linewidth]{assets/preprocess}
 	\captionof{figure}{Arquitectura del módulo de pre-procesado}
@@ -94,7 +94,7 @@ Un pipeline es definido a partir de un conjunto de funciones ejecutadas en el si
 
 Donde \verb|computeFormFactors()| variará dependiendo del método de cálculo elegido (veáse \ref{img:procesado}), donde puede utilizarse el método del hemi-cubo o el de la hemi-esfera. El primero de ellos utilizará un \textit{pipeline} configurado utilizando una API de rasterización, mientras que el segundo utilizará una API capaz de calcular intersecciones utilizando \textit{trazado de rayos}.
 
-La ejecución de \verb|computeRadiosity()| dependerá directamente de \verb|solver| seleccionará el algoritmo que calculará el vector de radiosidades para la escena.
+La ejecución de \verb|computeRadiosity()| dependerá directamente del manejador \verb|Solver| seleccionado por el usuario, este último enecurará el algoritmo que calculará el vector de radiosidades para la escena.
 
 \subsubsection{Módulo de visualización}
 
@@ -110,15 +110,17 @@ El módulo de visualización se encarga de renderizar la escena actual desde el 
 
 \subsection{Interfaz gráfica}
 
-El módulo de visualización (UI) utiliza una arquitectura basada en el paradigma del \textit{bucle de eventos} \ref{img:ui}, consiste en un bucle que detecta y maneja los distintos eventos recibidos por el sistema. Este método es útil para el manejo sencillo de la concurrencia en sistemas con múltiples hilos en ejecución y es de fácil implementación pues procesa cada uno de los eventos completamente antes de procesar el siguiente
+El módulo de visualización (UI) utiliza una arquitectura basada en el paradigma del \textit{bucle de eventos} \ref{img:ui}, consiste en un bucle que detecta y maneja los distintos eventos recibidos por el sistema. Este método es útil para el manejo sencillo de la concurrencia en sistemas con múltiples hilos en ejecución y es de fácil implementación pues procesa cada uno de los eventos completamente antes de procesar el siguiente como se aprecia en \ref{alg:eventloop}.
 
-En alto nivel, el \textit{bucle de eventos} se compone de la siguiente forma:
-
+\begin{algorithm}
+	\caption{El algoritmo del búcle de eventos}
+	\label{alg:eventloop}
  \begin{algorithmic}
  	\While{$queue.waitForEvent()$}
  		\State $queue.processEvent()$
  	\EndWhile
  \end{algorithmic}
+\end{algorithm}
  
  El  \textit{bucle de eventos} procesará todos los eventos de la aplicacación, lo que desencadena un conjunto de acciones que modificarán su \textbf{estado} de la interfaz de usuario. Este estado será dibujado por un conjunto de \textbf{componentes}, que no son más que presentadores del estado actual. Es decir, a partir de un conjunto de valores los presentarán en un formato gráfico adecuado y sencillo de comprender.
 

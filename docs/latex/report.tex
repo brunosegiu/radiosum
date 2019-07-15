@@ -1,30 +1,5 @@
 \documentclass[msc,oneside,a4paper]{udelar}
 
-\lstdefinestyle{customc}{
-	belowcaptionskip=1\baselineskip,
-	breaklines=true,
-	frame=L,
-	xleftmargin=\parindent,
-	language=C,
-	showstringspaces=false,
-	basicstyle=\footnotesize\ttfamily,
-	keywordstyle=\bfseries\color{green!40!black},
-	commentstyle=\itshape\color{purple!40!black},
-	identifierstyle=\color{blue},
-	stringstyle=\color{orange},
-}
-
-\lstdefinestyle{customasm}{
-	belowcaptionskip=1\baselineskip,
-	frame=L,
-	xleftmargin=\parindent,
-	language=[x86masm]Assembler,
-	basicstyle=\footnotesize\ttfamily,
-	commentstyle=\itshape\color{purple!40!black},
-}
-
-\lstset{escapechar=@,style=customc}
-
 \pgfplotsset{compat=1.16}
 
 \bibliographystyle{unsrtnat}
@@ -32,7 +7,10 @@
 % ===== FIN DEL PREÁMBULO =====
 
 % ===== INICIO DEL DOCUMENTO =====
-
+\makeatletter
+\renewcommand{\ALG@name}{Algoritmo}
+\renewcommand{\listalgorithmname}{Lista de \ALG@name s}
+\makeatother
 \begin{document}
 
 
