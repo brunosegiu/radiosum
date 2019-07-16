@@ -197,13 +197,6 @@ Si bien el <<\textit{rendering pipeline}>> es modificable, cada una de sus etapa
 
 A continuación, se describe el proceso para OpenGL 4.5 \ref{img:pipelinegl} visualizado en la figura \ref{img:pipelinegl}, aunque muchas de estas etapas son trasladables a otras tecnologías existentes.
 
-\vspace{5mm}
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.55\linewidth]{assets/OpenGL}
-	\captionof{figure}{El \textit{rendering pipeline} de OpenGL}
-	\label{img:pipelinegl}
-\end{figure}
 \begin{enumerate}
 	\item Procesamiento de primitivas geométricas:
 		\begin{enumerate}
@@ -223,6 +216,14 @@ A continuación, se describe el proceso para OpenGL 4.5 \ref{img:pipelinegl} vis
 			\item \textit{Depth test}: En esta etapa se ejecuta el algoritmo del Z-Buffer, donde sólo se escribirá el resultado en el \textit{frame buffer} de aquellos fragmentos que tengan la menor profundidad. Es decir, los que se encuentren más cerca del observador.
 		\end{enumerate}
 \end{enumerate}
+
+\vspace{5mm}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.55\linewidth]{assets/OpenGL}
+	\captionof{figure}{El \textit{rendering pipeline} de OpenGL}
+	\label{img:pipelinegl}
+\end{figure}
 
 Esta técnica de dibujado es extremadamente rápida, además, la mayoría de dispositivos contienen hardware especializado capaz de acelerar estos cálculos, comúnmente conocidos como Unidades de Procesamiento Gráfico (o GPU en sus siglas en inglés). Con el objetivo de aprovechar este hardware \citeauthor{Cohen} idearon el método del hemi-cubo para el cálculo de factores de forma.
 
@@ -360,7 +361,7 @@ Aunque los algoritmos clásicos de resolución de sistema de ecuaciones aplican 
 	\label{eq:iterativo}
 \end{equation}
 
-Cabe aclarar, que el método planteado hasta el momento resuelve la radiosidad en un único canal. Es decir, no se toma en cuenta todo el espectro electromagnético de la luz, es por ello que puede establecerse una extensión del método. Esta extensión implica la existencia de tres vectores de reflexión, uno para cada canal \textit{RGB} (del inglés \textit{Red - Green - Blue}. Por tanto es necesario que se resuelvan tres y no un único sistema de ecuaciones, aunque es posible destacar que la matriz $\mathbf{F}$ permanece constante pues depende únicamente del coeficiente de reflexión especular y la geometría de la escena, el único cambio en el sistema surge en la matriz $\mathbf{R}$ que pasará a depender del canal seleccionado: $\mathbf{R}_{c}$.
+Cabe aclarar, que el método planteado hasta el momento resuelve la radiosidad en un único canal. Es decir, no se toma en cuenta todo el espectro electromagnético de la luz, es por ello que puede establecerse una extensión del método. Esta extensión implica la existencia de tres vectores de reflexión, uno para cada canal \textit{RGB} (del inglés \textit{Red - Green - Blue}). Por tanto es necesario que se resuelvan tres y no un único sistema de ecuaciones, aunque es posible destacar que la matriz $\mathbf{F}$ permanece constante pues depende únicamente del coeficiente de reflexión especular y la geometría de la escena, el único cambio en el sistema surge en la matriz $\mathbf{R}$ que pasará a depender del canal seleccionado: $\mathbf{R}_{c}$.
 
 \section{OpenGL}
 OpenGL es una especificación de una Interfaz de Programación de Aplicación (API por sus siglas en inglés) diseñada por la organizción Khronos Group. Su cometido es el dibujado de gráficos bidimensionales o tridimensionales utilizando el método de rasterización \ref{sec:rasterizacion}. Los distintos fabricantes de Sistemas Operativos y tarjetas gráficas proporcionan implementaciones que se ajusten al hardware específico. Esta abstracción facilita la compatibilidad de las aplicaciones independientemente del hardware donde sean ejecutadas.

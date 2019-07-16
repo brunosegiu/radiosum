@@ -131,6 +131,35 @@ En el caso de la implementación propuesta, el primer paso consiste en dibujar u
 
 Finalmente, se obtienen los identificadores de las caras reflejadas. En caso de que existan caras con valores de reflexión especular no nulos se vuelven a procesar, en otro caso se utilizarán los identificadores obtenidos para distribuir el factor de forma correspondiente al fragmento del hemi-cubo entre los parches visualizados.
 
+\begin{algorithm}
+	\caption{Cálculo de las caras vistas utilizando dibujado de portales}
+	\label{alg:processHemicube}
+	\begin{algorithmic}
+		\Function{$renderPortal$}{$face, targetFace$}
+		\State $origin \gets face.getBarycenter()$
+		\State $direction \gets face.getNormal()$
+		\State $setCamera(origin, direction)$
+		\State $bindVertices(targetFace)$
+		\State $renderStencil(0xFF)$
+		\State $refDir \gets reflected(dir, targetFace.getNormal())$
+		\State $refOrig \gets symmetrical(origin, targetFace.getPlane())$
+		\State $setCamera(refOrig, refDir)$
+		\State $bindVertices(scene)$
+		\State $setStencilFunction(== 0xFF)$
+		\State $render()$
+		\State $seenFaces \gets readBuffer()$
+		\Loop{$faceId \in seenFaces$}
+			\If{$isValid(faceId)$}
+				\State $row[faceId] \gets +(\frac{1}{nSamples})$
+				\If{$isReflective(faceId)$}
+					\State $renderPortal(targetFace, faceId)$
+				\EndIf
+			\EndIf
+		\EndLoop
+		\EndFunction
+	\end{algorithmic}
+\end{algorithm}
+
 \subsubsection{Método híbrido}
 
 El método híbrido consiste en la utilización del trazado de rayos para computar qué parches son visualizados desde el parche considerado. Para ello, se trazarán rayos desde un conjunto de puntos pertenecientes al parche reflectivo de manera uniformemente distribuida, la dirección es la que corresponde a la del voluen de vista, es decir, la que está dada por la diferencia entre los baricentros del parche de origen y del especular. Las caras vistas, de ser difusas, son las que aportarán fracciones de valor al factor de forma.
@@ -144,13 +173,34 @@ Esto emula el fenómeno de la reflexión, aunque introduce pequeños errores al 
 	\label{img:hibrido}
 \end{figure}
 
+\begin{algorithm}
+	\caption{Cálculo de las caras vistas utilizando trazado de rayos}
+	\label{alg:processHemicube}
+	\begin{algorithmic}
+		\Function{$renderReflections$}{$face, targetFace$}
+			\State $direction \gets normalize(targetFacegetNormal() - face.getNormal())$
+			\State $refDir \gets reflected(dir, targetFace.getNormal())$
+			\State $origins \gets getUniformSamples(targetFace)$
+			\Loop{$\textbf{ in parallel }origin \in origins$}
+				\State $hit \gets traceRay(origin, refDir)$
+				\If{$isValid(hit)$}
+				\State $row[face] \gets +(\frac{1}{nSamples})$
+					\If{$isReflective(faceId)$}
+						\State $renderReflections(targetFace, faceId)$
+					\EndIf
+				\EndIf
+			\EndLoop
+		\EndFunction
+	\end{algorithmic}
+\end{algorithm}
+
 \subsection{Extensión del método de la hemi-esfera}
 
 En el caso del trazado de rayos, la extensión de los factores de forma es prácticamente trivial. Comprende la extensión de la función \verb|traceRay()|, que en lugar de retornar un único valor para la cara vista, retornará un conjunto de pares de identificadores de caras y fracción de factor de forma. Básicamente, si el rayo inicial interseca una cara cuyo coeficiente de reflexión especular es estrictamente positivo se almacenará el total de $k(1 - \rho_{j})$ (donde $k = \frac{1}{nMuestras}$) como contribuyente del factor de forma $\mathbf{F}_{ij}$ y se calcularán las siguientes intersecciones con el \textit{residuo} de la reflexión que se distribuirá en los factores de forma que correspondan a la reflexión. Es decir, suponiendo que un rayo impacta $S_{k}$ desde el camino $(S_{i}, S_{j})$ donde $\rho_{j} \ge 0$ se agregará $k\rho_{j}(1 - \rho_{k})$ y se procederá de forma recursiva hasta que $\rho_{z} = 0$ para una superficie intersecada $S_{z}$ o se alcance el máximo límite de recursión cómo se aprecia en la Figura \ref{img:caminoespecular}.
 
 \section{Cálculo del vector de radiosidad}
 
-Recordando \ref{sec:vrad}, se han propuesto dos métodos para resolver el sistema. El método exacto supone hallar el vector solución del sistema de ecuaciones dado por $(mathbf{I - RF}B) = E$, el segundo método está regido por el método iterativo dado por \eqref{eq:iterativo}.
+Recordando \ref{sec:vrad}, se han propuesto dos métodos para resolver el sistema. El método exacto supone hallar el vector solución del sistema de ecuaciones dado por $(\mathbf{I - RF}B) = E$, el segundo método está regido por el método iterativo dado por \eqref{eq:iterativo}.
 
 En el primer caso, la implementación se realizó utilizando la biblioteca de álgebra lineal \textit{Eigen} pues soporta la resolución de sistemas con matrices esparzas. En este caso, dadas las características de la matriz se optó por añadir soporte para los siguientes métodos:
 
