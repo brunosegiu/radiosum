@@ -1,6 +1,6 @@
 #include "preprocessing/CustomSolver.h"
 
-#define ITERATION_COUNT 100
+#define ITERATION_COUNT 1000
 
 void CustomSolver::init(
     GLuint size, std::vector<std::tuple<GLuint, GLuint, GLfloat>> triplets) {
