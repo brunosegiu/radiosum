@@ -249,6 +249,22 @@ Este proceso puede realizarse de forma trivial, simplemente copiando valores o a
 
 Esta técnica genera resultados con figuras de colores menos planas, ocultando la discretización que se realizó para aplicar el método de elementos finitos como se aprecia en la Figura \ref{img:interpolationres}.
 
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}{0.7\textwidth}
+		\centering
+		\includegraphics[width=1\linewidth]{assets/cornell-flat}
+		\caption{Interpolación plana (sin interpolación)}
+	\end{subfigure}
+	\begin{subfigure}{0.7\textwidth}
+		\centering
+		\includegraphics[width=1\linewidth]{assets/cornell-gouraud}
+		\caption{Interpolación de Gouraud}
+	\end{subfigure}
+	\caption{Dibujado utilizando distintas funciones de interpolación}
+	\label{img:interpolationres}
+\end{figure}
+
 \section {Visualización de resultados y resultados intermedios}
 
 La visualización de resultados y resultados intermedios se implementó utilizando el método de \textit{dibujado a textura en capas}. Las texturas en capas son un conjunto de imagenes de igual resolución que contienen distinta información.
@@ -259,6 +275,49 @@ Finalmente, para generar la textura que se mostrará en pantalla se utiliza un c
 
 Este método, además, añade la posibilidad de implementar la técnica de \textit{picking} que involucra el reconocimiento de la selección que realiza el usuario. Para ello, basta obtener el valor del fragmento (\verb|glReadPixels|) que se encuentra en las coordenadas del puntero dentro de la textura, que son suministradas por el Sistema Operativo.
 
+\begin{figure}[H]
+	\centering
+		\begin{subfigure}{0.4\textwidth}
+		\includegraphics[width=1\linewidth]{assets/display-view(3)}
+		\caption{Vista de la radiosidad de la escena (sin interpolar)}
+	\end{subfigure}
+	\begin{subfigure}{0.4\textwidth}
+		\includegraphics[width=1\linewidth]{assets/display-view(4)}
+		\caption{Vista de la radiosidad de la escena (interpolada)}
+	\end{subfigure}
+	\begin{subfigure}{0.4\textwidth}
+		\includegraphics[width=1\linewidth]{assets/display-view(1)}
+		\caption{Vista de identificadores de parches}
+	\end{subfigure}
+	\begin{subfigure}{0.4\textwidth}
+		\includegraphics[width=1\linewidth]{assets/display-view(2)}
+		\caption{Vista de coeficientes de reflexión \textit{RGB}}
+	\end{subfigure}
+	\begin{subfigure}{0.4\textwidth}
+		\includegraphics[width=1\linewidth]{assets/display-view(5)}
+		\caption{Vista de coeficientes de emisión}
+	\end{subfigure}
+	\caption{Vistas seleccionables por el usuario a través de la interfaz gráfica}
+	\label{img:displayed}
+\end{figure}
+
 \section {Interfaz de usuario}
 
 La interfaz de usuario fue implementada utilizando la bibioteca de dibujado de interfaces gráfica en modo inmediato \textit{ImGui}. Este método de dibujado implica que los comandos de dibujado de la interfaz se ejecutan inmediatamente, de forma tal que los resultados son guardados en una máquina de estados. Los componentes dibujados dependen directamente del estado interno de la aplicación, este método era el utilizado en versiones anteriores de OpenGL o Direct3D. Esta biblioteca es reconocida por su capacidad de extenderse a diversas plataformas y por minimizar el impacto en el rendimiento de la aplicación en caso de ser utilizada.
+
+Entre los componentes implementados que se observan en la figura \ref{img:ui-ex} se encuentran:
+
+\begin{itemize}
+	\item Menú: El menú principal permite importar o exportar geometría y sus propiedades además de la matriz de factores de forma y editar las configuraciones del motor de dibujado.
+	\item Panel de geometría: El panel de geometría permite editar el modo de seleccionado (cara, objeto) y visualizar qué cara se ha seleccionado.
+	\item Panel de preprocesado: Este panel permite configurar y ejecutar las dos etapas de preprocesado (cálculo de factores de forma y radiosidad).
+	\item Panel de iluminación: Permite editar características de los materiales de los objetos como los coeficientes de reflexión difusa, especular y emisión.
+	\item \textit{Log}: El componente \textit{Log} imprime un conjunto de propiedades y detalles del proceso que pueden resultar interesantes, como por ejemplo, los tiempos empleados.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\linewidth]{assets/ui-ex}
+	\caption{Interfaz gráfica implementada}
+	\label{img:ui-ex}
+\end{figure}
