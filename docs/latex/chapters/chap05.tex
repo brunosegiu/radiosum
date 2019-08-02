@@ -1,3 +1,4 @@
+% !TeX spellcheck = es_ES
 \chapter{Experimental}
 \label{ch:chap05}
 
@@ -5,38 +6,36 @@
 \label{sec:hardware}
 
 \begin{table}[H]
-	\begin{tabular}{ll}
-		Procesador & Intel i7 8700K - 12 CPUs - 3.7 GHz       \\\cline{1-1}
-		GPU        & Nvidia GeForce GTX 1070 Ti - 8 GiB  VRAM \\\cline{1-1}
-		RAM        & 32 GiB - 2667 MHz                        \\\cline{1-1}
+	\centering
+	\begin{tabular}{l|l}
+		Procesador & Intel i7 8700K - 12 CPUs - 3.7 GHz       \\
+		\hline
+		GPU        & Nvidia GeForce GTX 1070 Ti - 8 GiB  VRAM \\
+		\hline
+		RAM        & 32 GiB - 2667 MHz                        \\
+		\hline
 	\end{tabular}
 	\caption{Características del hardware utilizado}
 \end{table}
 
 \begin{table}[H]
-	\begin{tabular}{ll}
-		SO & Windows 10 Pro       \\\cline{1-1}
-		Embree        & v3.5.2  \\\cline{1-1}
-		OpenGL        & v4.5                        \\\cline{1-1}
+	\centering
+	\begin{tabular}{l|l}
+	SO & Windows 10 Pro        \\
+		\hline
+	Embree        & v3.5.2 \\
+		\hline
+		OpenGL        & v4.5  \\
+		\hline
 	\end{tabular}
-	\caption{Características del software utilizado}
+	\caption{Características del hardware utilizado}
 \end{table}
 
-\begin{tabular}{@{} *5l @{}}    \toprule
-	\textit{name} & \textit{foo} &&&  \\\midrule
-	Models    & A  & B  & C  & D  \\ 
-	Model $X$ & X1 & X2 & X3 & X4\\ 
-	Model $Y$ & Y1 & Y2 & Y3 & Y4\\\bottomrule
-	\hline
-\end{tabular}
 \section{Escenas}
 \label{sec:escenas}
 
 Con el objetivo de obtener resultados comparables para los distintos algoritmos y configuraciones se plantea el uso de dos escenas particulares de prueba, con distintas variaciones en los materiales que componen cada una de ellas.
 
-
-
-Se denominará \textit{Escena - Conrnell Box} a la referente a la figura \ref{img:cornell}. Se basa en un tipo de escena comúnmente usado en el se ubican objetos en el interior de una caja (cubo) donde debajo están los objetos de prueba y en el nivel superior reside el objeto que emitirá luz. Esta escena cuenta con siete objetos, el cubo, una esfera que oficia de luz, y cinco objetos compuestos por diversas primitivas. En total, existen 12.922 caras de las cuales 96 son triangulares y 12.826 son cuadrilaterales. Cabe notar, que de haber soportado únicamente caras triangulares se procesarían 25.748 parches.
 
 \begin{figure}[H]
 	\centering
@@ -52,7 +51,8 @@ Se denominará \textit{Escena - Conrnell Box} a la referente a la figura \ref{im
 	\label{img:cornell}
 \end{figure}
 
-Se denominará \textit{Escena - Calle} a la referente a la figura \ref{img:street}. La escena está construida por dos objetos, el primero de ellos es una cúpula (hemi-esfera) subdividia en 2.407 cuadriláteros de área equitativa, su objetivo es representar el cielo. Por otro lado, el segundo objeto es una representación de ... . En total, las escena cuenta con 61.795 caras cuadrilaterales.
+Se denominará \textit{Escena - Conrnell Box} a la referente a la figura \ref{img:cornell}. Se basa en un tipo de escena comúnmente usado en el se ubican objetos en el interior de una caja (cubo) donde debajo están los objetos de prueba y en el nivel superior reside el objeto que emitirá luz. Esta escena cuenta con siete objetos, el cubo, una esfera que oficia de luz, y cinco objetos compuestos por diversas primitivas. En total, existen 12.922 caras de las cuales 96 son triangulares y 12.826 son cuadrilaterales. Cabe notar, que de haber soportado únicamente caras triangulares se procesarían 25.748 parches.
+
 
 \begin{figure}[H]
 	\centering
@@ -61,28 +61,54 @@ Se denominará \textit{Escena - Calle} a la referente a la figura \ref{img:stree
 		\caption{Vista desde la ventana de una de las edificaciones}
 	\end{subfigure}
 	\begin{subfigure}{0.45\textwidth}
-	\includegraphics[width=1\linewidth]{assets/street2}
-	\caption{Vista desde uno de los extremos de la calle}
+		\includegraphics[width=1\linewidth]{assets/street2}
+		\caption{Vista desde uno de los extremos de la calle}
 	\end{subfigure}
 	\begin{subfigure}{0.45\textwidth}
-	\includegraphics[width=1\linewidth]{assets/street3}
-	\caption{Vista aérea}
+		\includegraphics[width=1\linewidth]{assets/street3}
+		\caption{Vista aérea}
 	\end{subfigure}
 	\begin{subfigure}{0.45\textwidth}
-	\includegraphics[width=1\linewidth]{assets/street4}
-	\caption{Vista aérea}
+		\includegraphics[width=1\linewidth]{assets/street4}
+		\caption{Vista aérea}
 	\end{subfigure}
 	\caption{Vistas de la escena \textit{Calle}}
 	\label{img:street}
 \end{figure}
+
+Se denominará \textit{Escena - Calle} a la referente a la figura \ref{img:street}. La escena está construida por dos objetos, el primero de ellos es una cúpula (hemi-esfera) subdividia en 2.407 cuadriláteros de área equitativa, su objetivo es representar el cielo. Por otro lado, el segundo objeto es una representación de una porción de una calle en el barrio de Petit Bayonne, localizado en Bayona, Francia cuyas imágenes se aprecian en la figura \ref{img:streetcomp}. El modelo fue construido por \citeauthor{Benoit} con el objetivo de estudiar el fenómeno de la radiación. En total, las escena cuenta con 61.795 caras cuadrilaterales.
+
+
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}{0.475\textwidth}
+		\includegraphics[width=1\linewidth]{assets/streetreal1}
+		\caption{Vista Sur - real}
+	\end{subfigure}
+	\begin{subfigure}{0.475\textwidth}
+		\includegraphics[width=1\linewidth]{assets/streetreal2}
+		\caption{Vista Norte - real}
+	\end{subfigure}
+	\begin{subfigure}{0.475\textwidth}
+		\includegraphics[width=1\linewidth]{assets/streetmodel1}
+		\caption{Vista Sur - modelada}
+	\end{subfigure}
+	\begin{subfigure}{0.475\textwidth}
+		\includegraphics[width=1\linewidth]{assets/streetmodel2}
+		\caption{Vista Norte - modelada}
+	\end{subfigure}
+	\caption{Comparación entre el fotografías reales del modelo \textit{Calle} y su representación tridimensional}
+	\label{img:streetcomp}
+\end{figure}
+
 \section{Casos de prueba}
 \label{sec:pruebas}
 
 Se proponen casos de prueba utilizando las escenas descritas en \ref{sec:escenas} utilizando diversos materiales.
 
 \subsection{Métricas consideradas}
-
-Con el objetivo de medir correctamente las ventajas y desventajas de cara acercamiento al cálculo de factores de forma simples y extendidos que se han propuesto, se definirán un conjunto de métricas para evaluar su optimialidad en distintas dimensiones.
+\label{metricasestablecidas}
+Con el objetivo de medir correctamente las ventajas y desventajas de cara acercamiento al cálculo de factores de forma simples y extendidos que se han propuesto, se definirán un conjunto de métricas para evaluar su optimialidad en distintas dimensiones. Cada dimensión considerada se aplicará dependiendo del caso considerado.
 
 \begin{itemize}
 	\item Dimensión rendimiento
@@ -91,18 +117,130 @@ Con el objetivo de medir correctamente las ventajas y desventajas de cara acerca
 		\end{itemize}
 	\item Dimensión matriz de factores de forma: Se computará la matriz de factores de forma de control $\mathbf{F_{C}}$ utilizando la técnica de trazado de rayos con una gran resolución.
 		\begin{itemize}
-			\item Error promedio de factor de forma por fila: $Ep_{i} = \sum_{j=1}^{N} \frac{|\mathbf{F}_{ij} -\mathbf{F}_{ij}|}{N}$
-			\item Error máximo de factor de forma por fila: $Em_{i} = \max_{j=1}^{N}|\mathbf{F}_{ij} -\mathbf{F}_{ij}|$
+			\item Error promedio de factor de forma por fila: $Ep_{i} = \sum_{j=1}^{N} \frac{|\mathbf{F_{C}}_{ij} -\mathbf{F}_{ij}|}{N}$
+			\item Error máximo de factor de forma por fila: $Em_{i} = \max_{j=1}^{N}|\mathbf{F}_{ij} -\mathbf{Fc}_{ij}|$
 			\item Error estándar de factor de forma por fila: $Em_{i} = \max_{j=1}^{N}(\mathbf{F}_{ij} -\mathbf{F_{C}}_{ij})^{2}$
 		\end{itemize}
-	\item Dimensión vector de radiosidad:
+	\item Dimensión vector de radiosidad (dado el vector $R$, y el vector de control $Rc$):
 	\begin{itemize}
 		\item Error promedio de radiosidad: $Ep = \sum_{i=1}^{N} \frac{|R_{i}-R_{Ci}|}{N}$
-		\item Error máximo de radiosidad
-		\item Error estándar de radiosidad
+		\item Error máximo de radiosidad: $Em = \max_{j=1}^{N}|R_{j} -Rc_{j}|$
+		\item Error estándar de radiosidad: $Em = \max_{j=1}^{N}(R_{j} -Rc_{j})^{2}$
 	\end{itemize}
 \item Dimensión visual:
 	\begin{itemize}
-		\item Calidad de resultados
+		\item Calidad de resultados: Se evaluarán los resultados esperando que se asemejen a la realidad.
 	\end{itemize}
 \end{itemize}
+
+\subsection{Descripción de casos de prueba}
+
+\begin{enumerate}
+	\item \textit{Pruba difusa}: Se utilizarán materiales estrictamente difusos en ambas escenas, con colores aleatorios. Desactivando, entonces, cualquier interacción especular. Se escogerá un conjunto de parches que oficiarán de fuente luminosa. En caso de la escena \textit{Calle}, se seleccionan 10 parches que emulan la luz solar. Por otro lado, para la escena \textit{Cornell Box} se utiliza la bola central como fuente luminosa.
+	\item \textit{Pruba especular}: Se utilizarán materiales difusos y especulares en ambas escenas, con una cantidad reducida de estos últimos. En caso de la escena \textit{Cornell Box} se utiliza el plano ubicado en el centro como reflector, mientras que en la escena \textit{Calle} se utiliza una selección de ventanas.
+	\item \textit{Prueba híbrida}: Únicamente en la escena \textit{Cornell Box} se computarán dos variantes. En una de ellas se desactivan los reflectores especulares (plano) y en el otro caso no.
+	\item{Prueba de estrés}: Se utiliza gran cantidad de espejos en ambas escenas.
+	\item{Prueba de rendimiento}: Para cada \textit{pipeline} (completo) implementado se computa la radiosidad registrando el tiempo de renderizado según la cantidad de muestras configurada.
+\end{enumerate}
+
+\subsection{Resultados observados}
+
+\subsubsection{Caso de prueba I}
+
+\begin{table}[H]
+	\label{tab:tablecaso1}
+	\centering
+	\begin{tabular}{|c|l|l|l|l|}
+		\hline
+		\multirow{3}{*}{\textbf{Muestras}} & \multicolumn{4}{c|}{\textbf{Tiempo de ejecución (s)}}                                                                                  \\ \cline{2-5} 
+		& \multicolumn{2}{c|}{\textit{Cornell Box}}                 & \multicolumn{2}{c|}{\textit{Street}}                      \\ \cline{2-5} 
+		& \multicolumn{1}{c|}{OpenGL} & \multicolumn{1}{c|}{Embree} & \multicolumn{1}{c|}{OpenGL} & \multicolumn{1}{c|}{Embree} \\ \hline
+		\textbf{96}                        & 7                           & 3                           & 68                          & 14                          \\ \hline
+		\textbf{384}                       & 10                          & 30                          & 128                         & 174                         \\ \hline
+		\textbf{768}                       & 31                          & 116                         & 248                         & 665                         \\ \hline
+		\textbf{1536}                      & 251                         & 446                         & 1213                        & 2565                        \\ \hline
+		\textbf{3072}                      & 992                         & 1778                        & 4018                        & 7511                        \\ \hline
+	\end{tabular}
+	\caption{Resultados obtenidos para el primer caso de prueba en ambas escenas consideradas}
+\end{table}
+
+En este caso, se observa en la tabla \ref{tab:tablecaso1} que el método del hemicubo tiene un rendimiento considerablemente superior al de la traza de rayos. Cabe destacar que se observó una ocupación promedio de la GPU del 30\% y CPU 90\% (esta última probablemente se deba a la gran cantidad de sincronizaciones necesarioas entre el dispositivo y el controlador); mientras que el uso de traza de rayos presentó una ocupación de los núcleos del procesador del 99\%. Se destaca la diferencia observada entre OpenGL y Embree en \ref{plot:emglc1}.
+
+\begin{tikzpicture}
+\label{plot:emglc1}
+\begin{axis}[
+title={\textbf{Caso de prueba I, rendimiento en segundos.}},
+xlabel={Muestras (píxeles/rayos)},
+ylabel={Tiempo (s)},
+xmin=0, xmax=3072,
+ymin=0,
+width=.85\textwidth, height=7cm,
+legend pos=north west,
+ymajorgrids=true,
+grid style=dashed,
+]
+
+\addplot[
+smooth,
+color=blue,
+mark=square,
+]
+coordinates {
+	(96,7)(384,105)(768,31)(1536,251)(3072,992)
+};
+\addplot[
+smooth,
+color=red,
+mark=square,
+]
+coordinates {
+	(96,3)(384,30)(768,116)(1536,446)(3072,1778)
+};
+
+\addplot[
+smooth,
+color=cyan,
+mark=square,
+]
+coordinates {
+	(96,68)(384,128)(768,248)(1536,1213)(3072,4018)
+};
+
+\addplot[
+smooth,
+color=magenta,
+mark=square,
+]
+coordinates {
+	(96,14)(384,174)(768,665)(1536,2565)(3072,7511)
+};
+
+\legend{OpenGL(CB),Embree(CB),OpenGL(S), Embree(S)}
+
+\end{axis}
+\end{tikzpicture}
+
+Una de las consecuencias más interesantes a ser analizadas para detectar la cantidad de muestras óptimas a considerar es la calidad de la imagen final, y qué tan pronunciados son las diferencias en de iluminación entre los parches, es decir, en qué medida difiere la radiosidad entre parches. Para este caso, se pudo observar (véase la figura \ref{img:difres}) que si bien las resoluciones más bajas consumen menor cantidad de recursos los resultados tienen una calidad sustancialmente menor a la esperada. Considerando que el modelo generalmente es utilizado para el cálculo de mapas de iluminación en una etapa de pre-procesado, es recomendable evitar el uso de factores de muestreo tan bajos. Esto se ve acentuado en el análisis de la matriz de factores de forma, según las métricas establecidas en \ref{metricasestablecidas} se pudo comprobar que .
+
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}{0.45\textwidth}
+		\includegraphics[width=1\linewidth]{assets/32sgl}
+		\caption{OpenGL - 32 píxeles por cara}
+	\end{subfigure}
+	\begin{subfigure}{0.45\textwidth}
+		\includegraphics[width=1\linewidth]{assets/512sgl}
+		\caption{OpenGL - 512 píxeles por cara}
+	\end{subfigure}
+	\begin{subfigure}{0.45\textwidth}
+		\includegraphics[width=1\linewidth]{assets/32srt}
+		\caption{Embree - 96 rayos}
+	\end{subfigure}
+	\begin{subfigure}{0.45\textwidth}
+		\includegraphics[width=1\linewidth]{assets/512srt}
+		\caption{Embree - 1536 rayos}
+	\end{subfigure}
+	\caption{Diferencias visuales ajustando la cantidad de muestras}
+	\label{img:difres}
+\end{figure}
+

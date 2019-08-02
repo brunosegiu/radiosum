@@ -17,7 +17,7 @@ Face::Face(glm::vec3 v0, glm::vec3 v1, glm::vec3 v2, glm::vec3 v3) {
 
 glm::vec3 Face::getNormal() {
   glm::vec3 u = v1 - v0;
-  glm::vec3 v = v2 - v1;
+  glm::vec3 v = v2 - v0;
   return glm::normalize(glm::cross(u, v));
 }
 

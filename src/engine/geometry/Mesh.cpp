@@ -267,7 +267,6 @@ std::vector<glm::vec3> Mesh::getRadiosity() { return this->radiosity; }
 GLuint Mesh::size() { return faces; }
 
 Face Mesh::getFace(GLuint index) {
-  index = index % this->size();
   if (index < tFaces) {
     std::vector<GLuint> indices(3);
     indices[0] = this->geometry.vertices.triangles[3 * index];
