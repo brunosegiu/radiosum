@@ -1,3 +1,4 @@
+% !TeX spellcheck = es_ES
 \chapter{Introducción}
 \label{ch:chap01}
 
@@ -13,7 +14,15 @@
 \section{Motivación y problema}
 \label{sec:motivacionYProblemas}
 
+Naturalmente, el fenómeno de la iluminación ocurre cuando una fuente luminosa emite un conjunto flujo de fotones, normalmente conocido como rayo o haz de luz, que recorre un camino hasta intersectar una superficie que lo bloquee. Según la óptica, los fenómenos que pueden manifestarse debido a esta interacción son la \textit{absorción, reflexión, refracción o fluorescencia}; pues una superficie puede conservar parte de la energía transmitida afectando el color percibido, reflejarla en distintas direcciones, modificar la dirección del haz al poseer propiedades de transparencia o re-emitir la energía de forma fluorescente en alguna dirección particular.
 
+Estas interacciones observadas son de gran interés para la computación gráfica, dado que su estudio tiene gran relevancia en la arquitectura y la industria del entretenimiento. En particular, la generación de modelos capaces de simular el transporte de la luz en espacios tridimensionales es uno de los mayores motivadores de los avances en computación gráfica. A lo largo del siglo $XX$ y $XXI$ se han propuesto distintos modelos (\cite{Kajiya}, \cite{Cohen}) que aproximan el comportamiento real de la luz en distintos entornos con variados niveles de foto-realismo y desempeño.
+
+Históricamente, se destacan tres acercamientos al cálculo de la iluminación. La traza de rayos, el método de radiosidad y el mapeado de fotones. Estas técnicas se concibieron con un motivo similar, la construcción de algoritmos que emulen la iluminación indirecta, es decir, los caminos de iluminación de la forma \textbf{L(S|D)*E} (estos son los caminos trazados por un haz de luz que parte de la fuente luminosa, interseca superficies especulares o difusas y llega al punto de vista del observador). 
+
+Si bien las técnicas consideradas tienen el potencial de resolver estos caminos el método de radiosidad tiene la capacidad de resolver los caminos de la forma \textbf{LD*E} (únicamente se considera el fenómeno de la reflexión difusa) de forma eficiente a través del modelado de el fenómeno de la iluminación como el transporte de energía térmica entre superficies. Mientras que la traza de rayos y mapeado de fotones ponen especial énfasis en los caminos \textbf{LS*DE}, pues considerará con mayor importancia las reflexiones especulares.
+
+El avance del \textit{hardware} introducido en los últimos años significa que es necesario re-evaluar técnicas y algoritmos constantemente, con el objetivo de generar algoritmos que provean resultados foto-realistas en tiempos de ejecución mínimos. Si bien en los últimos años se han desarrollado las técnicas de \textit{trazado de rayos bi-direccional} y otras técnicas de \textit{trazado de rayos de Monte Carlo} con el objetivo de atacar el problema de la reflexión difusa utilizando el algoritmo de traza de rayos. No obstante, también se han propuesto variantes que extienden los métodos de radiosidad para considerar los efectos introducidos por las superficies especulares.
 
 %================================================================================================
 % Objetivos
@@ -22,17 +31,9 @@
 \section{Objetivos}
 \label{sec:objetivos}
 
+Este proyecto tiene el objetivo de \textbf{analizar} las técnicas de extensión del método de radiosidad a caminos de la forma \textbf{L(S|D)*E}, generando \textbf{adaptaciones} de las extensiones propuestas por la Academia a un conjunto de técnicas establecidas en la Industria, generando la \textbf{implementación} correspondiente a los distintos algoritmos formulados con la finalidad de \textbf{comparar} cualitativamente el rendimiento computacional observado en \textit{hardware} moderno así como el error introducido por las aproximaciones que se consideran al discretizar el problema concebido.
 
-
-%================================================================================================
-% Resultados esperados
-%================================================================================================
-
-\section{Resultados esperados}
-\label{sec:resultadosEsperados}
-
-
-
+En este sentido, se explorarán tres alternativas para el cálculo de la radiosidad entre las superficies que componen la escena virtual considerada; aprovechando la implementación eficiente en \textit{hardware} de un conjunto de funcionalidades que facilitan la proyección de gráficos tridimensionales así como el uso de recursos eficiente a través del paralelismo.  
 
 %================================================================================================
 % Estructura el documento
@@ -41,3 +42,4 @@
 \section{Estructura del documento}
 \label{sec:estructuraDelDocumento}
 
+El resto del documento se estructura de la siguiente manera. El Capítulo 2 introduce el estado del arte en técnicas de iluminación global, con especial énfasis en la técnica de radiosidad y sus extensiones; además, se exploran diversos acercamientos alternativos al problema a resolver. El Capítulo 3 refiere al diseño de la solución que se ha propuesto para resolver y facilitar la construcción de pruebas de los algoritmos implementados. El Capítulo 4 contiene detalles de implementación, detallando distintas decisiones tomadas para eludir un conjunto de obstáculos técnicos observados. En el Capítulo 5, se encuentra una síntesis de los casos de prueba considerados así como los un análisis de los resultados obtenidos junto a un conjunto de ventajas y desventajas que se han observado. Finalmente, se proveen un conjunto de conclusiones y posible trabajo a futuro detectado a lo largo de la construcción del proyecto.

@@ -220,7 +220,7 @@ coordinates {
 \end{axis}
 \end{tikzpicture}
 
-Una de las consecuencias más interesantes a ser analizadas para detectar la cantidad de muestras óptimas a considerar es la calidad de la imagen final, y qué tan pronunciados son las diferencias en de iluminación entre los parches, es decir, en qué medida difiere la radiosidad entre parches. Para este caso, se pudo observar (véase la figura \ref{img:difres}) que si bien las resoluciones más bajas consumen menor cantidad de recursos los resultados tienen una calidad sustancialmente menor a la esperada. Considerando que el modelo generalmente es utilizado para el cálculo de mapas de iluminación en una etapa de pre-procesado, es recomendable evitar el uso de factores de muestreo tan bajos. Esto se ve acentuado en el análisis de la matriz de factores de forma, según las métricas establecidas en \ref{metricasestablecidas} se pudo comprobar que .
+Una de las consecuencias más interesantes a ser analizadas para detectar la cantidad de muestras óptimas a considerar es la calidad de la imagen final, y qué tan pronunciados son las diferencias en de iluminación entre los parches, es decir, en qué medida difiere la radiosidad entre parches. Para este caso, se pudo observar (véase la figura \ref{img:difres}) que si bien las resoluciones más bajas consumen menor cantidad de recursos los resultados tienen una calidad sustancialmente menor a la esperada. Considerando que el modelo generalmente es utilizado para el cálculo de mapas de iluminación en una etapa de pre-procesado, es recomendable evitar el uso de factores de muestreo tan bajos. Esto se ve acentuado en el análisis de la matriz de factores de forma, según las métricas establecidas en \ref{metricasestablecidas} se pudo comprobar que máximo error promedio apreciado (medida que se ha denominado $Ep$) fue de $4.15 10^{-5}$ y $3.91 10^{-5}$ utilizando $1536$ muestras para los métodos del hemicubo y la hemiesfera mientras que el uso de $96$ muestras generó errores del entorno de los $3.10 10^{-3}$ y $8.52 10^{-4}$ respectivamente. Estos errores se ven aún más acentuados al realizar el calcular la radiosidad para cada parche.
 
 \begin{figure}[H]
 	\centering
@@ -244,3 +244,4 @@ Una de las consecuencias más interesantes a ser analizadas para detectar la can
 	\label{img:difres}
 \end{figure}
 
+\subsubsection{Caso de prueba I}
