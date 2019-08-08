@@ -244,4 +244,100 @@ Una de las consecuencias más interesantes a ser analizadas para detectar la can
 	\label{img:difres}
 \end{figure}
 
-\subsubsection{Caso de prueba I}
+\subsubsection{Caso de prueba II}
+
+En este caso, en cuanto a rendimiento, se observa en la tabla \ref{tab:caso2} que el mejor rendimiento observado se obtiene utilizando el método híbrido, esto se debe a los hilos que ejecutan los cálculos correspondientes al rebote especular (utilizando traza de rayos) son ejecutados en la CPU mientras la GPU procesa hemicubos. Esto se ve respaldado por el hecho de que, en promedio se observó una ocupación rondando en los entornos de 100\% de la CPU y 35\% GPU en el método híbrido; 75\% de la CPU y 30\% GPU en el método utilizando OpenGL y 99\% en la implementación que solo utiliza traza de rayos. 
+
+
+\begin{table}[H]
+	\centering
+	\label{tab:caso2}
+	\caption{Resultados obtenidos en el segundo caso de prueba}
+	\begin{tabular}{|l|l|l|l|l|l|l|}
+		\hline
+		\multicolumn{1}{|c|}{\multirow{3}{*}{Muestras}} & \multicolumn{6}{c|}{Tiempo de ejecución (s)}                                                                                         \\ \cline{2-7} 
+		\multicolumn{1}{|c|}{}                          & \multicolumn{3}{c|}{\textit{Cornell Box}}                                                & \multicolumn{3}{c|}{\textit{Street}}      \\ \cline{2-7} 
+		\multicolumn{1}{|c|}{}                          & \multicolumn{1}{c|}{OpenGL} & \multicolumn{1}{c|}{Embree} & \multicolumn{1}{c|}{Híbrido} & OpenGL                 & Embree & Híbrido \\ \hline
+		\textbf{96 - 32}                                & 152                         & 53                          & 21                           & 2563                   & 1221   & 943     \\ \hline
+		\textbf{768 - 32}                               & 312                         & 134                         & 533                          & 4521                   & 2512   & 1643    \\ \hline
+		\textbf{1536 - 64}                              & 1071                        & 486                         & 228                          & \multicolumn{1}{c|}{-} & 5342   & 4725    \\ \hline
+	\end{tabular}
+\end{table}
+
+El paralelismo de las implementaciones basadas en la GPU garantiza el mejor rendimiento, sin embargo, se pudo notar que el uso exclusivo de traza de rayos provee hasta 14 veces menor error máximo que los otros algoritmos implementados (en \textit{Cornell Box}, con 1536 muestras se notó una diferencia de error máxima $Ep$ de $6.78 10^{-5}$ con el método híbrido y  $9.13 10^{-4}$ utilizando el método de dibujado de portales). Esto se debe a que tanto en el uso de dibujado de portales o el algoritmo híbrido se utilizan estimaciones de la dirección en la que rebotaría el rayo en el espejo considerado, lo que degrada la autenticidad final de los datos obtenidos, sobre todo en el dibujado de portales donde la granularidad de las muestras obtenidas es inferior (se toman muestras por área y no por rayo). Por lo tanto, incluso si el método de traza de rayos posee un rendimiento un tanto menor (que se debe mayormente al hecho de que se ejecuta únicamente en la CPU) se observa una calidad de datos órdenes de magnitud superior a la de los otros métodos.
+
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}{0.5\textwidth}
+		\includegraphics[width=1\linewidth]{assets/caso2gl}
+		\caption{OpenGL}
+	\end{subfigure}
+	\begin{subfigure}{0.5\textwidth}
+		\includegraphics[width=1\linewidth]{assets/caso2e}
+		\caption{Embree}
+	\end{subfigure}
+	\begin{subfigure}{0.5\textwidth}
+		\includegraphics[width=1\linewidth]{assets/caso2h}
+		\caption{Híbrido}
+	\end{subfigure}	
+	\caption{Diferencias visuales visualizadas utilizando las distintas implementaciones de factores de forma extendido. 1536 muestras iniciales y 64 para rebotes especulares.}
+	\label{img:difres}
+\end{figure}
+
+Con el objetivo de cuantificar los datos de error observado se analizó el error estándar y promedio observado en el vector de radiosidad final (comparado a una muestra utilizando exclusivamente trazado de rayos con 3276 muestras para la hemiesfera) y se observó que, tal como se había supuesto, el método es significativamente menos propenso a generar errores como se ve en la figura \ref{plot:emglc1}.
+
+\begin{tikzpicture}
+\label{plot:errorcII}
+\begin{axis}[
+title={\textbf{Caso de prueba II, error promedio observado en valor final de radiosidad en Híbrido}},
+xlabel={Muestras (píxeles/rayos)},
+ylabel={Error},
+xmin=0,
+ymin=0,
+width=.95\textwidth, height=7cm,
+legend pos=north west,
+ymajorgrids=true,
+grid style=dashed,
+]
+
+\addplot[
+smooth,
+color=blue,
+mark=square,
+mark=o,error bars/.cd, y dir=both,y explicit
+]
+coordinates {
+	(96,0.10145) +- (0, 0.01)
+	(384,0.06145) +- (0, 0.006)
+	(1536,0.01545) +- (0, 0.005)
+};
+\addplot[
+smooth,
+color=red,
+mark=square,
+mark=o,error bars/.cd, y dir=both,y explicit
+]
+coordinates {
+	(96,0.010145) +- (0, 0.003)
+	(384,0.001145) +- (0, 0.002)
+	(1536,0.000945) +- (0, 0.001)
+};
+
+\addplot[
+smooth,
+color=cyan,
+mark=square,
+mark=o,error bars/.cd, y dir=both,y explicit
+]
+coordinates {
+	(96,0.08145)  +- (0, 0.01)
+	(384,0.04145)  +- (0, 0.006)
+	(1536,0.01045)  +- (0, 0.005)
+};
+
+
+\legend{OpenGL,Embree,Híbrido}
+
+\end{axis}
+\end{tikzpicture}
+
