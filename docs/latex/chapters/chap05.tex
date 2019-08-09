@@ -137,10 +137,9 @@ Con el objetivo de medir correctamente las ventajas y desventajas de cara acerca
 
 \begin{enumerate}
 	\item \textit{Pruba difusa}: Se utilizarán materiales estrictamente difusos en ambas escenas, con colores aleatorios. Desactivando, entonces, cualquier interacción especular. Se escogerá un conjunto de parches que oficiarán de fuente luminosa. En caso de la escena \textit{Calle}, se seleccionan 10 parches que emulan la luz solar. Por otro lado, para la escena \textit{Cornell Box} se utiliza la bola central como fuente luminosa.
-	\item \textit{Pruba especular}: Se utilizarán materiales difusos y especulares en ambas escenas, con una cantidad reducida de estos últimos. En caso de la escena \textit{Cornell Box} se utiliza el plano ubicado en el centro como reflector, mientras que en la escena \textit{Calle} se utiliza una selección de ventanas.
+	\item \textit{Pruba especular}: Se utilizarán materiales difusos y especulares en ambas escenas, con una cantidad reducida de estos últimos. En caso de la escena \textit{Cornell Box} se utiliza el plano ubicado en el centro como reflector, mientras que en la escena \textit{Calle} se utiliza una selección de ventanas. Para cada \textit{pipeline} (completo) implementado se computa la radiosidad registrando el tiempo de renderizado según la cantidad de muestras configurada.
 	\item \textit{Prueba híbrida}: Únicamente en la escena \textit{Cornell Box} se computarán dos variantes. En una de ellas se desactivan los reflectores especulares (plano) y en el otro caso no.
 	\item{Prueba de estrés}: Se utiliza gran cantidad de espejos en ambas escenas.
-	\item{Prueba de rendimiento}: Para cada \textit{pipeline} (completo) implementado se computa la radiosidad registrando el tiempo de renderizado según la cantidad de muestras configurada.
 \end{enumerate}
 
 \subsection{Resultados observados}
@@ -153,7 +152,7 @@ Con el objetivo de medir correctamente las ventajas y desventajas de cara acerca
 	\begin{tabular}{|c|l|l|l|l|}
 		\hline
 		\multirow{3}{*}{\textbf{Muestras}} & \multicolumn{4}{c|}{\textbf{Tiempo de ejecución (s)}}                                                                                  \\ \cline{2-5} 
-		& \multicolumn{2}{c|}{\textit{Cornell Box}}                 & \multicolumn{2}{c|}{\textit{Street}}                      \\ \cline{2-5} 
+		& \multicolumn{2}{c|}{\textit{Cornell Box}}                 & \multicolumn{2}{c|}{\textit{Calle}}                      \\ \cline{2-5} 
 		& \multicolumn{1}{c|}{OpenGL} & \multicolumn{1}{c|}{Embree} & \multicolumn{1}{c|}{OpenGL} & \multicolumn{1}{c|}{Embree} \\ \hline
 		\textbf{96}                        & 7                           & 3                           & 68                          & 14                          \\ \hline
 		\textbf{384}                       & 10                          & 30                          & 128                         & 174                         \\ \hline
@@ -169,7 +168,7 @@ En este caso, se observa en la tabla \ref{tab:tablecaso1} que el método del hem
 \begin{tikzpicture}
 \label{plot:emglc1}
 \begin{axis}[
-title={\textbf{Caso de prueba I, rendimiento en segundos.}},
+title={\textbf{Rendimiento en segundos.}},
 xlabel={Muestras (píxeles/rayos)},
 ylabel={Tiempo (s)},
 xmin=0, xmax=3072,
@@ -215,7 +214,7 @@ coordinates {
 	(96,14)(384,174)(768,665)(1536,2565)(3072,7511)
 };
 
-\legend{OpenGL(CB),Embree(CB),OpenGL(S), Embree(S)}
+\legend{OpenGL(CB),Embree(CB),OpenGL(C), Embree(C)}
 
 \end{axis}
 \end{tikzpicture}
@@ -256,13 +255,59 @@ En este caso, en cuanto a rendimiento, se observa en la tabla \ref{tab:caso2} qu
 	\begin{tabular}{|l|l|l|l|l|l|l|}
 		\hline
 		\multicolumn{1}{|c|}{\multirow{3}{*}{Muestras}} & \multicolumn{6}{c|}{Tiempo de ejecución (s)}                                                                                         \\ \cline{2-7} 
-		\multicolumn{1}{|c|}{}                          & \multicolumn{3}{c|}{\textit{Cornell Box}}                                                & \multicolumn{3}{c|}{\textit{Street}}      \\ \cline{2-7} 
+		\multicolumn{1}{|c|}{}                          & \multicolumn{3}{c|}{\textit{Cornell Box}}                                                & \multicolumn{3}{c|}{\textit{Calle}}      \\ \cline{2-7} 
 		\multicolumn{1}{|c|}{}                          & \multicolumn{1}{c|}{OpenGL} & \multicolumn{1}{c|}{Embree} & \multicolumn{1}{c|}{Híbrido} & OpenGL                 & Embree & Híbrido \\ \hline
 		\textbf{96 - 32}                                & 152                         & 53                          & 21                           & 2563                   & 1221   & 943     \\ \hline
-		\textbf{768 - 32}                               & 312                         & 134                         & 533                          & 4521                   & 2512   & 1643    \\ \hline
+		\textbf{768 - 32}                               & 312                         & 134                         & 84                          & 4521                   & 2512   & 1643    \\ \hline
 		\textbf{1536 - 64}                              & 1071                        & 486                         & 228                          & \multicolumn{1}{c|}{-} & 5342   & 4725    \\ \hline
 	\end{tabular}
 \end{table}
+
+\begin{tikzpicture}
+\label{plot:emglc2}
+\begin{axis}[
+title={\textbf{Rendimiento en segundos. (Cornell Box)}},
+xlabel={Muestras (píxeles/rayos)},
+ylabel={Tiempo (s)},
+xmin=0,
+ymin=0,
+width=.85\textwidth, height=7cm,
+legend pos=north west,
+ymajorgrids=true,
+grid style=dashed,
+]
+
+\addplot[
+smooth,
+color=blue,
+mark=square,
+]
+coordinates {
+	(96,152)(768,312)(1536,1071)
+};
+\addplot[
+smooth,
+color=red,
+mark=square,
+]
+coordinates {
+	(96,53)(768,134)(1536,486)
+};
+
+\addplot[
+smooth,
+color=cyan,
+mark=square,
+]
+coordinates {
+	(96,21)(768,84)(1536,228)
+};
+
+
+\legend{OpenGL,Embree,Híbrido}
+
+\end{axis}
+\end{tikzpicture}
 
 El paralelismo de las implementaciones basadas en la GPU garantiza el mejor rendimiento, sin embargo, se pudo notar que el uso exclusivo de traza de rayos provee hasta 14 veces menor error máximo que los otros algoritmos implementados (en \textit{Cornell Box}, con 1536 muestras se notó una diferencia de error máxima $Ep$ de $6.78 10^{-5}$ con el método híbrido y  $9.13 10^{-4}$ utilizando el método de dibujado de portales). Esto se debe a que tanto en el uso de dibujado de portales o el algoritmo híbrido se utilizan estimaciones de la dirección en la que rebotaría el rayo en el espejo considerado, lo que degrada la autenticidad final de los datos obtenidos, sobre todo en el dibujado de portales donde la granularidad de las muestras obtenidas es inferior (se toman muestras por área y no por rayo). Por lo tanto, incluso si el método de traza de rayos posee un rendimiento un tanto menor (que se debe mayormente al hecho de que se ejecuta únicamente en la CPU) se observa una calidad de datos órdenes de magnitud superior a la de los otros métodos.
 
@@ -289,13 +334,13 @@ Con el objetivo de cuantificar los datos de error observado se analizó el error
 \begin{tikzpicture}
 \label{plot:errorcII}
 \begin{axis}[
-title={\textbf{Caso de prueba II, error promedio observado en valor final de radiosidad en Híbrido}},
+title={\textbf{Error promedio observado en valor final de radiosidad en Híbrido}},
 xlabel={Muestras (píxeles/rayos)},
 ylabel={Error},
 xmin=0,
 ymin=0,
 width=.95\textwidth, height=7cm,
-legend pos=north west,
+legend pos=north east,
 ymajorgrids=true,
 grid style=dashed,
 ]
@@ -340,4 +385,25 @@ coordinates {
 
 \end{axis}
 \end{tikzpicture}
+
+\subsubsection{Caso de prueba III}
+
+Esta prueba se construyó con el objetivo de comparar el rendimiento observado utilizando los algoritmos de extensión de factores de forma implementados por lo que su análisis es escueto. Las pruebas se realizaron con una cantidad de muestras fijar (768 muestras de hemicubo/rayo, 64x64 muestras de portal), sin embargo, se varió la cantidad de parches reflectivos utilizados con el objetivo de evaluar el impacto de los algoritmos considerados.
+
+\begin{table}[H]
+	\centering
+	\caption{Pruebas realizasdas en \textit{Cornell Box} para identificar incidencia en la cantidad de caras especulares utilizadas en el tiempo de ejecución}
+\begin{tabular}{|l|l|l|l|}
+	\hline
+	\multicolumn{1}{|c|}{Muestras} & \multicolumn{1}{c|}{OpenGL} & \multicolumn{1}{c|}{Embree} & \multicolumn{1}{c|}{Híbrido} \\ \hline
+	0                              & 38                          & 126                         & -                            \\ \hline
+	16                             & 41                          & 118                         & 39                           \\ \hline
+	32                             & 48                          & 120                         & 40                           \\ \hline
+	62                             & 68                          & 121                         & 43                           \\ \hline
+\end{tabular}
+	\label{tab:caso3}
+\end{table}
+
+En table \ref{tab:caso3} puede observare cómo la traza de rayos supera en dos veces el tiempo a los otros algoritmos. Sin embargo, se ha de destacar (al igual que en las pruebas anteriores) que el algoritmo difiere completamente y si se utilizaran resoluciones mayores para el dibujado de portales los tiempos serían más afines, aunque se conseguirían resultados peores. Esto se demuestra al emparejar la cantidad de muestras tomadas por el portal con las de cada cara del hemicubo (256); en este caso los tiempos de ejecución para $62$ parches especulares es de 150 segundos. Por lo tanto, si bien existe un tiempo de ejecución mayor la estabilidad (en tiempo de ejecución) y la calidad de los datos obtenidos hacen que el método de traza de rayos sea superior a las otras dos propuestas.
+
 
