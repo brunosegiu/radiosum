@@ -147,7 +147,6 @@ Con el objetivo de medir correctamente las ventajas y desventajas de cara acerca
 \subsubsection{Caso de prueba I}
 
 \begin{table}[H]
-	\label{tab:tablecaso1}
 	\centering
 	\begin{tabular}{|c|l|l|l|l|}
 		\hline
@@ -161,14 +160,14 @@ Con el objetivo de medir correctamente las ventajas y desventajas de cara acerca
 		\textbf{3072}                      & 992                         & 1778                        & 4018                        & 7511                        \\ \hline
 	\end{tabular}
 	\caption{Resultados obtenidos para el primer caso de prueba en ambas escenas consideradas}
+	\label{tab:tablecaso1}
 \end{table}
 
-En este caso, se observa en la tabla \ref{tab:tablecaso1} que el método del hemicubo tiene un rendimiento considerablemente superior al de la traza de rayos. Cabe destacar que se observó una ocupación promedio de la GPU del 30\% y CPU 90\% (esta última probablemente se deba a la gran cantidad de sincronizaciones necesarioas entre el dispositivo y el controlador); mientras que el uso de traza de rayos presentó una ocupación de los núcleos del procesador del 99\%. Se destaca la diferencia observada entre OpenGL y Embree en \ref{plot:emglc1}.
+En este caso, se observa en la tabla \ref{tab:tablecaso1} que el método del hemi-cubo tiene un rendimiento considerablemente superior al de la traza de rayos. Cabe destacar que se observó una ocupación promedio de la GPU del 30\% y CPU 90\% (esta última probablemente se deba a la gran cantidad de sincronizaciones necesarias entre el dispositivo y el controlador); mientras que el uso de traza de rayos presentó una ocupación de los núcleos del procesador del 99\%. Se destaca la diferencia observada entre OpenGL y Embree en \ref{plot:emglc1}.
 
+\begin{figure}
 \begin{tikzpicture}
-\label{plot:emglc1}
 \begin{axis}[
-title={\textbf{Rendimiento en segundos.}},
 xlabel={Muestras (píxeles/rayos)},
 ylabel={Tiempo (s)},
 xmin=0, xmax=3072,
@@ -218,6 +217,9 @@ coordinates {
 
 \end{axis}
 \end{tikzpicture}
+\caption{Comparación del rendimiento de los algoritmos en escenas exclusivamente difusas}
+\label{plot:emglc1}
+\end{figure}
 
 Una de las consecuencias más interesantes a ser analizadas para detectar la cantidad de muestras óptimas a considerar es la calidad de la imagen final, y qué tan pronunciados son las diferencias en de iluminación entre los parches, es decir, en qué medida difiere la radiosidad entre parches. Para este caso, se pudo observar (véase la figura \ref{img:difres}) que si bien las resoluciones más bajas consumen menor cantidad de recursos los resultados tienen una calidad sustancialmente menor a la esperada. Considerando que el modelo generalmente es utilizado para el cálculo de mapas de iluminación en una etapa de pre-procesado, es recomendable evitar el uso de factores de muestreo tan bajos. Esto se ve acentuado en el análisis de la matriz de factores de forma, según las métricas establecidas en \ref{metricasestablecidas} se pudo comprobar que máximo error promedio apreciado (medida que se ha denominado $Ep$) fue de $4.15 10^{-5}$ y $3.91 10^{-5}$ utilizando $1536$ muestras para los métodos del hemicubo y la hemiesfera mientras que el uso de $96$ muestras generó errores del entorno de los $3.10 10^{-3}$ y $8.52 10^{-4}$ respectivamente. Estos errores se ven aún más acentuados al realizar el calcular la radiosidad para cada parche.
 
@@ -331,10 +333,9 @@ El paralelismo de las implementaciones basadas en la GPU garantiza el mejor rend
 
 Con el objetivo de cuantificar los datos de error observado se analizó el error estándar y promedio observado en el vector de radiosidad final (comparado a una muestra utilizando exclusivamente trazado de rayos con 3276 muestras para la hemiesfera) y se observó que, tal como se había supuesto, el método es significativamente menos propenso a generar errores como se ve en la figura \ref{plot:emglc1}.
 
+\begin{figure}
 \begin{tikzpicture}
-\label{plot:errorcII}
 \begin{axis}[
-title={\textbf{Error promedio observado en valor final de radiosidad en Híbrido}},
 xlabel={Muestras (píxeles/rayos)},
 ylabel={Error},
 xmin=0,
@@ -385,7 +386,9 @@ coordinates {
 
 \end{axis}
 \end{tikzpicture}
-
+\caption{Error promedio observado en valor final de radiosidad en Híbrido}
+\label{plot:errorcII}
+\end{figure}
 \subsubsection{Caso de prueba III}
 
 Esta prueba se construyó con el objetivo de comparar el rendimiento observado utilizando los algoritmos de extensión de factores de forma implementados por lo que su análisis es escueto. Las pruebas se realizaron con una cantidad de muestras fijar (768 muestras de hemicubo/rayo, 64x64 muestras de portal), sin embargo, se varió la cantidad de parches reflectivos utilizados con el objetivo de evaluar el impacto de los algoritmos considerados.
@@ -427,8 +430,6 @@ Adicionalmente, como se puede observar en la figura \ref{img:difspecstreet}, las
 Finalmente, con el objetivo de evaluar el impacto de contar con muchas superficies especulares se probó qué tanto tiempo adicional insume la carga impuesta al algoritmo para considerar este tipo de superficie, los resultados pueden observarse en la figura \ref{plot:este} con una diferencia máxima entre 0 y 1500 superficies especulares de 3\% en el tiempo de cálculo de los factores de forma. Es por ello que se puede concluir que al utilizar algoritmos de traza de rayos no se detecta un impacto significativo en el tiempo de ejecución.
 
 \begin{figure}
-\caption{Variación en el tiempo de ejecución en función de la cantidad de muestras y superficies especulares}
-\label{plot:este}
 \begin{tikzpicture}
 \centering
 \begin{axis}[
@@ -450,5 +451,7 @@ width=\linewidth
 \legend{0 superficies, 20 superficies, 1500 superficies}
 \end{axis}
 \end{tikzpicture}
+\caption{Variación en el tiempo de ejecución en función de la cantidad de muestras y superficies especulares}
+\label{plot:este}
 \end{figure}
 

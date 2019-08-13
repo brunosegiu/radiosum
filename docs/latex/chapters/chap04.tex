@@ -70,7 +70,7 @@ Para implementar el cálculo de factores de forma se implementará la función \
 \begin{minipage}[h]{\linewidth}
 	\centering
 	\includegraphics[width=\linewidth]{assets/statecosts}
-	\captionof{figure}{Costo de cambios de estado en OpenGL. Fuente: Nvidia}
+	\captionof{figure}{Costo de cambios de estado en OpenGL referencia \cite{nvidia}}
 	\label{img:statechangescost}
 \end{minipage}
 
@@ -97,7 +97,7 @@ El algoritmo de la hemi-esfera fue implementado utilizando la biblioteca de traz
 	\end{algorithmic}
 \end{algorithm}
 
-De forma similar a \ref{sec:hemicubehgl} es necesario posicionar el origen de cada rayo a trazar en el baricentro de la superficie. Luego, recordando \eqref{ffhemiesfera}, es necesario generar un conjunto de direcciones utilizando la distribución del coseno o similar. Si bien originalmente se utilizó la generación de números pseudo-aleatorios para generar rayos correctamente distribuidos, el uso de números aleatorios perjudicó el rendimiento del algoritmo dada la complejidad de los algoritmos que lo computan. Es por esto que se decidió utilizar otro algoritmo de generación de direcciones determinísticas en una hemi-esfera, en este caso la \textit{regla general de particionado de una hemi-esfera en celdas de área equitativa} propuesta por \citeauthor{Becker}. Estas direcciones son pre-calculadas y almacenadas pues previo al procesamiento de se conoce la definición (o cantidad de rayos) que se utilizarán en el cálculo.
+De forma similar a \ref{sec:hemicubehgl} es necesario posicionar el origen de cada rayo a trazar en el baricentro de la superficie. Luego, recordando \eqref{eq:ffhemiesfera}, se generan un conjunto de direcciones utilizando la distribución del coseno o similar. Si bien originalmente se utilizó la generación de números pseudo-aleatorios para generar rayos correctamente distribuidos, el uso de números aleatorios perjudicó el rendimiento del algoritmo dada la complejidad de los algoritmos que lo computan. Es por esto que se decidió utilizar otro algoritmo de generación de direcciones determinísticas en una hemi-esfera, en este caso la \textit{regla general de particionado de una hemi-esfera en celdas de área equitativa} propuesta por \citeauthor{Becker}. Estas direcciones son pre-calculadas y almacenadas pues previo al procesamiento de se conoce la definición (o cantidad de rayos) que se utilizarán en el cálculo.
 
 Luego se procede a la traza de rayos, $\mathbf{F}_{ij}$ se calculará como $\frac{nIntersecciones_{ij}}{nMuestras}$, esto significa que por cada rayo que parta de la superficie $S_{i}$ impactando $S_{j}$ se adiciona $\frac{1}{nMuestras}$ al valor de la entrada correspondiente en $\mathbf{F}$.
 
