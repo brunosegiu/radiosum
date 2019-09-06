@@ -1,33 +1,33 @@
 \chapter{Estado del arte}
 \label{ch:chap02}
 
-Este capítulo introduce un resumen de las áreas más importantes relacionadas al trabajo realizado en este proyecto, estas incluyen los modelos de iluminación por computadora, el método de radiosidad y sus posibles implementaciones y extensiones.
+Este capítulo introduce un resumen de las áreas más importantes relacionadas al trabajo realizado en este proyecto, incluyendo los modelos de iluminación por computadora, el método de radiosidad y sus posibles implementaciones y extensiones.
 
 \section{Modelos de iluminación}
 \label{sec:dibujado}
 
 El proceso de dibujado de gráficos tridimiensionales por computadora comprende la generación automática de imágenes con cierto nivel de realismo a partir de modelos que componen una \textit{escena} o \textit{mundo} tridimencional, junto a un conjunto de cualidades físicas que rigen las formas en la que la luz interactúa con los objetos.
 
-Trivialmente, esto puede ser reducido al problema de cálculo del valor de intensidad lumínica observada en un punto $x$ y proveniente de otro punto $x'$. En  \citeyear{Kajiya}, \citeauthor{Kajiya} presentó uno de los modelos más aceptado por la comunidad por su generalidad, comúnmente denominado <<la ecuación del \textit{rendering}>>:
+Este problema puede ser reducido al problema de cálculo del valor de intensidad lumínica observada en un punto $x$ y proveniente directamente de un conjunto de puntos, representado por $x'$. En  \citeyear{Kajiya}, \citeauthor{Kajiya} presentó uno de los modelos más aceptado por la comunidad por su generalidad, comúnmente denominado <<ecuación del \textit{rendering}>>:
 
 \begin{equation}
     I(x,x') = g(x,x') \bigg[\epsilon(x,x') + \int_{S} \rho(x,x',x'')I(x',x'') \delta x''\bigg] \label{eq:rendering}
 \end{equation}
 donde:
 \begin{itemize}
-    \item $I(x,x')$ describe energía de radiación lumínica observada en el punto $x$ proveniente de $x''$
-    \item $g(x,x')$ es un término geométrico, toma el valor de $0$ si existe oclusión entre $x'$ y $x$ en otro caso su valor es $\dfrac{1}{r^{2}}$ donde $r$ es la distancia entre $x'$ y $x$
-    \item $\epsilon(x,x')$ mide la energía emitida por la superficie en el punto $x'$ a $x$
+    \item $I(x,x')$ describe la intensidad lumínica que llega al punto $x$ proveniente de $x'$
+    \item $g(x,x')$ es un término geométrico, toma el valor de $0$ si existe oclusión entre $x'$ y $x$, y en otro caso su valor es $\dfrac{1}{r^{2}}$ donde $r$ es la distancia entre ambos puntos.
+    \item $\epsilon(x,x')$ mide la energía emitida por la superficie en el punto $x'$ en dirección a $x$
     \item $\int_{S} \rho(x,x',x'')I(x',x'') \delta x''$ está compuesta por dos términos:
         \begin{itemize}
-            \item $\rho(x,x',x'')$ es el término de dispersión de la luz que llega desde $x''$ a $x$ desde el punto $x'$
-            \item $I(x',x'')$ describe energía de radiación lumínica observada en el punto $x'$ proveniente de $x''$
+            \item $\rho(x,x',x'')$ es el término de reflectividad bi-direccional la luz que llega desde $x''$ a $x$ pasando por $x'$
+            \item $I(x',x'')$ describe la intensidad lumínica observada en el punto $x'$ proveniente de $x''$
         \end{itemize}
     por lo que este término refiere a la intensidad percibida desde $x$ considerando todos las reflexiones de
-    luz posibles para el espacio $S$.
+    luz posibles para el dominio $S$.
 \end{itemize}
 
-Existen distintos métodos de resolución de la <<ecuación del \textit{rendering}>>, la mayoría implican aproximaciones dado el gran costo de cálculo requerido para computar el valor exacto de $I(x,x')$. Estos métodos balancean el costo computacional de los algoritmos utilizados y la fidelidad con el valor final de la función. Dependiendo de las decisiones y simplificaciones consideradas existen dos clasificaciones posibles para el modelo: \textit{local} y \textit{global} \ref{local-vs-global-img}.
+Existen distintos métodos de resolución de la ecuación del rendering; la mayoría implican aproximaciones dado el gran costo de cálculo requerido para computar su valor exacto. Estos métodos balancean el costo computacional de los algoritmos utilizados y la precisión del valor obtenido. Dependiendo de las decisiones y simplificaciones consideradas existen dos clasificaciones posibles para el modelo: \textit{local} y \textit{global}, un ejemplo de ambos modelos puede ser observado en la Figura \ref{local-vs-global-img}.
 
 \vspace{5mm}
 \begin{figure}[h]
@@ -47,47 +47,40 @@ Existen distintos métodos de resolución de la <<ecuación del \textit{renderin
 
 \subsection{Iluminación Local}
 \label{sec:ilumlocal}
-Los modelos de iluminación local como el propuesto por \citeauthor{Phong} en \citeyear{Phong} tienen en cuenta las propiedades físicas de los materiales
+Los modelos de iluminación local tienen en cuenta las propiedades físicas de los materiales
 y las superficies de forma individual. Es decir, al dibujar uno de los objetos no se toman en cuenta las posibles interacciones de los haces de luz con los objetos restantes en la escena. Estos métodos son frecuentemente utilizados en problemas cuya resolución debe ser realizada en tiempo real o por decisiones artísticas.
 
-En referencia a la ecuación del rendering, el término geométrico nunca toma el valor 0 es decir, no se toma en cuenta las colisiones de la luz con otros objetos, $\epsilon(x,x')$ toma un valor constante únicamente dependiente de $x$ y $\int_{S} \rho(x,x',x'')I(x',x'') \delta x''$ toma el valor constante $1$.
+En referencia a la ecuación del rendering, el término geométrico nunca toma el valor 0, es decir, no se toma en cuenta las colisiones de la luz con otros objetos, $\epsilon(x,x')$ toma un valor constante únicamente dependiente de $x$ y $\int_{S} \rho(x,x',x'')I(x',x'') \delta x''$ toma el valor constante $0$.
 
 \subsection{Iluminación Global}
 \label{sec:ilumglobal}
 
-El término iluminación global refiere a una modelo de computación gráfica en donde se simulan parcialmente o completamente las interacciones de la luz con todos los objetos que se encuentran  en la escena. Es decir, en contraposición a la iluminación local, se consideran los fenómenos de reflexión y refracción de la luz.
+El término iluminación global refiere a un modelo en donde se simulan parcial o completamente las interacciones de la luz con todos los objetos que se encuentran  en la escena. Es decir, en contraposición a la iluminación local, se consideran los fenómenos de reflexión y refracción de la luz.
 
 Dependiendo de las característica de los modelos y algoritmos empleados, pueden obtenerse resultados más fieles a la realidad en distintos sentidos.
 
-El algoritmo de \textit{trazado de caminos de rayos} emula completamente cada haz de luz desde su incepción en una fuente luminosa siguiendo el camino de interacciones del rayo con las distintas superficies de la escena. En este caso el grado de granularidad (que depende directamente de la cantidad de muestras utilizadas) impacta directamente en los errores y calidad en la imagen final.
+El algoritmo de \textit{path-tracing} emula completamente cada haz de luz desde su incepción en una fuente luminosa siguiendo el camino de interacciones del rayo con las distintas superficies de la escena. En este caso el grado de granularidad (que depende directamente de la cantidad de muestras utilizadas) impacta directamente en la precisión y calidad en la imagen final.
 
-Por otro lado, el algoritmo de \textit{mapeado de fotones} simula los efectos producidos por las colisiones de las partículas que componen la luz (fotones) con los objetos, que dejan \textit{impresiones} que afectarán el resultado final de la imágen.
+Por otro lado, el algoritmo de \textit{mapeado de fotones} simula los efectos producidos por las colisiones de las partículas que componen la luz (fotones) con los objetos, que dejan impresiones que afectarán el resultado final de la imágen.
 
-Existen además distintas variaciones e híbridos de estos métodos que normalmente dibujan imágenes \textit{fuera de línea} pues son demasiado costosos como para dibujar imágenes en tiempo real.
+Existen además distintas variaciones e híbridos de estos métodos ya que los mismos son demasiado costosos como para dibujar imágenes en tiempo real.
 
 \section{Radiosidad}
 \label{sec:radiosidad}
 
-El método de radiosidad es una técnica de iluminación global \ref{sec:ilumglobal} que emula el transporte de la luz entre superficies que se rige por la magnitud física definida, a su vez, como radiosidad, que indica el flujo de energía irradiada por unidad de área ($\frac{W}{m^{2}}$).
+El método de radiosidad es una técnica de iluminación global que emula el transporte de la luz entre superficies difusas. El mismo nombre se utiliza también para describir la magnitud física definida como radiosidad, que indica el flujo de energía radiada por unidad de área ($\frac{W}{m^{2}}$).
 
-Originalmente, este modelo de iluminación global fue propuesto por \citeauthor{Goral} en \citeyear{Goral}, se basa en modelos matemáticos similares a los que resuelven el problema de la transferencia de calor en sistemas cerrados (MEF).
+Originalmente, este modelo de iluminación global fue propuesto por [\citeauthor{Goral}], y se basa en modelos matemáticos similares a los que resuelven el problema de la transferencia de calor en sistemas cerrados dicretos como diferencias finitas o elementos finitos.
 
 \subsection{Radiosidad en superficies lambertianas}
 
-La solución propuesta por \citeauthor{Goral} implica que todas las superficies son idealmente difusas, también conocidas como \textbf{lambertianas}. Estas superficies se comportan como reflectores difusos ideales, lo que significa que reflejan la energía incidente de forma isotrópica siguiendo la regla del coseno como se observa en la figura \ref{img:lamber}.
+La solución propuesta por \citeauthor{Goral} implica que todas las superficies son idealmente difusas, también conocidas como lambertianas. Estas superficies se comportan como reflectores difusos ideales, lo que significa que reflejan la energía incidente de forma isotrópica siguiendo la regla del coseno como se observa en la Figura \ref{img:lamber}.
 
 \vspace{5mm}
 \begin{figure}[h]
 	\centering
-	\begin{subfigure}{0.45\textwidth}
-		\includegraphics[width=1\linewidth]{assets/difusa}
-		\caption{Reflector genérico}
-	\end{subfigure}
-	\begin{subfigure}{0.45\textwidth}
-		\includegraphics[width=1\linewidth]{assets/lambert}
-		\caption{Reflector lambertiano}
-	\end{subfigure}
-	\caption{Comparación entre tipos de reflectores}
+	\includegraphics[width=1\linewidth]{assets/lambert}
+	\caption{Reflector lambertiano}
 	\label{img:lamber}
 \end{figure}
 
@@ -113,29 +106,24 @@ Es por esto que la energía total que deja una superficie ($P$) puede ser calcul
     \label{eq:P}
 \end{equation}
 
-Por tanto, dada una superficie $S_{i}$, es posible calcular la energía lumínica que deja la superficie utilizando \eqref{eq:P}.
-
-Existen tres métodos posibles de cálculo de la ecuación de radiosidad: la integración basada en elementos finitos, la integración basada en reglas de cuadratura y la integración basada en métodos de Monte Carlo.
-
-En este caso, los autores decidieron utilizar un método de elementos finitos. Estos métodos consisten en la subdivisión del espacio en partes discretas más simples conocidas como \textbf{elementos finitos} aproximando el valor real de la función a través de un sistema de ecuaciones. Por tanto, para poder aplicarlo resta definir la \textit{cerradura} de una superficie, definiremos la cerradura de una superficie como los límites que definen los puntos internos y externos de esta, llamaremos \textbf{parche} a cada una de estas superficies cerradas. Esta re-formulación del problema, es fácilmente trasladable a la ecuación \eqref{eq:rendering}.
+Por tanto, dada una superficie $S_{i}$, es posible calcular la energía lumínica que deja la superficie utilizando \eqref{eq:P}. Para ello, se discretizan las superficies en parches difusos, lo que transforma la Eq. \eqref{eq:P} en:
 
 \begin{equation}
-    B_{j} = E_{j} + \rho_{j} \sum_{i=1}{N} B_{i} F_{ij} \label{eq:radiosity}
+    B_{i} = E_{i} + \rho_{i} \sum_{j=1}^{N} B_{j} F_{ij} \label{eq:radiosity}
 \end{equation}
 donde:
 \begin{itemize}
-    \item $B_{j}$ es la intensidad lumínica (radiosidad) que deja la superficie $j$.
-    \item $E_{j}$ es la intensidad lumínica directamente emitida por $j$.
-    \item $\rho_{j}$ es la reflectividad del material para la superficie $j$.
-    \item $F_{ij}$ se denomina \textit{factor de forma}, un término que representa la fracción de energía lumínica
-    que deja la superficie $i$ y llega a $j$. 
+    \item $B_{i}$ es la intensidad lumínica (radiosidad) que deja la superficie $i$.
+    \item $E_{i}$ es la intensidad lumínica directamente emitida por $i$.
+    \item $\rho_{i}$ es la reflectividad del material para la superficie $i$.
+    \item $F_{ij}$ se denomina \textit{factor de forma}, un término que representa la fracción de energía lumínica va del parche $i$ al parche $j$. 
 \end{itemize}
 
 Cabe destacar que la naturaleza recursiva de la ecuación anterior, implica que se toman en cuenta todas las reflexiones difusas que existan en la escena. Como puede observarse, resolver el sistema de $N$ ecuaciones lineales bastaría para conocer la energía emitida por cada parche. 
 
-$E$, $\mathbf{\rho}$ dependen de los materiales que compongan la escena, son parámetros dados. Sin embargo, resta computar la matriz de factores de forma $\mathbf{F}$ para finalmente obtener el vector de radiosidades $B$. 
+Los factores de emisión y reflexión, $E$, $\mathbf{\rho}$ respectivamente, dependen de los materiales que compongan la escena, son parámetros dados. Sin embargo, resta computar la matriz de factores de forma $\mathbf{F}$ para finalmente obtener el vector de radiosidades $B$. 
 
-Para determinar una entrada de la matriz $F_{ij}$ involucrando a las superficies $i$ y $j$ de área $A(i)$, $A(j)$, considerando los diferenciales infinitesimales de área $\delta{A_{i}}$, $\delta{A_{j}}$, representados en la figura \ref{img:ff}, el ángulo sólido visto por $\delta{A_{i}}$ es $\delta{\omega} = \frac{\cos{\phi_{j}\delta{A_{j}}}}{r^{2}}$. Sustituyendo en \eqref{eq:P} se obtiene:
+Para determinar una entrada de la matriz $F_{ij}$ involucrando a las superficies $i$ y $j$ de área $A(i)$, $A(j)$, considerando los diferenciales infinitesimales de área $\delta{A_{i}}$, $\delta{A_{j}}$, representados en la Figura \ref{img:ff2}, el ángulo sólido visto por $\delta{A_{i}}$ es $\delta{\omega} = \frac{\cos{\phi_{j}\delta{A_{j}}}}{r^{2}}$. Sustituyendo en \eqref{eq:P} se obtiene:
 
 \begin{equation}
     \delta{P}_{i}\delta{A_{i}} = i_{i} \cos{\phi_{i}}\delta{\omega}\delta{A_{i}} = \frac{P_{i}\cos{\phi_{i}}\cos{\phi_{j}}\delta{A_{i}}\delta{A_{j}}}{\pi r^{2}}
@@ -146,11 +134,11 @@ Para determinar una entrada de la matriz $F_{ij}$ involucrando a las superficies
 	\centering
 	\includegraphics[width=0.8\linewidth]{assets/ff}
 	\captionof{figure}{El factor de forma entre dos superficies}
-	\label{img:ff}
+	\label{img:ff2}
 \end{figure}
 
 
-Considerando que ${P}_{i}{A_{i}}$ es la energía que deja $i$, y que el factor de forma $F_{ij}$ representa el porcentaje de dicha energía que llega a $j$ podemos observar que:
+Considerando que ${P}_{i}{A_{i}}$ es la energía que deja $i$, y que el factor de forma $F_{ij}$ representa la fracción de dicha energía que llega a $j$ podemos observar que:
 
 \begin{equation}
     F_{\delta{A_{i}}-\delta{A_{j}}} = \frac{\frac{P_{i}\cos{\phi_{i}}\cos{\phi_{j}}\delta{A_{i}}\delta{A_{j}}}{\pi r^{2}}}{P_{i}\delta{A_{i}}} = \frac{\cos{\phi_{i}}\cos{\phi_{j}}\delta{A_{i}}}{\pi{r^{2}}}
@@ -175,9 +163,9 @@ De \eqref{eq:ff} se obtienen las siguientes propiedades:
 \section{Métodos de cálculo de la matriz de Factores de Forma}
 \label{sec:calculoff}
 
-El cálculo de los factores de forma a través de la ecuación \eqref{eq:ff} analíticamente es inviable en la práctica pues supone la necesidad de calcular la visibilidad entre cada par de parches que componen la escana. Por tanto, es necesario establecer otros métodos que provean aproximaciones lo suficientemente correctas.
+El cálculo de los factores de forma a través de la Eq. \eqref{eq:ff} analíticamente es inviable en la práctica pues supone la necesidad de calcular la visibilidad entre cada par de parches que componen la escana. Por tanto, es necesario establecer otros métodos que provean aproximaciones lo suficientemente correctas.
 
-Geométricamente, puese establecerse una analogía para la computación de factores de forma conocida como <<analogía de Nusselt>> (ver Figura \ref{img:nusselt}). Se expresará el factor de forma como la proporción de área proyectada de $S_{j}$ en una hemi-esfera centrada en $S_{i}$ y luego en un disco centrado en $S_{i}$.
+Geométricamente, puese establecerse una analogía para la computación de factores de forma conocida como <<analogía de Nusselt>> (ver Figura \ref{img:nusselt}). Se expresará el factor de forma como la proporción de área proyectada de $S_{j}$ en una hemi-esfera ubicada en el baricentro de $S_{i}$ y luego en un disco centrado en $S_{i}$.
 
 \begin{figure}[H]
 	\centering
@@ -186,7 +174,7 @@ Geométricamente, puese establecerse una analogía para la computación de facto
 	\label{img:nusselt}
 \end{figure}
 
-El cálculo de la matriz de factores de forma $\mathbf{F}$ supone la proyección de los parches, de aquí en más se asumirá que estos parches son poligonales y por tanto es posible utilizar las técnicas de dibujado de objetos tridimensionales tradicionales.
+El cálculo de la matriz de factores de forma $\mathbf{F}$ supone la proyección de los parches, de aquí en más se asumirá que estos parches son polígonos no curvos y lo que permite utilizar las técnicas de dibujado de objetos tridimensionales tradicionales.
 
 \subsection{Rasterización}
 \label{sec:rasterizacion}
