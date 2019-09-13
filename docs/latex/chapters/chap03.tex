@@ -1,12 +1,13 @@
+% !TeX spellcheck = es_ES
 \chapter{Solución propuesta}
 \label{ch:chap03}
 
 \section{Alcance y objetivos}
 \label{sec:alcance}
 
-Este proyecto se centra en la implementación completa de una aplicación capaz de calcular tanto la matriz de factores de forma como el vector de radiosidad final. Comparando el rendimiento de los distintos métodos en \ref{ch:chap02}, en escenas compuestas por triángulos y cuadriláteros.
+Este proyecto se centra en la implementación completa de una aplicación capaz de calcular tanto la matriz de factores de forma como el vector de radiosidad final. Se agrega especial énfasis en la comparación del rendimiento de los distintos métodos en la Sección \ref{ch:chap02} para escenas compuestas por triángulos y cuadriláteros.
 
-Los métodos involucrados incluyen:
+Se propone comparar cuatro métodos para el cálculo de factores de forma:
 
 \begin{enumerate}
  	\item Cálculo de factores de forma utilizando el hemi-cubo
@@ -15,12 +16,12 @@ Los métodos involucrados incluyen:
  	\item Cálculo de factores  de forma extendidos utilizando trazado de rayos
 \end{enumerate}
 
-Además, será necesario implementar una interfaz de usuario que facilite la carga, edición y visualización de los objetos que componen la escena y sus respectivas propiedades (geometría, emisión inicial, coeficientes de reflexión difusa y especular, y radiosidad). Se soportará la carga de datos geométricos y materiales utilizando el formato estándar \verb|Waveform|.
+Además, se propone implementar una interfaz de usuario que facilite la carga, edición y visualización de los objetos que componen la escena y sus respectivas propiedades (geometría, emisión inicial, coeficientes de reflexión difusa y especular, y radiosidad).
 
 \section{Proceso de desarrollo}
 \label{sec:procdes}
 
-Dada la naturaleza del proyecto, fue deseable establecer una metodología de desarrollo para facilitar el proceso de seguimiento del progreso incluso cuando el equipo de desarrollo fue individual.
+Dada la naturaleza del proyecto, es deseable establecer una metodología de desarrollo para facilitar el proceso de seguimiento del progreso incluso cuando el equipo de desarrollo fue compuesto por un único integrante.
 
 Para ello, internamente, se utilizó una metodología ágil de desarrollo similar a la conocida como \textit{Kanban}.
 
@@ -31,7 +32,7 @@ Los principios claves del método aplicado a este proyecto fueron:
 	\item Dirigir y gestionar el flujo de trabajo implica la priorización de tareas a realizar dada una cantidad finita de recursos.
 \end{itemize}
 
-La gestión de las tareas a relizar se llevó a cabo en el respositiorio del proyecto, con tareas como las vistas en \ref{img:kanban}. Donde se consideran un conjunto de tareas:
+La gestión de las tareas a relizar se llevó a cabo en el respositiorio del proyecto, con tareas como las vistas en la Figura \ref{img:kanban}. Donde se consideran un conjunto de tareas:
 
 \begin{itemize}
 	\item Backlog: Las tareas a realizar, en orden de importancia.
@@ -57,11 +58,11 @@ El diseño de la solución comprende dos componentes principales, la interfaz gr
 \subsection{Motor de renderizado}
 \label{sec:engine}
 
-El paquete del motor de renderizado se compone de un conjunto de sub-módulos, el primero de ellos que maneja el pre-procesado de una escena, es decir, el cálculo de l matriz de factores de forma y la radiosidad. El siguiente conjunto de sub-módulos se ocupan del renderizado en tiempo real de la escena, así como la carga de modelos desde el disco duro, la modificación de materiales, entre otras funcionalidades detalladas en \ref{sec:ui}.
+El paquete del motor de renderizado se compone de un conjunto de sub-módulos, el primero de ellos que maneja el pre-procesado de una escena, es decir, el cálculo de la matriz de factores de forma y la radiosidad. El siguiente conjunto de sub-módulos se ocupan del renderizado en tiempo real de la escena, así como la carga de modelos desde el disco duro, la modificación de materiales, entre otras funcionalidades detalladas en \ref{sec:ui}.
 
 \subsubsection{Módulo de geometría}
 
-El módulo de geometría encapsula la información de las escenas leídas desde el disco duro, además de adaptar y optimizar los formatos de las primitivas geométricas para ser utilizados en las APIs de dibujado de terceros. La clase \verb|Scene| \ref{img:geom} cargará distintos objetos desde el disco duro que serán manejados como una instancia de \verb|Mesh|.
+El módulo de geometría encapsula la información de las escenas leídas desde el disco duro, además de adaptar y optimizar los formatos de las primitivas geométricas para ser utilizados en las APIs de dibujado de terceros. La clase \verb|Scene|, diagramada en la Figura \ref{img:geom}, cargará distintos objetos desde el disco duro que serán manejados como una instancia de \verb|Mesh|.
 
 
 \vspace{5mm}
@@ -87,18 +88,18 @@ El módulo de preprocesado se compone de un controlador principal (\verb|Preproc
 Un pipeline es definido a partir de un conjunto de funciones ejecutadas en el siguiente orden:
 
 \begin{enumerate}
-	\item \verb|setConfig(scene, interpolator, reflections, n_channels, solver)|
+	\item \verb|setConfig(scene, intrp, ref, chan, sol)|
 	\item \verb|computeFormFactors()|
 	\item \verb|computeRadiosity()|
 \end{enumerate}
 
-Donde \verb|computeFormFactors()| variará dependiendo del método de cálculo elegido (veáse \ref{img:procesado}), donde puede utilizarse el método del hemi-cubo o el de la hemi-esfera. El primero de ellos utilizará un \textit{pipeline} configurado utilizando una API de rasterización, mientras que el segundo utilizará una API capaz de calcular intersecciones utilizando \textit{trazado de rayos}.
+Donde \verb|computeFormFactors()| variará dependiendo del método de cálculo elegido (Figura \ref{img:procesado}), donde puede utilizarse el método del hemi-cubo o el de raytracing. El primero de ellos utilizará un \textit{pipeline} configurado utilizando una API de rasterización, mientras que el segundo utilizará una API capaz de calcular intersecciones utilizando rayos.
 
-La ejecución de \verb|computeRadiosity()| dependerá directamente del manejador \verb|Solver| seleccionado por el usuario, este último enecurará el algoritmo que calculará el vector de radiosidades para la escena.
+La ejecución de \verb|computeRadiosity()| dependerá directamente del manejador \verb|Solver| seleccionado por el usuario, este último ejecutará el algoritmo que calculará el vector de radiosidades para la escena.
 
 \subsubsection{Módulo de visualización}
 
-El módulo de visualización se encarga de renderizar la escena actual desde el punto de vista seleccionado por el usuario. Además, debe tener la capacidad de mostrar las distintas propiedades de los materiales como valor de emisión inicial, valor de reflexión especular, visualización de geometría para facilitar la edición de las propiedades de los objetos o sus caras. El proceso de dibujado comienza con el dibujante de la escena que dibujará un conjunto de imágenes correspondiente a las propiedades de los materiales \verb|SceneRenderer| en la figura \ref{img:vis}, luego un dibujante de texturas \verb|TextureRenderer| seleccionará y convertirá correctamente el resultado anterior a valores tres canales (RGB). El módulo de visualización siempre tendrá una textura bidimensional como parámetro de salida.
+El módulo de visualización se encarga de renderizar la escena actual desde el punto de vista seleccionado por el usuario. Además, debe tener la capacidad de mostrar las distintas propiedades de los materiales como valor de emisión inicial, valor de reflexión especular, visualización de geometría para facilitar la edición de las propiedades de los objetos y de sus caras. El proceso de renderizado comienza con una instancia de la clase \verb|DisplayController| que dibujará un conjunto de imágenes correspondiente a las propiedades de los materiales, \verb|SceneRenderer| en la Figura \ref{img:vis}. Luego un dibujante de texturas \verb|TextureRenderer| seleccionará y convertirá correctamente el resultado anterior a valores tres canales (RGB). El módulo de visualización siempre tendrá una textura bidimensional como parámetro de salida.
 
 \vspace{5mm}
 \begin{minipage}[h]{0.8\linewidth}
@@ -110,19 +111,9 @@ El módulo de visualización se encarga de renderizar la escena actual desde el 
 
 \subsection{Interfaz gráfica}
 
-El módulo de visualización (UI) utiliza una arquitectura basada en el paradigma del \textit{bucle de eventos} \ref{img:ui}, consiste en un bucle que detecta y maneja los distintos eventos recibidos por el sistema. Este método es útil para el manejo sencillo de la concurrencia en sistemas con múltiples hilos en ejecución y es de fácil implementación pues procesa cada uno de los eventos completamente antes de procesar el siguiente como se aprecia en \ref{alg:eventloop}.
+El módulo de visualización (UI) utiliza una arquitectura basada en el paradigma del bucle de eventos (Figura \ref{img:ui}), consiste en un bucle que detecta y maneja los distintos eventos recibidos por el sistema. Este método es útil para el manejo sencillo de la concurrencia en sistemas con múltiples hilos en ejecución y es de fácil implementación pues procesa cada uno de los eventos completamente antes de procesar el siguiente.
 
-\begin{algorithm}
-	\caption{El algoritmo del búcle de eventos}
-	\label{alg:eventloop}
- \begin{algorithmic}
- 	\While{$queue.waitForEvent()$}
- 		\State $queue.processEvent()$
- 	\EndWhile
- \end{algorithmic}
-\end{algorithm}
- 
- El  \textit{bucle de eventos} procesará todos los eventos de la aplicacación, lo que desencadena un conjunto de acciones que modificarán su \textbf{estado} de la interfaz de usuario. Este estado será dibujado por un conjunto de \textbf{componentes}, que no son más que presentadores del estado actual. Es decir, a partir de un conjunto de valores los presentarán en un formato gráfico adecuado y sencillo de comprender.
+ El  \textit{bucle de eventos} procesará todos los eventos de la aplicación, lo que desencadena un conjunto de acciones que modificarán su estado de la interfaz de usuario. Este estado será dibujado por un conjunto de componentes, que no son más que presentadores del estado actual. Es decir, a partir de un conjunto de valores los presentarán en un formato gráfico adecuado y sencillo de comprender.
 
 \vspace{5mm}
 \begin{minipage}[h]{0.8\linewidth}
