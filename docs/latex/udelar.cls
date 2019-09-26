@@ -66,7 +66,6 @@
 \RequirePackage[toc]{appendix}
 \RequirePackage{lastpage}
 \RequirePackage[spanish,es-nodecimaldot]{babel}
-\RequirePackage[utf8x]{inputenc}
 \RequirePackage{amsmath,amssymb}
 \RequirePackage{ifthen}
 \RequirePackage{graphicx}

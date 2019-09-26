@@ -3,7 +3,8 @@
 \pgfplotsset{compat=1.16}
 \usepackage{booktabs}
 \bibliographystyle{unsrtnat}
-\usepackage[utf8]{inputenc}
+\usepackage[utf8x]{inputenc}
+\usepackage{textcomp}
 % ===== FIN DEL PREÁMBULO =====
 
 % ===== INICIO DEL DOCUMENTO =====
@@ -60,11 +61,6 @@
   
   \backmatter 
   
-  \apenarabicnumbering
-  \apenmatter
-  	\afterpage{\blankpage}
-
-  \input{appendix/appendix_C}
 
   \bibliography{bibliography} 
   \bibend

@@ -80,7 +80,7 @@ El algoritmo de la hemi-esfera fue implementado utilizando la biblioteca de traz
 
 \begin{algorithm}
 	\caption{Cálculo de una fila de los factores de forma utilizando traza de rayos}
-	\label{alg:processHemicube}
+	\label{alg:computeff}
 	\begin{algorithmic}
 		\Function{$computeFormFactors$}{$face$}
 			\State $row \gets [0,...,0]$
@@ -178,7 +178,7 @@ Esto emula el fenómeno de la reflexión, aunque introduce pequeños errores al 
 
 \begin{algorithm}
 	\caption{Cálculo de las caras vistas utilizando trazado de rayos}
-	\label{alg:processHemicube}
+	\label{alg:reflections}
 	\begin{algorithmic}
 		\Function{$renderReflections$}{$face, targetFace$}
 			\State $direction \gets normalize(targetFacegetNormal() - face.getNormal())$

@@ -164,8 +164,7 @@ En esta Sección se presentan los resultados observados para los casos de prueba
 		\textbf{3072}                        & 7                           & 3                           & 68                          & 14                          \\ \hline
 		\textbf{49512}                       & 10                          & 30                          & 128                         & 174                         \\ \hline
 		\textbf{196608}                       & 31                          & 116                         & 248                         & 665                         \\ \hline
-		
-49512		\textbf{786432‬}                      & 251                         & 446                         & 1213                        & 2565                        \\ \hline
+		\textbf{786432}   & 251                         & 446                         & 1213                        & 2565                        \\ \hline
 		\textbf{3145728}                      & 992                         & 1778                        & 4018                        & 7511                        \\ \hline
 	\end{tabular}
 	\caption{Resultados obtenidos para el primer caso de prueba en ambas escenas consideradas}
@@ -265,12 +264,12 @@ En este caso, en cuanto a rendimiento, se observa en la tabla \ref{tab:caso2} qu
 		\hline
 		\multicolumn{1}{|c|}{\multirow{3}{*}{Muestras}} & \multicolumn{6}{c|}{Tiempo de ejecución (s)}                                                                                         \\ \cline{2-7} 
 		\multicolumn{1}{|c|}{}                          & \multicolumn{3}{c|}{\textit{Cornell Box}}                                                & \multicolumn{3}{c|}{\textit{Calle}}      \\ \cline{2-7} 
-		\multicolumn{1}{|c|}{}                          & \multicolumn{1}{c|}{OpenGL-D+S} & \multicolumn{1}{c|}{Embree-D+S} & \multicolumn{1}{c|}{Híbrido} & OpenGL-D+S                 & Embree-D+S & Híbrido \\ \hline
+		\multicolumn{1}{|c|}{}                          & \multicolumn{1}{c|}{GL-D+S} & \multicolumn{1}{c|}{E-D+S} & \multicolumn{1}{c|}{Híb} & GL-D+S                 & E-D+S & Híb \\ \hline
 		\textbf{96 - 32}                                & 25                         & 53                          & 21                           & 2563                   & 1221   & 943     \\ \hline
 		\textbf{768 - 32}                               & 93                         & 134                         & 84                          & 1054                   & 2512   & 1643    \\ \hline
 		\textbf{1536 - 64}                              & 304                        & 486                         & 228                          & \multicolumn{1}{c|}{-} & 5342   & 4725    \\ \hline
 	\end{tabular}
-	\caption{Resultados obtenidos en el segundo caso de prueba}
+	\caption{Resultados obtenidos en el segundo caso de prueba. Notación: GL, E, Híb corresponden a OpenGL, Embree e Híbrido; D+S indica que se utilizaron reflexiones especulares y difusas.}
 	\label{tab:caso2}
 \end{table}
 
@@ -400,7 +399,7 @@ coordinates {
 \end{figure}
 \subsubsection{Caso de prueba III}
 
-Esta prueba se construyó con el objetivo de comparar el rendimiento observado utilizando los algoritmos de extensión de factores de forma implementados. Se ha puesto especial énfasis en las diferencias producidas al variar la cantidad de caras especulares de la escena, es decir, los parches cuyo coeficiente de reflexión es positivo. Las pruebas se realizaron con una cantidad de muestras fijas ($196608$ muestras de hemicubo/rayo, y $4096$‬ muestras de portal).
+Esta prueba se construyó con el objetivo de comparar el rendimiento observado utilizando los algoritmos de extensión de factores de forma implementados. Se ha puesto especial énfasis en las diferencias producidas al variar la cantidad de caras especulares de la escena, es decir, los parches cuyo coeficiente de reflexión es positivo. Las pruebas se realizaron con una cantidad de muestras fijas (196608 para el hemicubo o rayos y 4096 para el portal).
 
 \begin{table}[H]
 	\centering
@@ -421,11 +420,11 @@ En table \ref{tab:caso3} puede observare cómo la traza de rayos supera en dos v
 \begin{figure}[H]
 	\centering
 	\begin{subfigure}{0.47\textwidth}
-		\includegraphics[width=1\linewidth]{assets/sdif}
+		\includegraphics[width=1\linewidth]{assets/streete}
 		\caption{Extensión desactivada}
 	\end{subfigure}
 	\begin{subfigure}{0.47\textwidth}
-		\includegraphics[width=1\linewidth]{assets/sspec}
+		\includegraphics[width=1\linewidth]{assets/streets}
 		\caption{Extensión activada}
 	\end{subfigure}
 	\caption{Diferencias observadas activando y desactivando extensiones}

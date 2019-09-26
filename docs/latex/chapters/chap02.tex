@@ -247,7 +247,7 @@ donde:
 	\centering
 	\includegraphics[width=0.8\linewidth]{assets/Hemicube}
 	\captionof{figure}{Representación gráfica del método del hemicubo}
-	\label{img:ff}
+	\label{img:ff3}
 \end{figure}
 
 Los diferenciales de factores de forma deben corregir la deformación introducida con el cambio de proyección desde una hemiesfera a un hemi-cubo. Para ello, para cada píxel que compone el hemi-cubo es necesario calcular la proporición de área que este término ocupa en la hemiesfera unitaria.
@@ -279,7 +279,7 @@ Otra de las técnicas de simulación de iluminación existente es el ray tracing
 
 Para cada uno de los rayos emitidos, se determinará el punto de intersección más cercano. Dada la primitiva geométrica interceptada, es posible integrar el resultado intermedio al resultado final, dependiendo del modelo de iluminación utilizado.
 
-El trazado de rayos es una técnica efectiva \cite{Kajiya} para resolver la ecuación del rendering, utilizando la técnica de \textit{trazado de camino} donde el haz de luz absorbe las propiedades de los materiales con los que interacciona. En este algoritmo, la integral se resielve con un método de Monte Carlo, donde cada rayo representa una muestra estadísticamente independiente.
+El trazado de rayos es una técnica efectiva [Kajiya \cite{Kajiya}] para resolver la ecuación del rendering, utilizando la técnica de \textit{trazado de camino} donde el haz de luz absorbe las propiedades de los materiales con los que interacciona. En este algoritmo, la integral se resielve con un método de Monte Carlo, donde cada rayo representa una muestra estadísticamente independiente.
 
 \subsubsection{El método de la hemi-esfera}
 
