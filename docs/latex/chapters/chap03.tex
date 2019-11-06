@@ -12,7 +12,7 @@ Se propone comparar cuatro métodos para el cálculo de factores de forma:
 \begin{enumerate}
  	\item Cálculo de factores de forma utilizando el hemi-cubo
  	\item  Cálculo de factores de forma utilizando trazado de rayos
- 	\item Cálculo de factores de forma extendidos utilizando dibujado de portales
+ 	\item Cálculo de factores de forma extendidos utilizando rasterización
  	\item Cálculo de factores  de forma extendidos utilizando trazado de rayos
 \end{enumerate}
 
@@ -28,11 +28,11 @@ Para ello, internamente, se utilizó una metodología ágil de desarrollo simila
 Los principios claves del método aplicado a este proyecto fueron:
 \begin{itemize}
 	\item La visualización sencilla del curso de trabajo (una lista de tareas a realizar conocida como \textit{Backlog})
-	\item La limitación de las tareas en progreso.
+	\item La limitación de las tareas en progreso con el objetivo de eliminar la sobrecarga de trabajo.
 	\item Dirigir y gestionar el flujo de trabajo implica la priorización de tareas a realizar dada una cantidad finita de recursos.
 \end{itemize}
 
-La gestión de las tareas a relizar se llevó a cabo en el respositiorio del proyecto, con tareas como las vistas en la Figura \ref{img:kanban}. Donde se consideran un conjunto de tareas:
+La gestión de las tareas a relizar se llevó a cabo en el repositorio del proyecto, con tareas como las vistas en la Figura \ref{img:kanban}, donde se consideran un conjunto de tareas:
 
 \begin{itemize}
 	\item Backlog: Las tareas a realizar, en orden de importancia.
@@ -53,7 +53,7 @@ La gestión de las tareas a relizar se llevó a cabo en el respositiorio del pro
 
 Con la finalidad de evitar el alto acoplamiento, facilitar la extensión y reducir la cantidad de errores de integración se tomó la decisión de utilizar distintos módulos y sub-módulos que ofrezcan un conjunto de funcionalidades bien definido utilizando programación orientada a objetos. Esta decisión permite el añadido de nuevas características y la optimización de ciertas funcionalidades independientemente de los demás módulos contruidos.
 
-El diseño de la solución comprende dos componentes principales, la interfaz gráfica de usuario (GUI, en inglés) y el motor de renderizado.
+El diseño de la solución comprende dos componentes principales, la interfaz gráfica de usuario (GUI, por su nombre en inglés) y el motor de renderizado.
 
 \subsection{Motor de renderizado}
 \label{sec:engine}
@@ -99,7 +99,7 @@ La ejecución de \verb|computeRadiosity()| dependerá directamente del manejador
 
 \subsubsection{Módulo de visualización}
 
-El módulo de visualización se encarga de renderizar la escena actual desde el punto de vista seleccionado por el usuario. Además, debe tener la capacidad de mostrar las distintas propiedades de los materiales como valor de emisión inicial, valor de reflexión especular, visualización de geometría para facilitar la edición de las propiedades de los objetos y de sus caras. El proceso de renderizado comienza con una instancia de la clase \verb|DisplayController| que dibujará un conjunto de imágenes correspondiente a las propiedades de los materiales, \verb|SceneRenderer| en la Figura \ref{img:vis}. Luego un dibujante de texturas \verb|TextureRenderer| seleccionará y convertirá correctamente el resultado anterior a valores tres canales (RGB). El módulo de visualización siempre tendrá una textura bidimensional como parámetro de salida.
+El módulo de visualización se encarga de renderizar la escena actual desde el punto de vista seleccionado por el usuario. Además, debe tener la capacidad de mostrar las distintas propiedades de los materiales, tales como valor de emisión inicial, valor de reflexión especular y, visualización de geometría, para así facilitar la edición de las propiedades de los objetos y de sus caras. El proceso de renderizado comienza con una instancia de la clase \verb|DisplayController| que dibujará un conjunto de imágenes correspondiente a las propiedades de los materiales, \verb|SceneRenderer| en la Figura \ref{img:vis}. Luego un dibujante de texturas \verb|TextureRenderer| seleccionará y convertirá correctamente el resultado anterior a valores de tres canales (RGB). El módulo de visualización siempre tendrá una textura bidimensional como parámetro de salida.
 
 \vspace{5mm}
 \begin{minipage}[h]{0.8\linewidth}
@@ -111,9 +111,9 @@ El módulo de visualización se encarga de renderizar la escena actual desde el 
 
 \subsection{Interfaz gráfica}
 
-El módulo de visualización (UI) utiliza una arquitectura basada en el paradigma del bucle de eventos (Figura \ref{img:ui}), consiste en un bucle que detecta y maneja los distintos eventos recibidos por el sistema. Este método es útil para el manejo sencillo de la concurrencia en sistemas con múltiples hilos en ejecución y es de fácil implementación pues procesa cada uno de los eventos completamente antes de procesar el siguiente.
+El módulo de visualización (UI) utiliza una arquitectura basada en el paradigma del bucle de eventos (Figura \ref{img:ui}), consiste en un bucle que detecta y maneja los distintos eventos recibidos por el sistema. Este método es útil para el manejo sencillo de la concurrencia en sistemas con múltiples hilos en ejecución, y es de fácil implementación pues procesa cada uno de los eventos completamente antes de procesar el siguiente.
 
- El  \textit{bucle de eventos} procesará todos los eventos de la aplicación, lo que desencadena un conjunto de acciones que modificarán su estado de la interfaz de usuario. Este estado será dibujado por un conjunto de componentes, que no son más que presentadores del estado actual. Es decir, a partir de un conjunto de valores los presentarán en un formato gráfico adecuado y sencillo de comprender.
+ El  \textit{bucle de eventos} procesa todos los eventos de la aplicación, lo que desencadena un conjunto de acciones que modifican su estado de la interfaz de usuario. Este estado es dibujado por un conjunto de componentes, que no son más que presentadores del estado actual. Es decir, a partir de un conjunto de valores los presentan en un formato gráfico adecuado y sencillo de comprender.
 
 \vspace{5mm}
 \begin{minipage}[h]{0.8\linewidth}

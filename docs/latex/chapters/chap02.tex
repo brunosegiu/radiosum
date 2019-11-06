@@ -101,7 +101,7 @@ En superficies perfectamente lambertianas, la energía reflejada puede ser expre
 Sustituyendo en \eqref{eq:i} se obtiene: $\frac{\delta{P}}{\delta{\omega}} = \frac{k\cos{\phi}}{\cos{\phi}} = k$, esto implica que la energía percibida de un punto $x$ 
 es constante, independientemente del punto de vista.
 
-Es por esto que la energía total que deja una superficie ($P$) puede ser calculada integrando la energía que deja la superficie en cada dirección posible, esto es, se integra la energía saliente en un hemi-esfera centrada en el punto estudiado:
+Es por esto que la energía total que deja una superficie ($P$) puede ser calculada integrando la energía que deja la superficie en cada dirección posible, esto es, se integra la energía saliente en un hemiesferio centrado en el punto estudiado:
 
 \begin{equation}
     P = \int_{2\pi} \delta{P} = \int_{2\pi} I\cos{\phi}\delta{\omega} = I \int_{2\pi} \cos{\phi}\delta{\omega} = I\pi
@@ -158,7 +158,7 @@ De \eqref{eq:ff} se obtienen las siguientes propiedades:
     \item $A_{i}F_{ij} = A_{j}F{ij}$, lo que supone una relación simétrica entre los factores de forma.
     \item $\sum_{j=1}^{N} F_{ij} < 1$ Es decir, la suma de una de las filas de la matriz de factores de forma no podrá tener un valor superior a la unidad.
     \item $F_{ii} = 0$ Esto se debe a que los parches considerados son planos y por tanto no reflejan su propia luz.
-    \item $F_{ij}$ toma el valor correspondiente a la proyección de $j$ en una hemiesfera unitaria centrada en $i$, proyectándola a su vez en un disco unitario.
+    \item $F_{ij}$ toma el valor correspondiente a la proyección de $j$ en un hemiesferio unitario centrado en $i$, proyectándola a su vez en un disco unitario.
 \end{enumerate}
 
 
@@ -167,7 +167,7 @@ De \eqref{eq:ff} se obtienen las siguientes propiedades:
 
 El cálculo de los factores de forma a través de la Eq. \eqref{eq:ff} analíticamente es inviable en la práctica pues supone la necesidad de conocer la visibilidad entre cada par de parches que componen la escana. Por tanto, es necesario establecer otros métodos que provean aproximaciones lo suficientemente correctas.
 
-Geométricamente, puese establecerse una analogía para la computación de factores de forma conocida como <<analogía de Nusselt>> (ver Figura \ref{img:nusselt}). Se expresará el factor de forma como la proporción de área proyectada de $S_{j}$ en una hemi-esfera ubicada en el baricentro de $S_{i}$ y luego en un disco centrado en $S_{i}$.
+Geométricamente, puese establecerse una analogía para la computación de factores de forma conocida como <<analogía de Nusselt>> (ver Figura \ref{img:nusselt}). Se expresará el factor de forma como la proporción de área proyectada de $S_{j}$ en un hemiesferio ubicado en el baricentro de $S_{i}$ y luego en un disco centrado en $S_{i}$.
 
 \begin{figure}[H]
 	\centering
@@ -186,6 +186,14 @@ El <<\textit{rendering pipeline}>> es un proceso de dibujado estandarizado que c
 Si bien el <<\textit{rendering pipeline}>> es modificable, cada una de sus etapas están definidas.  El programador es capaz de modificar pequeñas funciones (también llamadas \textit{kernels} o \textit{shaders}) que son ejecutadas en la GPU en las etapas correspondientes. El cometido de estas funciones es procesar los parámetros de entrada para generar parámetros que recibirá la siguiente etapa, que los recibirá y transformará como corresponda.
 
 A continuación, se describe el proceso para OpenGL 4.5 visualizado en la Figura \ref{img:pipelinegl}, aunque muchas de estas etapas son trasladables a otras tecnologías existentes.
+
+\vspace{5mm}
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.55\linewidth]{assets/OpenGL}
+	\captionof{figure}{El \textit{rendering pipeline} de OpenGL}
+	\label{img:pipelinegl}
+\end{figure}
 
 \begin{enumerate}
 	\item Procesamiento de primitivas geométricas:
@@ -207,51 +215,41 @@ A continuación, se describe el proceso para OpenGL 4.5 visualizado en la Figura
 		\end{enumerate}
 \end{enumerate}
 
-\clearpage
-
-\vspace{5mm}
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.55\linewidth]{assets/OpenGL}
-	\captionof{figure}{El \textit{rendering pipeline} de OpenGL}
-	\label{img:pipelinegl}
-\end{figure}
-
-Esta técnica de dibujado es extremadamente rápida, además, la mayoría de dispositivos contienen hardware especializado capaz de acelerar estos cálculos, comúnmente conocidos como Unidades de Procesamiento Gráfico (o GPU por sus siglas en inglés). Con el objetivo de aprovechar este hardware [Cohen y Greenberg \cite{Cohen}] idearon el método del hemi-cubo para el cálculo de factores de forma.
+Esta técnica de dibujado es extremadamente rápida, además, la mayoría de dispositivos contienen hardware especializado capaz de acelerar estos cálculos, comúnmente conocidos como Unidades de Procesamiento Gráfico (o GPU por sus siglas en inglés). Con el objetivo de aprovechar este hardware Cohen y Greenberg \cite{Cohen} idearon el método del hemi-cubo para el cálculo de factores de forma.
 
 \subsubsection{El método del hemi-cubo}
 
 El hardware optimizado para realizar operaciones de rasterización tiene la capacidad de proyectar escenas tridimensionales en imágenes planas a gran velocidad. 
 
-El método original de cálculo de factores de forma propone la proyección de la escena una hemiesfera centrada en $S_{i}$, sin embargo los modelos de proyección utilizados no lo permiten. Por esto es necesario proyectar la escena a un hemi-cubo centrado en $S_{i}$, esto supone el dibujado de cinco superficies planar, y por tanto puede ser realizada utilizando la rasterización.
+El método original de cálculo de factores de forma propone la proyección de la escena una hemiesferio centrado en $S_{i}$, sin embargo los modelos de proyección utilizados no lo facilitan pues las proyecciones se realizan sobre superficies planas. Por esto, Cohen y Greenberg \cite{Cohen} proponen proyectar la escena a un hemi-cubo centrado en $S_{i}$, esto supone el dibujado de cinco superficies planar, y por tanto puede ser realizada utilizando la rasterización como se aprecia en la Figura \ref{img:deltaff}.
 
 Para utilizar el hardware eficientemente consideraremos que se calcula una fila completa de $\mathbf{F}$, esto implica que dado el parche $S_{i}$, se calcula simultáneamente los factores de forma desde $S_{i}$ al resto de las superficies restantes. 
 
 Este método aprovecha el buffer de profundidad (Z-buffer), para la correcta determinación de visibilidad entre parches tomando en cuenta los fragmentos proyectados para los elementos que se encuentren más cercanos al parche $S_{i}$.
 
-Este algoritmo, propuesto originalmente por [Cohen y Greenberg] en \citeyear{Cohen}, propone rasterizar la escena tridimensional en cinco texturas correspondientes a las caras de un hemi-cubo. Para cada fragmento renderizado se sumará un valor diferencial del factor de forma, que dependerá de la posición del píxel en el hemi-cubo en relación a el hemiesferio que este aproxima.  Esta suma genera una fila de la matriz $\mathbf{F}$, específicamente la fila $\mathbf{F}_{i}$, como se puede observar en la Figura \ref{img:ff}.
+Este algoritmo, propone rasterizar la escena tridimensional en cinco texturas correspondientes a las caras de un hemi-cubo. Para cada fragmento renderizado se sumará un valor diferencial del factor de forma, que dependerá de la posición del píxel en el hemi-cubo en relación a el hemiesferio que este aproxima.  Esta suma genera una fila de la matriz $\mathbf{F}$, específicamente la fila $\mathbf{F}_{i}$, como se puede observar en la Eq. \eqref{eq:ffgreenberg}.
 
 Por tanto, podremos definir:
 
 \begin{equation}
-	\mathbf{F}_{ij} = \sum_{q=1}^{R} \delta{F_{q}}
+	\mathbf{F}_{ij} = \sum_{q_{j}=1}^{R_{j}} \delta{F_{q_{j}}}
 	\label{eq:ffgreenberg}
 \end{equation}
 donde:
 \begin{itemize}
-	\item $R$ es la cantidad de píxeles correspondientes a la superficie $S_{j}$ que cubren el hemi-cubo.
-	\item $\delta{F_{q}}$ el diferencial de factor de forma asociado al píxel del hemi-cubo $q$.
+	\item $R_{j}$ es la cantidad de píxeles correspondientes a la superficie $S_{j}$ que cubren el hemi-cubo.
+	\item $\delta{F_{q_{j}}}$ el diferencial de factor de forma asociado al píxel del hemi-cubo $q_{j}$.
 \end{itemize}
 
 \vspace{5mm}
 \begin{figure}[!ht]
 	\centering
 	\includegraphics[width=0.8\linewidth]{assets/Hemicube}
-	\captionof{figure}{Representación gráfica del método del hemicubo}
+	\captionof{figure}{Representación gráfica del método del hemi-cubo.}
 	\label{img:ff3}
 \end{figure}
 
-Los diferenciales de factores de forma deben corregir la deformación introducida con el cambio de proyección desde una hemiesfera a un hemi-cubo. Para ello, para cada píxel que compone el hemi-cubo es necesario calcular la proporición de área que este término ocupa en el hemiesferio unitaria.
+Los diferenciales de factores de forma deben corregir la deformación introducida con el cambio de proyección desde un hemiesferio a un hemi-cubo. Para ello, para cada píxel que compone el hemi-cubo es necesario calcular la proporición de área que este término ocupa en el hemiesferio unitaria.
 
 Para la cara superior, los diferenciales se calculan como (ver referencias en la Figura \ref{img:deltaff}):
 
@@ -268,7 +266,7 @@ Para las caras laterales, la fórmula dada es:
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.4\linewidth]{assets/deltaff}
-	\captionof{figure}{Representación gráfica de los ejes considerados para el factor de corrección de los factores de forma}
+	\captionof{figure}{Representación gráfica de los ejes considerados para el factor de corrección de los factores de forma.}
 	\label{img:deltaff}
 \end{figure}
 
@@ -280,18 +278,18 @@ Otra de las técnicas de simulación de iluminación existente es el ray tracing
 
 Para cada uno de los rayos emitidos, se determinará el punto de intersección más cercano. Dada la primitiva geométrica interceptada, es posible integrar el resultado intermedio al resultado final, dependiendo del modelo de iluminación utilizado.
 
-El trazado de rayos es una técnica efectiva [Kajiya \cite{Kajiya}] para resolver la ecuación del rendering, utilizando la técnica de \textit{trazado de camino} donde el haz de luz absorbe las propiedades de los materiales con los que interacciona. En este algoritmo, la integral se resielve con un método de Monte Carlo, donde cada rayo representa una muestra estadísticamente independiente.
+El trazado de rayos es una técnica efectiva según Kajiya \cite{Kajiya}, para resolver la ecuación del rendering, utilizando la técnica de \textit{trazado de camino} donde el haz de luz absorbe las propiedades de los materiales con los que interactúa. En este algoritmo, la integral se resuelve con un método de Monte Carlo, donde cada rayo representa una muestra estadísticamente independiente.
 
 \subsubsection{El método del hemiesferio}
 
-El algoritmo de ray tracing puede ser utilizado par ael cálculo de factores de forma, en particular para resolver la doble integral presentada en la Eq. \eqref{eq:ff}.
+El algoritmo de ray tracing puede ser utilizado para el cálculo de factores de forma, en particular para resolver la doble integral presentada en la Eq. \eqref{eq:ff}.
 
-Es posible re-imaginar el problema original colocando una hemi-esfera unitaria en el centro de $S_{i}$ orientada en la direccción de la normal de la superficie.
+Es posible re-imaginar el problema original colocando un hemiesferio unitario en el centro de $S_{i}$ orientada en la direccción de la normal de la superficie.
 
-El algoritmo propuesto por \citeauthor{Malley}  consiste realizar un muestreo de la cantidad de  rayos que parten desde el centro de $S_{i}$ e intersecan $S_{j}$. Las direcciones de los rayos serán determinadas a partir de la \textit{distribución del coseno} cuya función de densidad es $f(x) = \frac{1}{2}[1 + \cos((x-1)\pi)]$.
+El algoritmo propuesto por \citeauthor{Malley}  consiste realizar un muestreo de la cantidad de  rayos que parten desde el centro de $S_{i}$ e intersecan $S_{j}$. Las direcciones de los rayos serán determinadas a partir de la \textit{distribución del coseno} cuya función de densidad es $f(x) = \frac{1}{2}[1 + \cos((x-1)\pi)]$ donde $x$ es una variable aleatoria uniforma en el rango $[]0,1]$.
 
 \begin{equation}
-	\mathbf{F}_{ij} = \sum_{k=1}^{nMuestras} \frac{\beta(ray(S_{i},d), S_{j})}{nMuestras} 
+	\mathbf{F}_{ij} = \frac{1}{nMuestras} \sum_{k=1}^{nMuestras} {\beta(ray(S_{i},d), S_{j})}
 	\label{eq:ffhemiesfera}
 \end{equation}
 
@@ -299,7 +297,7 @@ donde:
 	
 	\begin{itemize}
 		\item  $d$ sigue la distribución coseno.
-		\item $\beta(r, S_{x})$ toma el valor 1 si el rayo $ray(S_{i},d)$ interseca a $S_{j}$ o $0$ en otro caso.
+		\item $\beta(r, S_{j})$ toma el valor 1 si el rayo $ray(S_{i},d)$ interseca a $S_{j}$ o $0$ en otro caso.
 	\end{itemize}
 
 \vspace{5mm}
@@ -310,20 +308,18 @@ donde:
 	\label{img:ff}
 \end{figure}
 
-Cabe destacar que, no es necesario utilizar una distribución de probabilidad con valores aleatorios o pseudo-aleatorios, sino que, si la cantidad de rayos utilizados es la suficiente y además se utiliza una función que distribuya correctamente cada rayo, los resultados obtenidos se aproximan a los reales.
+Cabe destacar que, no es necesario utilizar una distribución de probabilidad con valores aleatorios o pseudo-aleatorios, sino que alcanza con utilizar una secuencia determinista de rayos que tengan una distribución que siga la del coseno.
 
-Para esto, pueden utilizare otras distribuciones para la dirección de traza. Particularmente, una de ellas es la propuesta por [\citeauthor{Beckers} \cite{Beckers}], presenta un método general de teselación de discos y hemi-esferas. Es desacable el hecho de que la propuesta para hemiesferas genera un conjunto de celdas de igual área que comparten la misma relación de aspecto. Esto hace que el método presente una calidad adecuada para la elección de las direcciones en la que se trazaran los rayos.
+Para esto, pueden utilizarse otras distribuciones para la dirección de traza. Particularmente, una de ellas es la propuesta por Beckers y Beckers \cite{Beckers}, presenta un método general de teselación de discos y hemiesferios. Es deseable el hecho de que la propuesta para hemiesferios genera un conjunto de celdas de igual área que comparten la misma relación de aspecto. Esto hace que el método presente una calidad adecuada para la elección de las direcciones en la que se trazaran los rayos.
 
-\section{Superficies especulares}
+\section{Extensión a superficies especulares}
 
-Originalmente, el método de cálculo de la radiosidad asume que todas las superficies son reflectores lambertianos, lo que supone que solo existirán reflexiones difusas cuando la luz interactúa con ellas. Sin embargo, en la mayor parte de las escenas del mndo real es necesario simular reflexiones especulares correctamente para obtener resultados que se asemejen a la realidad.
+Originalmente, el método de cálculo de la radiosidad asume que todas las superficies son reflectores lambertianos, lo que supone que solo existirán reflexiones difusas cuando la luz interactúa con ellas. Sin embargo, en la mayor parte de las escenas del mundo real es necesario simular reflexiones especulares correctamente para obtener resultados que se asemejen a la realidad.
 
-Por ello existe la extensión del método para superficies especulares o refractantes propuesto por [\citeauthor{Sillion} \cite{Sillion}]. Los autores proponen extender el significado del término \textit{factor de forma} a más que una mera relación geométrica entre parches. El nuevo factor de forma $\mathbf{F}_{ij}$ corresponde a la proporción de energía que deja la superficie $i$ y llega la superficie $j$ luego de un número de reflexiones y refracciones especulares.
-
-Esto modifica completamente los algoritmos de cálculo de factores de forma. Los autores proponen un algoritmo de  que cálculo consiste en el trazado de rayos desde $S_{i}$ en una dirección arbitraria $d$ bien distribuida.  Luego, una vez que se conozca el camino trazado se distribuirá el valor final del factor de forma dependiendo en la cantidad de superficies con las que interaccione el rayo y sus coeficientes especulares como se observa en la Figura \ref{img:caminoespecular}.
+Por ello se ha desarrollado una extensión del método de radiosidad para superficies especulares o refractantes propuesto por Sillion, et al \cite{Sillion}. Los autores proponen extender el significado del término \textit{factor de forma} a más que una mera relación geométrica entre parches. El nuevo factor de forma $\mathbf{F}_{ij}$ corresponde a la proporción de luz que sale de la superficie $i$ y llega la superficie $j$ luego de un número de reflexiones y refracciones especulares. Esta propuesta modifica completamente los algoritmos de cálculo de factores de forma. Los autores proponen un algoritmo de cálculo que consiste en el trazado de caminos desde $S_{i}$ en una dirección arbitraria $d$ bien distribuida.  Luego, para cada camino trazado, se distribuirá el valor final del factor de forma dependiendo en la cantidad de superficies con las que interaccione el camino y sus coeficientes especulares como se observa en la Figura \ref{img:caminoespecular}.
 
 \vspace{5mm}
-\begin{figure}[H]
+\begin{figure}[htbp]
 	\includegraphics[width=1\linewidth]{assets/extended}
 	\captionof{figure}{Representación gráfica del cálculo del factor de forma extendido donde $k = \frac{1}{N}$, con $N$ muestras tomadas.}
 	\label{img:caminoespecular}
@@ -360,11 +356,15 @@ Aunque los algoritmos clásicos de resolución de sistema de ecuaciones aplican 
 
 Cabe aclarar, que el método planteado hasta el momento resuelve la radiosidad en un único canal. Es decir, no se toma en cuenta todo el espectro electromagnético de la luz, es por ello que puede establecerse una extensión del método. Esta extensión implica la existencia de tres vectores de reflexión, uno para cada canal \textit{RGB} (del inglés \textit{Red - Green - Blue}). Por tanto es necesario que se resuelvan tres y no un único sistema de ecuaciones, aunque es posible destacar que la matriz $\mathbf{F}$ permanece constante pues depende de la geometría de la escena. El único cambio en el sistema surge en la matriz $\mathbf{R}$ que pasará a depender del canal seleccionado: $\mathbf{R}_{c}$.
 
-\section{OpenGL}
+\section{Bibliotecas gráficas}
 
-Con el objetivo de proveer interfaces estandarizadas para el uso de tarjetas gráficas y los distintos algoritmos relacioandos a la rasterización existen un conjunto de interfaces que abstraen los recursos necesarios (hardware, sistema operativo). En el contexto de este proyecto, se estudia el uso de Open Graphics Library (OpenGL).
+La computación gráfica es una herramienta sumamente útil para la generación de programas que faciliten tareas. Es por ello que ha sido necesario proveer bibliotecas estándar capaces de facilitar la aplicación de técnicas como la rasterización o el trazado de rayos utilizando las aceleraciones por hardware disponibles y de forma abstacta. Es por esto que generalmente se utilizan bibliotecas gráficas que abstraigan el hardware subyacente para el programador.
 
-OpenGL es una especificación de una Interfaz de Programación de Aplicación (API por sus siglas en inglés) diseñada por la organizción Khronos Group. Su cometido es el dibujado de gráficos bidimensionales o tridimensionales utilizando el método de rasterización (ver Sección \ref{sec:rasterizacion}). Los distintos fabricantes de Sistemas Operativos y tarjetas gráficas proporcionan implementaciones que se ajusten al hardware específico. Esta abstracción facilita la compatibilidad de las aplicaciones independientemente del hardware donde sean ejecutadas.
+\subsection{OpenGL}
+
+Existen un conunto bibliotecas de gráficas que soportan la rasterización (OpenGL, Vulkan, DirectX, Metal). En el contexto de este proyecto, se estudia el uso de Open Graphics Library (OpenGL).
+
+OpenGL es una especificación de una Interfaz de Programación de Aplicación (API por sus siglas en inglés) diseñada por la organización Khronos Group. Su cometido es el dibujado de gráficos bidimensionales o tridimensionales utilizando el método de rasterización (ver Sección \ref{sec:rasterizacion}). Los distintos fabricantes de sistemas operativos y tarjetas gráficas proporcionan implementaciones que se ajusten al hardware específico. Esta abstracción facilita la compatibilidad de las aplicaciones independientemente del hardware donde sean ejecutadas.
 
 \subsection{Arquitectura}
 La arquitectura base de la bibliotecta es de cliente/servidor (ver Figura \ref{img:gpucpugl}). El cliente es la aplicación que invoca funciones para el dibujado de gráficos y es ejecutado en la CPU. El servidor, que es ejecutado en la GPU, almacena los distintos buffers y ejecuta las funciones necesarias.
@@ -386,9 +386,9 @@ La inicialización de la máquina de estados depende directamente de la creació
 	
 \section{Embree}
 
-Los distintos algoritmos para evaluar la intersección entre superficies y rayos han evolucionado a gran velocidad, introduciéndose los conceptos de volumen envolvente y jerarquías de escena. Esto resulta en un gran re-trabajo al momento de implementar algoritmos que se basan en el trazado de rayos de forma eficiente. Es por ello, que de manera similar a las APIs de dibujado de gráficos acelerados por hardware existen interfaces que facilitan la aceleración del trazado de rayos. En particular, Embree es una biblioteca creada por Intel con este propósito.
+Los distintos algoritmos para evaluar la intersección entre superficies y rayos han evolucionado en los últimos años, introduciéndose los conceptos de volumen acotante y jerarquías de escena. Esto resulta en un gran trabajo innecesario al momento de implementar algoritmos que se basan en el trazado de rayos de forma eficiente. Es por ello, que de manera similar a las APIs de dibujado de gráficos acelerados por hardware existen interfaces que facilitan la aceleración del trazado de rayos. En particular, Embree es una biblioteca creada por Intel con este propósito.
 
-La biblioteca expone un conjunto de funciones para realizar el trazado de rayos acelerado a través de componentes de hardware y software mediante la utilización del conjunto de instrucciones del paradigma SIMD (del inglés Single Instruction - Multiple Data), donde una única instrucción es ejecutada sobre un gran conjunto de datos (por ejemplo, la ejecución concurrente de un conjunto de multiplicaciones en punto flotante a nivel de CPU) y la generación de estructuras de aceleración, como las BVH (del inglés \textit{Bounding Volume Hierarchies}). La arquitectura de la aplicación, diagramada en la Figura \ref{img:embree}, demuestra los distintos algoritmos propuestos para la generación de estructuras de aceleración y algoritmos de intersección eficientes.
+Embree expone un conjunto de funciones para realizar el trazado de rayos acelerado a través de componentes de hardware y software mediante la utilización del conjunto de instrucciones del paradigma SIMD (del inglés Single Instruction - Multiple Data), donde una única instrucción es ejecutada sobre un gran conjunto de datos (por ejemplo, la ejecución concurrente de un conjunto de multiplicaciones en punto flotante a nivel de CPU) y la generación de estructuras de aceleración, como las BVH (del inglés \textit{Bounding Volume Hierarchies}). La arquitectura de la aplicación, diagramada en la Figura \ref{img:embree}, demuestra los distintos algoritmos propuestos para la generación de estructuras de aceleración y algoritmos de intersección eficientes.
 
 La biblioteca resuelve un conjunto de dificultades normalmente encontradas en todas las aplicaciones de algoritmos que involucren el trazado de rayos, entre ellas:
 
@@ -397,7 +397,7 @@ La biblioteca resuelve un conjunto de dificultades normalmente encontradas en to
 	\item \textbf{Vectorización:} Con el objetivo de optimizar el uso de la CPU, la biblioteca vectoriza los cálculos necesarios para aprovechar las instrucciones SIMD.
 	\item \textbf{Soporte para múltiples CPUs:} La biblioteca provee de una capa de abstracción independiente del hardware donde se utilice.
 	\item \textbf{Conocimiento del dominio extenso:} Dado que la biblioteca implementa las estructuras de aceleración y los algoritmos de intersección no es necesario tener un conocimiento completo del dominio para construir aplicaciones utilizando trazado de rayos.
-	\item \textbf{Manejo eficiente de la memoria:} Para la visualización de escenas con gran cantidad de primitivas.
+	\item \textbf{Manejo eficiente de la memoria:} Se provee un manejo interno de la memoria RAMo para facilitar la visualización de escenas con gran cantidad de primitivas.
 \end{itemize}
 
 \vspace{5mm}
@@ -412,7 +412,7 @@ La biblioteca resuelve un conjunto de dificultades normalmente encontradas en to
 
 En esta sección se discuten alternativas propuestas para resolver el cálculo de la iluminación global en escenas con materiales difusos y especulares.
 
-El algoritmo propuesto por [Shirley \cite{Shirley}] calcula la iluminación difusa utilizando dos pasadas. Este algoritmo difiere del propuesto por [Sillion y Pueach \cite{Sillion}] en el sentido que se consideran distintos modelos de fuentes luminosas con propiedades particulares (luces puntuales, direccionales, de área).
+El algoritmo propuesto por Shirley \cite{Shirley} calcula la iluminación difusa utilizando dos pasadas. Este algoritmo difiere del propuesto por Sillion y Pueach \cite{Sillion} en el sentido que se consideran distintos modelos de fuentes luminosas con propiedades particulares (luces puntuales, direccionales, de área).
 
 En la primer pasada, el algoritmo calcula la componente difusa de todos los rayos que rebotan en al menos una superficie especular. Este método calcula los caminos que seguirán los rayos de luz provenientes de fuentes luminosas, es decir, se discretiza la cantidad de rayos emitidos por una fuente luminosa, cada rayo representa una fracción de la energía emitida.
 
@@ -420,12 +420,12 @@ Cuando existe una intersección, se divide la energía entre los cuatro nodos m�
 
 El segundo paso utiliza el método de radiosidad para calcular la iluminación difusa que involucra al menos dos superficies, nuevamente se omite la iluminación directa pues se calculará en la etapa de vista. Para ello, se emiten rayos desde cada supeficie utilizando la distribución del coseno de manera equivalente a la propuesta por \citeauthor{Malley}. 
 
-Finalmente, cuando se dibuja la imagen final también se calcula la iluminación directa de forma estándar (ver [Whitted \cite{Whitted}]) sustituyendo el término de ambiente por el calculado en las pasadas anteriores.
+Finalmente, cuando se dibuja la imagen final también se calcula la iluminación directa de forma estándar (ver Whitted \cite{Whitted}) sustituyendo el término de ambiente por el calculado en las pasadas anteriores.
 
-Otro acercamiento al problema es el método propuesto de [Kok \cite{Kok}] es una extensión para parches que están formados por superficies de Bézier, estas son superficies delimitadas por curvas de nombre homónimo que para una superficie definida con $m$ puntos siguen la ecuación $c(u,v) = \sum_{i=0}^{m} c_{i}(v)B_{i}^{m}(u)$ donde $c$ es el vector de desplazamientos, y $B$ una función que genera la curva.
+Otro acercamiento al problema es el método propuesto de Kok \cite{Kok} es una extensión para parches que están formados por superficies de Bézier, estas son superficies delimitadas por curvas de nombre homónimo que para una superficie definida con $m$ puntos siguen la ecuación $c(u,v) = \sum_{i=0}^{m} c_{i}(v)B_{i}^{m}(u)$ donde $c$ es el vector de desplazamientos, y $B$ una función que genera la curva.
 
-Los autores proponen la discretización de las superficies en puntos de muestreo dependiendo del área, luego simplemente se calcula el factor de forma de la superficie utilizando el método de la hemi-esfera, agregando los resultados para cada punto. En caso de que un rayo interseque una superficie especular, los autores proponen un método similar al de [Sillion y Puech \cite{Sillion}] donde se seguirá el camino del rayo mientras rebote en superficies especulares y arribe en una difusa, distribuyendo el factor de forma entre las superficies involucradas dependiendo del coeficiente de reflexión especular.
+Los autores proponen la discretización de las superficies en puntos de muestreo dependiendo del área, luego simplemente se calcula el factor de forma de la superficie utilizando el método del hemiesferio, agregando los resultados para cada punto. En caso de que un rayo interseque una superficie especular, los autores proponen un método similar al de Sillion y Puech \cite{Sillion} donde se seguirá el camino del rayo mientras rebote en superficies especulares y arribe en una difusa, distribuyendo el factor de forma entre las superficies involucradas dependiendo del coeficiente de reflexión especular.
 
-Una formulación distinta del problema, que también se focaliza en el uso de radiosidad es [Holly y Torrance \cite{Holly}]. Los autores proponen, nuevamente, un método de dos pasadas donde el factor de forma está compuesto por tres partes el factor de forma delantero y trasero. El primero, está intrínsecamente relacionado a la reflexión difusa y tiene el mismo comportamiento que el factor de forma definido por [Cohen \cite{Cohen}] mientras que el segundo se relaciona con el fenómeno de la refracción y es calculado integrando en el hemiesferio opuesta por la normal del parche. La última componente son los factores de forma de ventana, que contienen la información referente a la reflexión especular.
+Una formulación distinta del problema, que también se focaliza en el uso de radiosidad es Holly y Torrance \cite{Holly}. Los autores proponen, nuevamente, un método de dos pasadas donde el factor de forma está compuesto por tres partes, el factor de forma difuso y los factores de forma delantero y trasero. El primero, está intrínsecamente relacionado a la reflexión difusa y tiene el mismo comportamiento que el factor de forma definido por Cohen \cite{Cohen} mientras que los segundos se relacionan con el fenómeno de la refracción y son calculado integrando en el hemiesferio opuesto por la normal del parche. La última componente son los factores de forma de ventana, que contienen la información referente a la reflexión especular.
 
-El método propone el uso del hemicubo para calcular los factores de forma delanteros, mientras que los traseros son calculados invirtiendo el hemicubo. Para calcular las componentes especulares, se utiliza un método similar al propuesto en el dibujado de portales, con la salvedad de que se opta por duplicar la geometría simétricamente en lugar de simplemente trasladar la cámara.
+El método propone el uso del hemi-cubo para calcular los factores de forma delanteros, mientras que los traseros son calculados invirtiendo el hemi-cubo. Para calcular las componentes especulares, se utiliza un método comúnmente denominado dibujado de portales, donde se coloca una ventana virtual que distorsiona la proyección de la escena al mover la cámara, con la salvedad de que se opta por duplicar la geometría simétricamente en lugar de simplemente trasladar la cámara.
