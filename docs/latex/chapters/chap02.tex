@@ -162,7 +162,7 @@ De \eqref{eq:ff} se obtienen las siguientes propiedades:
 \end{enumerate}
 
 
-\section{Métodos de cálculo de la matriz de Factores de Forma}
+\subsection{Métodos de cálculo de la matriz de Factores de Forma}
 \label{sec:calculoff}
 
 El cálculo de los factores de forma a través de la Eq. \eqref{eq:ff} analíticamente es inviable en la práctica pues supone la necesidad de conocer la visibilidad entre cada par de parches que componen la escana. Por tanto, es necesario establecer otros métodos que provean aproximaciones lo suficientemente correctas.
@@ -178,7 +178,7 @@ Geométricamente, puese establecerse una analogía para la computación de facto
 
 El cálculo de la matriz de factores de forma $\mathbf{F}$ supone la proyección de los parches. De aquí en más se asumirá que estos parches son polígonos no curvos y lo que permite utilizar las técnicas de dibujado de objetos tridimensionales tradicionales.
 
-\subsection{Rasterización}
+\subsubsection{Rasterización}
 \label{sec:rasterizacion}
 
 El <<\textit{rendering pipeline}>> es un proceso de dibujado estandarizado que consiste en un conjunto de etapas cuyo cometido es la generación de un \textit{frame buffer}. Los fabricantes de los dispositivos aceleradores gráficos y/o sistemas operativos proveen de interfaces de programación (OpenGL, Vulkan, DirectX) que se basan en este modelo para abstraer el uso del hardware.
@@ -271,7 +271,7 @@ Para las caras laterales, la fórmula dada es:
 \end{figure}
 
 
-\subsection{Trazado de rayos}
+\subsubsection{Trazado de rayos}
 \label{sec:raytracing}
 
 Otra de las técnicas de simulación de iluminación existente es el ray tracing que consiste en el cálculo de la intersección de una semi-recta (a la que denominaremos rayo) con la geometría de la escena, (cada uno de estos rayos simulará un haz de luz.
@@ -312,7 +312,7 @@ Cabe destacar que, no es necesario utilizar una distribución de probabilidad co
 
 Para esto, pueden utilizarse otras distribuciones para la dirección de traza. Particularmente, una de ellas es la propuesta por Beckers y Beckers \cite{Beckers}, presenta un método general de teselación de discos y hemiesferios. Es deseable el hecho de que la propuesta para hemiesferios genera un conjunto de celdas de igual área que comparten la misma relación de aspecto. Esto hace que el método presente una calidad adecuada para la elección de las direcciones en la que se trazaran los rayos.
 
-\section{Extensión a superficies especulares}
+\subsection{Extensión a superficies especulares}
 
 Originalmente, el método de cálculo de la radiosidad asume que todas las superficies son reflectores lambertianos, lo que supone que solo existirán reflexiones difusas cuando la luz interactúa con ellas. Sin embargo, en la mayor parte de las escenas del mundo real es necesario simular reflexiones especulares correctamente para obtener resultados que se asemejen a la realidad.
 
@@ -325,7 +325,7 @@ Por ello se ha desarrollado una extensión del método de radiosidad para superf
 	\label{img:caminoespecular}
 \end{figure}
 
-\section{Cálculo del vector de radiosidades}
+\subsection{Cálculo del vector de radiosidades}
 \label{sec:vrad}
 
 Luego de computar la matriz $\mathbf{F}$ y dado los vectores de emisiones $E$ y reflexiones $\rho$, resta computar el vector de radiosidades correspondiente para cada parche, denominado $B$.
@@ -366,7 +366,7 @@ Existen un conunto bibliotecas de gráficas que soportan la rasterización (Open
 
 OpenGL es una especificación de una Interfaz de Programación de Aplicación (API por sus siglas en inglés) diseñada por la organización Khronos Group. Su cometido es el dibujado de gráficos bidimensionales o tridimensionales utilizando el método de rasterización (ver Sección \ref{sec:rasterizacion}). Los distintos fabricantes de sistemas operativos y tarjetas gráficas proporcionan implementaciones que se ajusten al hardware específico. Esta abstracción facilita la compatibilidad de las aplicaciones independientemente del hardware donde sean ejecutadas.
 
-\subsection{Arquitectura}
+\subsubsection{Arquitectura}
 La arquitectura base de la bibliotecta es de cliente/servidor (ver Figura \ref{img:gpucpugl}). El cliente es la aplicación que invoca funciones para el dibujado de gráficos y es ejecutado en la CPU. El servidor, que es ejecutado en la GPU, almacena los distintos buffers y ejecuta las funciones necesarias.
 
 El cliente modifica los atributos a través de invocaciones a las funciones de prefijo \verb|gl|, identificando el recurso afectado con valores enumerados (por ejemplo, \verb|GL_TEXTURE_2D| representa un conjunto de imágenes bidimencionales). Dado que la biblioteca es implementada como una máquina de estado, los atributos son recordados hasta que sean modificados nuevamente.
@@ -381,10 +381,10 @@ Estas invocaciones no son ejecutadas inmediatamente, sino que de forma similar a
 	\label{img:gpucpugl}
  \end{figure}
 
-\subsection{Extensiones}
+\subsubsection{Extensiones}
 La inicialización de la máquina de estados depende directamente de la creación de un contexto que será utilizado para almacenar los datos. Este proceso depende fuertemente de la plataforma donde se ejecute la aplicación, que depende entre otros del sistema operativo y/o el hardware utilizado. Por este motivo, existen bibliotecas que manejan la creación del contexto en diversas plataformas como SDL y GLFW.
 	
-\section{Embree}
+\subsection{Embree}
 
 Los distintos algoritmos para evaluar la intersección entre superficies y rayos han evolucionado en los últimos años, introduciéndose los conceptos de volumen acotante y jerarquías de escena. Esto resulta en un gran trabajo innecesario al momento de implementar algoritmos que se basan en el trazado de rayos de forma eficiente. Es por ello, que de manera similar a las APIs de dibujado de gráficos acelerados por hardware existen interfaces que facilitan la aceleración del trazado de rayos. En particular, Embree es una biblioteca creada por Intel con este propósito.
 

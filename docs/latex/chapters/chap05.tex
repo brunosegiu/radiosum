@@ -149,10 +149,10 @@ Con el objetivo de medir correctamente las ventajas y desventajas de cada métod
 
 \subsection{Resultados observados}
 
-En esta sección se presentan los resultados observados para los casos de prueba planteados. En particular, los resultados se detallan en función de la cantidad de muestras tomadas en cada hemicubo o hemiesferio según corresponda. La cantidad de muestras tomadas depende de: $3 * x^{2}$ donde $x$ es el largo de un lado del hemicubo y en el caso del hemiesferio el número dependerá de la cantidad de rayos trazados.
+En esta sección se presentan los resultados observados para los casos de prueba planteados. En particular, los resultados se detallan en función de la cantidad de muestras tomadas en cada hemi-cubo o hemiesferio según corresponda. La cantidad de muestras tomadas depende de: $3 x^{2}$ donde $x$ es el largo de un lado del hemi-cubo y en el caso del hemiesferio el número dependerá de la cantidad de rayos trazados.
 
 
-\subsubsection{Caso de prueba I}
+\subsubsection{Caso de prueba I (Difusa)}
 
 \begin{table}[htbp]
 	\centering
@@ -167,11 +167,11 @@ En esta sección se presentan los resultados observados para los casos de prueba
 		\textbf{786432}   & 251                         & 446                         & 1213                        & 2565                        \\ \hline
 		\textbf{3145728}                      & 992                         & 1778                        & 4018                        & 7511                        \\ \hline
 	\end{tabular}
-	\caption{Resultados obtenidos para el primer caso de prueba en ambas escenas consideradas}
+	\caption{Resultados obtenidos para el primer caso de prueba.}
 	\label{tab:tablecaso1}
 \end{table}
 
-En este caso, se observa en la Tabla \ref{tab:tablecaso1} que el método del hemicubo tiene un rendimiento considerablemente superior al de la traza de rayos. Cabe destacar que se observó una ocupación promedio de la GPU del 30\% y CPU 90\%. Esto probablemente se deba a la gran cantidad de sincronizaciones necesarias entre el dispositivo y el controlador. El uso de traza de rayos presentó una ocupación de los núcleos del procesador del 99\%. Se destaca la diferencia observada entre OpenGL y Embree en la Figura \ref{plot:emglc1}.
+En este caso, se observa en la Tabla \ref{tab:tablecaso1} que el método del hemi-cubo tiene un rendimiento considerablemente superior al de la traza de rayos. Cabe destacar que se observó una ocupación promedio de la GPU del 30\% y CPU 90\%. Esto probablemente se deba a la gran cantidad de sincronizaciones necesarias entre el dispositivo y el controlador. El uso de traza de rayos presentó una ocupación de la CPU del 99\%. Se destaca la diferencia observada entre OpenGL y Embree en la Figura \ref{plot:emglc1}.
 
 \begin{figure}
 \begin{tikzpicture}
@@ -229,7 +229,7 @@ coordinates {
 \label{plot:emglc1}
 \end{figure}
 
-Una de las consecuencias más interesantes a ser analizadas para detectar la cantidad de muestras óptimas a considerar es la calidad de la imagen final, y qué tan pronunciadas son las diferencias en la iluminación entre los parches, es decir, en qué medida difiere la radiosidad entre parches. Para este caso, se pudo observar (véase la Figura \ref{img:difres}) que si bien las resoluciones más bajas consumen menor cantidad de recursos los resultados tienen una calidad sustancialmente menor. Considerando que el modelo generalmente es utilizado para el cálculo de iluminación en una etapa de pre-procesado (fuera de línea), es recomendable evitar el uso de factores de muestreo tan bajos. Esto se ve acentuado en el análisis de la matriz de factores de forma, según las métricas establecidas en \ref{metricasestablecidas} se pudo comprobar que máximo error promedio apreciado (medida que se ha denominado $Ep$) fue de $0.05$ y $0.04$ utilizando $786.432$ muestras para los métodos del hemicubo y el hemiesferio mientras que el uso de $3.072$ muestras generó errores del entorno de los $0.14$ y $0.06$ respectivamente. Estos se ven aún más acentuados al realizar el cálculo de la radiosidad para cada parche.
+Una de las consecuencias más interesantes a ser analizadas para detectar la cantidad de muestras óptimas a considerar es la calidad de la imagen final, y qué tan pronunciadas son las diferencias en la iluminación entre los parches, es decir, en qué medida difiere la radiosidad entre parches. Para este caso, se pudo observar (véase la Figura \ref{img:difres}) que si bien las resoluciones más bajas consumen menor cantidad de recursos los resultados tienen una calidad sustancialmente menor. Considerando que el modelo generalmente es utilizado para el cálculo de iluminación en una etapa de pre-procesado (fuera de línea), es recomendable evitar el uso de factores de muestreo tan bajos. Esto se ve acentuado en el análisis de la matriz de factores de forma, según las métricas establecidas en \ref{metricasestablecidas} se pudo comprobar que máximo error promedio apreciado (medida que se ha denominado $Ep$) fue de $0.05$ y $0.04$ utilizando $786.432$ muestras para los métodos del hemi-cubo y el hemiesferio mientras que el uso de $3.072$ muestras generó errores del entorno de los $0.14$ y $0.06$ respectivamente. Estos se ven aún más acentuados al realizar el cálculo de la radiosidad para cada parche.
 
 \begin{figure}[htbp]
 	\centering
@@ -253,9 +253,9 @@ Una de las consecuencias más interesantes a ser analizadas para detectar la can
 	\label{img:difres}
 \end{figure}
 
-\subsubsection{Caso de prueba II}
+\subsubsection{Caso de prueba II (Especular)}
 
-En este caso, en cuanto a rendimiento, se observa en la tabla \ref{tab:caso2} que el mejor rendimiento observado se obtiene utilizando el método híbrido, esto se debe a los hilos que ejecutan los cálculos correspondientes al rebote especular (utilizando traza de rayos) son ejecutados en la CPU mientras la GPU procesa hemicubos. Esto se ve respaldado por el hecho de que, en promedio se observó una ocupación rondando en los entornos de 100\% de la CPU y 35\% GPU en el método híbrido; 75\% de la CPU y 30\% GPU en el método utilizando OpenGL y 99\% en la implementación que solo utiliza traza de rayos. 
+En este caso, se observa en la tabla \ref{tab:caso2} que el mejor rendimiento se obtiene utilizando el método híbrido, esto se debe a los hilos que ejecutan los cálculos correspondientes al rebote especular (utilizando traza de rayos) son ejecutados en la CPU mientras la GPU procesa hemi-cubos. Esta observación se ve respaldada por el hecho de que, en promedio se observó una ocupación rondando en los entornos de 100\% de la CPU y 35\% GPU en el método híbrido, 75\% de la CPU y 30\% GPU en el método utilizando OpenGL y 99\% en la implementación que solo utiliza traza de rayos. 
 
 
 \begin{table}[htbp]
@@ -269,7 +269,7 @@ En este caso, en cuanto a rendimiento, se observa en la tabla \ref{tab:caso2} qu
 		\textbf{768 - 32}                               & 93                         & 134                         & 84                          & 1054                   & 2512   & 1643    \\ \hline
 		\textbf{1536 - 64}                              & 304                        & 486                         & 228                          & \multicolumn{1}{c|}{-} & 5342   & 4725    \\ \hline
 	\end{tabular}
-	\caption{Resultados obtenidos en el segundo caso de prueba. Notación: GL, E, Híb corresponden a OpenGL, Embree e Híbrido; D+S indica que se utilizaron reflexiones especulares y difusas.}
+	\caption{Resultados obtenidos en el segundo caso de prueba. Notación: GL, E, Híb corresponden a OpenGL, Embree e Híbrido; D+S indica que se utilizaron reflexiones difusas y especulares.}
 	\label{tab:caso2}
 \end{table}
 
@@ -319,7 +319,7 @@ coordinates {
 \end{axis}
 \end{tikzpicture}
 
-El paralelismo de las implementaciones basadas en la GPU garantiza el mejor rendimiento, sin embargo, se pudo notar que el uso exclusivo de traza de rayos provee hasta 14 veces menor error máximo que los otros algoritmos implementados (en \textit{Cornell Box}, con 786432 muestras se notó una diferencia de error máxima $Ep$ de $0.0138$ con el método híbrido y  $0.0091$ utilizando el método de dibujado de portales). Esto se debe a que tanto en el uso de dibujado de portales o el algoritmo híbrido se utilizan estimaciones de la dirección en la que rebotaría el rayo en el espejo considerado, lo que degrada la autenticidad final de los datos obtenidos, sobre todo en el dibujado de portales donde la granularidad de las muestras obtenidas es inferior (se toman muestras por área y no por rayo). Por lo tanto, incluso si el método de traza de rayos posee un rendimiento un tanto menor (que se debe mayormente al hecho de que se ejecuta únicamente en la CPU) se observa una calidad de datos órdenes de magnitud superior a la de los otros métodos.
+El paralelismo de las implementaciones basadas en la GPU garantiza el mejor rendimiento, sin embargo, se pudo notar que el uso exclusivo de traza de rayos provee hasta 14 veces menor error máximo que los otros algoritmos implementados (en \textit{Cornell Box}, con 786.432 muestras se notó una diferencia de error máxima $Ep$ de $0.0138$ con el método híbrido y  $0.0091$ utilizando el método de dibujado de portales). Esto se debe a que tanto en el uso de dibujado de portales o el algoritmo híbrido se utilizan estimaciones de la dirección en la que rebotaría el rayo en el espejo considerado, lo que degrada la autenticidad final de los datos obtenidos, sobre todo en el dibujado de portales donde la granularidad de las muestras obtenidas es inferior (se toman muestras por área y no por rayo). Por lo tanto, incluso si el método de traza de rayos posee un rendimiento un tanto menor (que se debe mayormente al hecho de que se ejecuta únicamente en la CPU) se observa una calidad de datos de órdenes de magnitud superior a la de los otros métodos.
 
 \begin{figure}[htbp]
 	\centering
@@ -397,9 +397,9 @@ coordinates {
 \caption{Error promedio observado en valor final de radiosidad en Híbrido}
 \label{plot:errorcII}
 \end{figure}
-\subsubsection{Caso de prueba III}
+\subsubsection{Caso de prueba III (Conjunta)}
 
-Esta prueba se construyó con el objetivo de comparar el rendimiento observado utilizando los algoritmos de extensión de factores de forma implementados. Se ha puesto especial énfasis en las diferencias producidas al variar la cantidad de caras especulares de la escena, es decir, los parches cuyo coeficiente de reflexión es positivo. Las pruebas se realizaron con una cantidad de muestras fijas (196608 para el hemicubo o rayos y 4096 para el portal).
+Esta prueba se construyó con el objetivo de comparar el rendimiento observado utilizando los algoritmos para el cálculo de factores de forma extendidos implementados. Se ha puesto especial énfasis en las diferencias producidas al variar la cantidad de caras especulares de la escena, es decir, los parches cuyo coeficiente de reflexión es positivo. Las pruebas se realizaron con una cantidad de muestras fijas (196608 para el hemi-cubo o rayos y 4096 para el portal).
 
 \begin{table}[htbp]
 	\centering
@@ -415,7 +415,7 @@ Esta prueba se construyó con el objetivo de comparar el rendimiento observado u
 	\label{tab:caso3}
 \end{table}
 
-En table \ref{tab:caso3} puede observare cómo la traza de rayos supera en dos veces el tiempo a los otros algoritmos. Sin embargo, se ha de destacar (al igual que en las pruebas anteriores) que los resultados observados difieren completamente si se utilizaran resoluciones mayores para el dibujado de portales los tiempos serían más afines, aunque se conseguirían resultados peores. Esto se demuestra al emparejar la cantidad de muestras tomadas por el portal con las de cada cara del hemicubo (256); en este caso los tiempos de ejecución para $62$ parches especulares es de 150 segundos. Por lo tanto, si bien existe un tiempo de ejecución mayor la estabilidad (en tiempo de ejecución) y la calidad de los datos obtenidos hacen que el método de traza de rayos sea superior a las otras dos propuestas.
+En la Tabla \ref{tab:caso3} puede observarse cómo la traza de rayos supera en dos veces el tiempo a los otros algoritmos. Sin embargo, se ha de destacar (al igual que en las pruebas anteriores) que los resultados observados tendrían variaciones en caso de utilizarse resoluciones mayores para el dibujado de portales. En cuyo caso, los tiempos entre los casos de prueba serían más afines, aunque se conseguirían resultados peores dada las aproximaciones realizadas en el dibujado de portales. Esto se demuestra al emparejar la cantidad de muestras tomadas por el portal con las de cada cara del hemi-cubo (256); en este caso los tiempos de ejecución para $62$ parches especulares es de 150 segundos. Por lo tanto, si bien existe un tiempo de ejecución mayor la estabilidad (en tiempo de ejecución) y la calidad de los datos obtenidos hacen que el método de traza de rayos sea superior a las otras dos propuestas.
 
 \begin{figure}[htbp]
 	\centering
@@ -431,11 +431,11 @@ En table \ref{tab:caso3} puede observare cómo la traza de rayos supera en dos v
 	\label{img:difspecstreet}
 \end{figure}
 
-Adicionalmente, como se puede observar en la figura \ref{img:difspecstreet}, las diferencias obtenidas en el valor final de la iluminación en cada parche pueden ser sutiles no obstante asemejan la simulación a escenarios reales con un costo negligible en el tiempo de ejecución. En esta prueba en particular se notó un aumento de aproximadamente 20 segundos de 670 segundos considerando únicamente la iluminación difusa a 690 segundos activando la extensión utilizando trazado de rayos.
+Adicionalmente, como se puede observar en la figura \ref{img:difspecstreet}, las diferencias obtenidas en el valor final de la iluminación en cada parche pueden ser sutiles no obstante asemejan la simulación a escenarios reales con un costo negligible en el tiempo de ejecución. En esta prueba en particular se notó un aumento de aproximadamente 20 segundos, de 670 a 690. Donde en el primer caso se utilizó únicamente la iluminación difusa a 690 segundos mientras que en segundo caso se activó la extensión utilizando trazado de rayos.
 
-\subsubsection{Caso de prueba IV}
+\subsubsection{Caso de prueba IV (Stress)}
 
-Finalmente, con el objetivo de evaluar el impacto de contar con muchas superficies especulares se probó qué tanto tiempo adicional insume la carga impuesta al algoritmo para considerar este tipo de superficie, los resultados pueden observarse en la figura \ref{plot:este} con una diferencia máxima entre 0 y 1500 superficies especulares de 3\% en el tiempo de cálculo de los factores de forma. Es por ello que se puede concluir que al utilizar algoritmos de traza de rayos no se detecta un impacto significativo en el tiempo de ejecución.
+Finalmente, con el objetivo de evaluar el impacto de contar con muchas superficies especulares se probó qué tanto tiempo adicional insume la carga impuesta al algoritmo para considerar este tipo de superficie, los resultados pueden observarse en la Figura \ref{plot:este}. Se notó una diferencia máxima de 3\% del tiempo de cálculo de los factores de forma al variar la cantidad de superficies especulares entre 0 y 1500 parches. Es por ello que se puede concluir que al utilizar algoritmos de traza de rayos no se detecta un impacto significativo en el tiempo de ejecución.
 
 \begin{figure}
 \begin{tikzpicture}
