@@ -1,10 +1,10 @@
 \documentclass[msc,twoside,a4paper, article]{udelar}
-
 \pgfplotsset{compat=1.16}
 \usepackage{booktabs}
 \bibliographystyle{unsrtnat}
 \usepackage[utf8x]{inputenc}
 \usepackage{textcomp}
+\usepackage{setspace}
 % ===== FIN DEL PREÁMBULO =====
 
 % ===== INICIO DEL DOCUMENTO =====
@@ -12,6 +12,7 @@
 \renewcommand{\ALG@name}{Algoritmo}
 \renewcommand{\listalgorithmname}{Lista de \ALG@name s}
 \makeatother
+
 \begin{document}
 
 
@@ -22,7 +23,7 @@
   \author{Bruno}{Sena}
   \escritura{en} 
   
-  \director{}{José}{Aguerre}{}
+  \director{}{José Pedro}{Aguerre}{}
   \director{}{Eduardo}{Fernández}{}
   
   \graduatename{Ingeniería en Computación}
@@ -36,7 +37,7 @@
 \keyword{Iluminación Global}
 \keyword{Radiosidad}
 \keyword{Reflexión Especular}
-
+\pgfkeys{/pgf/number format/use comma}
     
   \frontmatter 
   \afterpage{\blankpage}

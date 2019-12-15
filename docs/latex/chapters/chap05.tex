@@ -2,14 +2,14 @@
 \chapter{Experimental}
 \label{ch:chap05}
 
-En este capítulo se desarrollan detalles de las pruebas realizadas, con el objetivo de determinar las características positivas y negativas de los algoritmos implementados en las dimensiones de rendimiento (tiempo) y precisión de los resultados.
+En este capítulo se muestran detalles de las pruebas realizadas, con el objetivo de determinar las características positivas y negativas de los algoritmos implementados en las dimensiones de rendimiento computacional y precisión de los resultados.
 
 \section{Ambiente de prueba}
 \label{sec:hardware}
 
-Se presentan tanto el hardware utilizado en las pruebas (Tabla \ref{table:hardware}) así como las versiones del software utilizado Tabla \ref{table:software}, de forma que los resultados sean extrapolables a otros ambientes de prueba y además los tiempos de ejecución puedan entenderse en términos relativos.
+A continuación, se presentan tanto el hardware utilizado en las pruebas (Tabla \ref{table:hardware}) así como las versiones del software utilizado (Tabla \ref{table:software}), de forma que los resultados puedan entenderse en términos relativos al entorno de ejecución utilizado.
 
-\begin{table}[htbp]
+\begin{table}[htbp!]
 	\centering
 	\begin{tabular}{l|l}
 		Procesador & Intel i7 8700K - 12 CPUs - 3.7 GHz       \\
@@ -23,7 +23,7 @@ Se presentan tanto el hardware utilizado en las pruebas (Tabla \ref{table:hardwa
 	\label{table:hardware}
 \end{table}
 
-\begin{table}[htbp]
+\begin{table}[htbp!]
 	\centering
 	\begin{tabular}{l|l}
 	SO & Windows 10 Pro        \\
@@ -57,7 +57,7 @@ Con el objetivo de obtener resultados comparables para los distintos algoritmos 
 	\label{img:cornell}
 \end{figure}
 
-Se denomina \textit{Escena - Cornell Box} a la mostrada en la Figura \ref{img:cornell}. Se basa en un tipo de escena comúnmente usado en el que se ubican objetos en el interior de un cubo, donde debajo están los objetos de prueba y en el nivel superior reside el objeto que emitirá luz. Esta escena cuenta con siete objetos: el cubo, una esfera que oficia de luz, y cinco objetos compuestos por diversas primitivas. En total, existen 12.922 polígonos de las cuales 96 son triangulares y 12.826 son cuadrilaterales.
+Se denomina \textit{Escena - Cornell Box} a la mostrada en la Figura \ref{img:cornell}. Se basa en un tipo de escena comúnmente usado en el que se ubican objetos en el interior de un cubo, donde debajo están los objetos de prueba y en el nivel superior reside el objeto que emitirá luz. Esta escena cuenta con siete objetos: el cubo, una esfera que oficia de luz, y cinco objetos compuestos por diversas primitivas. En total, existen 12.922 polígonos de las cuales 96 son triángulos y 12.826 son cuadriláteros.
 
 \begin{figure}[htbp]
 	\centering
@@ -81,7 +81,7 @@ Se denomina \textit{Escena - Cornell Box} a la mostrada en la Figura \ref{img:co
 	\label{img:street}
 \end{figure}
 
-Se denomina \textit{Escena - Calle} a la referente a la figura \ref{img:street}. La escena está constituida por dos objetos, el primero de ellos es una cúpula (hemiesferio) subdividida en 2.407 cuadriláteros de igual área, cuyo objetivo es representar el cielo. Por otro lado, el segundo objeto es una representación de una porción de una calle en el barrio de Petit Bayonne, localizado en Bayona, Francia cuyas imágenes se aprecian en la figura \ref{img:streetcomp}. El modelo fue construido por Beniot, Minion, et al. \cite{Benoit} con el objetivo de estudiar el fenómeno de la radiación. En total, la escena cuenta con 61.795 parches cuadrangulares.
+Se denomina \textit{Escena - Calle} a la referente a la Figura \ref{img:street}. La escena está constituida por dos objetos, el primero de ellos es una cúpula (hemiesferio) subdividida en 2.407 cuadriláteros de igual área, cuyo objetivo es representar el cielo. Por otro lado, el segundo objeto es una representación de una porción de una calle en el barrio de Petit Bayonne, localizado en Bayona, Francia cuyas imágenes se aprecian en la figura \ref{img:streetcomp}. El modelo fue construido por Beniot, Acuña, et al. \cite{Benoit} con el objetivo de estudiar el fenómeno de la transferencia de calor a la escala de calle utilizando el método de elementos finitos. En total, la escena cuenta con 61.795 parches cuadrangulares.
 
 
 \begin{figure}[htbp]
@@ -124,13 +124,11 @@ Con el objetivo de medir correctamente las ventajas y desventajas de cada métod
 		\begin{itemize}
 			\item Error relativo promedio por fila: $Ep_{i} = \sum_{j=1}^{N} \frac{|\mathbf{F_{C}}_{ij} -\mathbf{F}_{ij}|}{N \mathbf{F_{C}}_{ij}}$
 			\item Error relativo máximo por fila: $Em_{i} = \max_{j=1}^{N}\frac{|\mathbf{F}_{ij} -\mathbf{Fc}_{ij}|}{\mathbf{F_{C}}_{ij}}$
-			\item Error estándar por fila: $Em_{i} = \max_{j=1}^{N}\frac{(\mathbf{F}_{ij} -\mathbf{F_{C}}_{ij})^{2}}{\mathbf{F_{C}}_{ij}}$
 		\end{itemize}
 	\item Dimensión vector de radiosidad (dado el vector $R$, y el vector de control $Rc$):
 	\begin{itemize}
 		\item Error relativo promedio de radiosidad: $Ep = \sum_{i=1}^{N} \frac{|R_{i}-R_{Ci}|}{N R_{Ci}}$
-		\item Error máximo de radiosidad: $Em = \max_{j=1}^{N}|frac{R_{j} -Rc_{j}|}{R_{Ci}}$
-		\item Error estándar de radiosidad: $Em = \max_{j=1}^{N}(R_{j} -Rc_{j})^{2}$
+		\item Error máximo de radiosidad: $Em = \max_{j=1}^{N}|\frac{R_{j} -Rc_{j}|}{R_{Ci}}$
 	\end{itemize}
 \item Visualización:
 	\begin{itemize}
@@ -138,10 +136,12 @@ Con el objetivo de medir correctamente las ventajas y desventajas de cada métod
 	\end{itemize}
 \end{itemize}
 
+Las definiciones fueron concebidas con la idea de que es necesario controlar el error de cada etapa del método. Se debe tener especial consideración con los términos geométricos, pues el resultado obtenido en la matriz de factores de forma incidirá en los cálculos posteriores. Para ello, se consideró una buena opción obtener errores relativos por fila, es decir, por parche. Un error promedio bajo asegura que en la generalidad los resultados sean aceptables, mientras que el error máximo controla la varianza del error percibido con el objetivo de evitar casos excepcionales. De la misma manera se considera el error observado en el resultado final, es decir, en el vector de radiosidad. Estos valores incidirán directamente en la calidad de la imagen, aunque pueden ser afectados por el error de la etapa anterior.
+
 \subsection{Descripción de casos de prueba}
 
 \begin{enumerate}
-	\item \textit{Prueba difusa}: Se utilizarán materiales estrictamente difusos en ambas escenas, cuyos colores no variarán a lo largo de las pruebas realizadas. De esta manera se desactiva cualquier interacción especular. Se escoge un conjunto de parches que ofician de fuente luminosa. En caso de la escena \textit{Calle}, se seleccionan 10 parches de la cúpula hemiesférica para emular al sol. Por otro lado, para la escena \textit{Cornell Box} se utiliza la bola central como fuente luminosa.
+	\item \textit{Prueba difusa}: Se utilizan materiales estrictamente difusos en ambas escenas, cuyos colores no varían a lo largo de las pruebas realizadas. De esta manera se desactiva cualquier interacción especular. Se escoge un conjunto de parches que ofician de fuente luminosa. En caso de la escena \textit{Calle}, se seleccionan 10 parches de la cúpula hemiesférica para emular al sol. Por otro lado, para la escena \textit{Cornell Box} se utiliza la bola central como fuente luminosa.
 	\item \textit{Prueba especular}: Se utilizan materiales difusos y especulares en ambas escenas, con una cantidad reducida de estos últimos. En caso de la escena \textit{Cornell Box} se utiliza el plano ubicado en el centro como reflector, mientras que en la escena \textit{Calle} se utiliza una selección de ventanas. Para cada \textit{pipeline} (completo) implementado se computa la radiosidad registrando el tiempo de renderizado según la cantidad de muestras configurada.
 	\item \textit{Prueba conjunta}: En la escena \textit{Cornell Box} se computarán dos variantes. En una de ellas se utilizan superficies con materiales exclusivamente difusos y en el segundo caso se añaden espejos, con el objetivo principal de destacar diferencias visuales percibidas al utilizar la extensión implementada.
 	\item \textit{Prueba de stress}: Se utiliza gran cantidad de espejos en ambas escenas.
@@ -149,25 +149,30 @@ Con el objetivo de medir correctamente las ventajas y desventajas de cada métod
 
 \subsection{Resultados observados}
 
-En esta sección se presentan los resultados observados para los casos de prueba planteados. En particular, los resultados se detallan en función de la cantidad de muestras tomadas en cada hemi-cubo o hemiesferio según corresponda. La cantidad de muestras tomadas depende de: $3 x^{2}$ donde $x$ es el largo de un lado del hemi-cubo y en el caso del hemiesferio el número dependerá de la cantidad de rayos trazados.
-
+En esta sección se presentan los resultados observados para los casos de prueba planteados. En particular, los resultados se detallan en función de la cantidad de muestras tomadas en cada hemi-cubo o hemiesferio según corresponda. Para realizar una comparación justa, se utiliza la misma cantidad de pixeles totales del hemi-cubo como la cantidad de rayos lanzados en el hemiesferio. Por ejemplo, para un hemi-cubo donde la cara frontal tiene dimensiones 32x32 pixeles el total de pixeles es de 32x32x3, totalizando 3072 pixeles. Por lo tanto, su caso equivalente en Embree corresponde a lanzar 3072 rayos.
 
 \subsubsection{Caso de prueba I (Difusa)}
 
 \begin{table}[htbp]
 	\centering
-	\begin{tabular}{|c|l|l|l|l|}
+	\begin{tabular}{|c|c|l|l||l|l|}
 		\hline
-		\multirow{3}{*}{\textbf{Muestras}} & \multicolumn{4}{c|}{\textbf{Tiempo de ejecución (s)}}                                                                                  \\ \cline{2-5} 
-		& \multicolumn{2}{c|}{\textit{Cornell Box}}                 & \multicolumn{2}{c|}{\textit{Calle}}                      \\ \cline{2-5} 
-		& \multicolumn{1}{c|}{OpenGL-D} & \multicolumn{1}{c|}{Embree-D} & \multicolumn{1}{c|}{OpenGL-D} & \multicolumn{1}{c|}{Embree-D} \\ \hline
-		\textbf{3072}                        & 7                           & 3                           & 68                          & 14                          \\ \hline
-		\textbf{49512}                       & 10                          & 30                          & 128                         & 174                         \\ \hline
-		\textbf{196608}                       & 31                          & 116                         & 248                         & 665                         \\ \hline
-		\textbf{786432}   & 251                         & 446                         & 1213                        & 2565                        \\ \hline
-		\textbf{3145728}                      & 992                         & 1778                        & 4018                        & 7511                        \\ \hline
+		\multicolumn{2}{|c|}{\multirow{3}{*}{\textbf{Muestras}}} & \multicolumn{4}{c|}{\textbf{Tiempo de ejecución (s)}}                                                                                  \\ \cline{3-6} 
+		\multicolumn{2}{|c|}{}                   & \multicolumn{2}{c||}{\textit{Cornell Box}}                 & \multicolumn{2}{c|}{\textit{Calle}}                      \\ \cline{3-6}
+		\multicolumn{2}{|c|}{}
+		& \multicolumn{1}{c|}{OpenGL-D} & \multicolumn{1}{c||}{Embree-D} & \multicolumn{1}{c|}{OpenGL-D} & \multicolumn{1}{c|}{Embree-D} \\ \hline
+		\textbf{32x32}                        &
+		\textbf{3072}                        & 7                           & \textbf{3}                           & 68                          & 14                          \\ \hline
+		\textbf{64x64}                        &
+		\textbf{49512}                       & \textbf{10}                          & 30                          & \textbf{128}                         & 174                         \\ \hline
+		\textbf{128x128}                        &
+		\textbf{196608}                       & \textbf{31}                          & 116                         & \textbf{248}                         & 665                         \\ \hline
+		\textbf{256x256}                        &
+		\textbf{786432}   & \textbf{251}                         & 446                         & \textbf{1213}                        & 2565                        \\ \hline
+		\textbf{1024x1024}                        &
+		\textbf{3145728}                      & \textbf{992}                         & 1778                        & \textbf{4018}                        & 7511                        \\ \hline
 	\end{tabular}
-	\caption{Resultados obtenidos para el primer caso de prueba.}
+	\caption{Resultados obtenidos para el primer caso de prueba. El número de muestras representa la cantidad de píxeles/rayos dibujados.}
 	\label{tab:tablecaso1}
 \end{table}
 
@@ -229,7 +234,7 @@ coordinates {
 \label{plot:emglc1}
 \end{figure}
 
-Una de las consecuencias más interesantes a ser analizadas para detectar la cantidad de muestras óptimas a considerar es la calidad de la imagen final, y qué tan pronunciadas son las diferencias en la iluminación entre los parches, es decir, en qué medida difiere la radiosidad entre parches. Para este caso, se pudo observar (véase la Figura \ref{img:difres}) que si bien las resoluciones más bajas consumen menor cantidad de recursos los resultados tienen una calidad sustancialmente menor. Considerando que el modelo generalmente es utilizado para el cálculo de iluminación en una etapa de pre-procesado (fuera de línea), es recomendable evitar el uso de factores de muestreo tan bajos. Esto se ve acentuado en el análisis de la matriz de factores de forma, según las métricas establecidas en \ref{metricasestablecidas} se pudo comprobar que máximo error promedio apreciado (medida que se ha denominado $Ep$) fue de $0.05$ y $0.04$ utilizando $786.432$ muestras para los métodos del hemi-cubo y el hemiesferio mientras que el uso de $3.072$ muestras generó errores del entorno de los $0.14$ y $0.06$ respectivamente. Estos se ven aún más acentuados al realizar el cálculo de la radiosidad para cada parche.
+Una de las consecuencias más interesantes a ser analizadas para detectar la cantidad de muestras óptimas a considerar es la calidad de la imagen final, y qué tan pronunciadas son las diferencias en la iluminación entre los parches, es decir, en qué medida difiere la radiosidad entre parches. Para este caso, se pudo observar (véase la Figura \ref{img:difres}) que si bien las resoluciones más bajas consumen menor cantidad de recursos los resultados tienen una calidad sustancialmente menor. Considerando que el modelo generalmente es utilizado para el cálculo de iluminación en una etapa de pre-procesado (fuera de línea), es recomendable evitar el uso de factores de muestreo tan bajos. Esto se ve acentuado en el análisis de la matriz de factores de forma, según las métricas establecidas en \ref{metricasestablecidas} se pudo comprobar que máximo error promedio apreciado (medida que se ha denominado $Ep$) fue de $0,05$ y $0,04$ utilizando $786.432$ muestras para los métodos del hemi-cubo y el hemiesferio mientras que el uso de $3.072$ muestras generó errores del entorno de los $0,14$ y $0,06$ respectivamente. Estos se ven aún más acentuados al realizar el cálculo de la radiosidad para cada parche.
 
 \begin{figure}[htbp]
 	\centering
@@ -243,11 +248,11 @@ Una de las consecuencias más interesantes a ser analizadas para detectar la can
 	\end{subfigure}
 	\begin{subfigure}{0.45\textwidth}
 		\includegraphics[width=1\linewidth]{assets/32srt}
-		\caption{Embree - 96 rayos}
+		\caption{Embree - 3072 rayos}
 	\end{subfigure}
 	\begin{subfigure}{0.45\textwidth}
 		\includegraphics[width=1\linewidth]{assets/512srt}
-		\caption{Embree - 1536 rayos}
+		\caption{Embree - 786432 rayos}
 	\end{subfigure}
 	\caption{Diferencias visuales ajustando la cantidad de muestras}
 	\label{img:difres}
@@ -260,16 +265,18 @@ En este caso, se observa en la tabla \ref{tab:caso2} que el mejor rendimiento se
 
 \begin{table}[htbp]
 	\centering
-	\begin{tabular}{|l|l|l|l|l|l|l|}
+	\begin{tabular}{|l|l|l|l|l||l|l|l|}
 		\hline
-		\multicolumn{1}{|c|}{\multirow{3}{*}{Muestras}} & \multicolumn{6}{c|}{Tiempo de ejecución (s)}                                                                                         \\ \cline{2-7} 
-		\multicolumn{1}{|c|}{}                          & \multicolumn{3}{c|}{\textit{Cornell Box}}                                                & \multicolumn{3}{c|}{\textit{Calle}}      \\ \cline{2-7} 
-		\multicolumn{1}{|c|}{}                          & \multicolumn{1}{c|}{GL-D+S} & \multicolumn{1}{c|}{E-D+S} & \multicolumn{1}{c|}{Híb} & GL-D+S                 & E-D+S & Híb \\ \hline
-		\textbf{96 - 32}                                & 25                         & 53                          & 21                           & 2563                   & 1221   & 943     \\ \hline
-		\textbf{768 - 32}                               & 93                         & 134                         & 84                          & 1054                   & 2512   & 1643    \\ \hline
-		\textbf{1536 - 64}                              & 304                        & 486                         & 228                          & \multicolumn{1}{c|}{-} & 5342   & 4725    \\ \hline
+		\multicolumn{2}{|c|}{\multirow{3}{*}{\textbf{Muestras}}} & \multicolumn{6}{c|}{\textbf{Tiempo de ejecución (s)}}                                                                                  \\ \cline{3-8} 
+		\multicolumn{2}{|c|}{}                   & \multicolumn{3}{c||}{\textit{Cornell Box}}                 & \multicolumn{3}{c|}{\textit{Calle}}                      \\ \cline{3-8}
+		\multicolumn{2}{|c|}{}                          & \multicolumn{1}{c|}{GL-D+S} & \multicolumn{1}{c|}{E-D+S} & \multicolumn{1}{c||}{Híb} & GL-D+S                 & E-D+S & Híb \\ \hline
+		\textbf{32x32 - 32}                                &
+		\textbf{3072 - 32}                                & 25                         & 53                          & \textbf{21}                           & 2563                   & 1221   & \textbf{943}     \\ \hline
+		\textbf{256x256 - 32}                                &
+		\textbf{196608 - 32}                               & 93                         & 134                         & \textbf{84}                          & \textbf{1054}                   & 2512   & 1643    \\ \hline
+		\textbf{512x512 - 64} &\textbf{786432 - 64}                              & 304                        & 486                         & \textbf{228}                          & \multicolumn{1}{c|}{-} & 5342   & \textbf{4725}    \\ \hline
 	\end{tabular}
-	\caption{Resultados obtenidos en el segundo caso de prueba. Notación: GL, E, Híb corresponden a OpenGL, Embree e Híbrido; D+S indica que se utilizaron reflexiones difusas y especulares.}
+	\caption{Resultados obtenidos en el segundo caso de prueba. Notación: GL, E, Híb corresponden a OpenGL, Embree e Híbrido; D+S indica que se utilizaron reflexiones difusas y especulares. '-' indica casos de prueba que tomaron tiempos excesivos.}
 	\label{tab:caso2}
 \end{table}
 
@@ -319,7 +326,7 @@ coordinates {
 \end{axis}
 \end{tikzpicture}
 
-El paralelismo de las implementaciones basadas en la GPU garantiza el mejor rendimiento, sin embargo, se pudo notar que el uso exclusivo de traza de rayos provee hasta 14 veces menor error máximo que los otros algoritmos implementados (en \textit{Cornell Box}, con 786.432 muestras se notó una diferencia de error máxima $Ep$ de $0.0138$ con el método híbrido y  $0.0091$ utilizando el método de dibujado de portales). Esto se debe a que tanto en el uso de dibujado de portales o el algoritmo híbrido se utilizan estimaciones de la dirección en la que rebotaría el rayo en el espejo considerado, lo que degrada la autenticidad final de los datos obtenidos, sobre todo en el dibujado de portales donde la granularidad de las muestras obtenidas es inferior (se toman muestras por área y no por rayo). Por lo tanto, incluso si el método de traza de rayos posee un rendimiento un tanto menor (que se debe mayormente al hecho de que se ejecuta únicamente en la CPU) se observa una calidad de datos de órdenes de magnitud superior a la de los otros métodos.
+El paralelismo de las implementaciones basadas en la GPU garantiza el mejor rendimiento, sin embargo, se pudo notar que el uso exclusivo de traza de rayos provee hasta 14 veces menor error máximo que los otros algoritmos implementados. En \textit{Cornell Box}, con 786.432 muestras se notó una diferencia de error máxima $Ep$ de $0.0138$ con el método híbrido y $0.0091$ utilizando el método de dibujado de portales, en comparación con el método de traza de rayos que logró un eror de $0.000481$. Esto se debe a que tanto en el uso de dibujado de portales o el algoritmo híbrido se utilizan estimaciones de la dirección en la que rebotaría el rayo en el espejo considerado, lo que degrada la autenticidad final de los datos obtenidos, sobre todo en el dibujado de portales donde la granularidad de las muestras obtenidas es inferior (se toman muestras por área y no por rayo). Por lo tanto, incluso si el método de traza de rayos posee un rendimiento un tanto menor (que se debe mayormente al hecho de que se ejecuta únicamente en la CPU) se observa una calidad de datos de órdenes de magnitud superior a la de los otros métodos.
 
 \begin{figure}[htbp]
 	\centering
@@ -339,7 +346,7 @@ El paralelismo de las implementaciones basadas en la GPU garantiza el mejor rend
 	\label{img:difres2}
 \end{figure}
 
-Con el objetivo de cuantificar los datos de error observado se analizó el error estándar y promedio observado en el vector de radiosidad final (comparado a una muestra utilizando exclusivamente trazado de rayos con 3276 muestras para el hemiesferio) y se observó que, tal como se había supuesto, el método es significativamente menos propenso a generar errores como se ve en la Figura \ref{img:difres2}.
+Con el objetivo de cuantificar los datos de error observado se analizó el error promedio en el vector de radiosidad final (comparado a una muestra utilizando exclusivamente trazado de rayos con 786.432 muestras para el hemiesferio) y se constató que, tal como se había supuesto, el método es significativamente menos propenso a generar errores como se ve en la Figura \ref{img:difres2}.
 
 \begin{figure}
 \begin{tikzpicture}
@@ -394,23 +401,23 @@ coordinates {
 
 \end{axis}
 \end{tikzpicture}
-\caption{Error promedio observado en valor final de radiosidad en Híbrido}
+\caption{Error promedio observado en valor final de radiosidad en Híbrido. Los intervalos muestran el error máximo.}
 \label{plot:errorcII}
 \end{figure}
 \subsubsection{Caso de prueba III (Conjunta)}
 
-Esta prueba se construyó con el objetivo de comparar el rendimiento observado utilizando los algoritmos para el cálculo de factores de forma extendidos implementados. Se ha puesto especial énfasis en las diferencias producidas al variar la cantidad de caras especulares de la escena, es decir, los parches cuyo coeficiente de reflexión es positivo. Las pruebas se realizaron con una cantidad de muestras fijas (196608 para el hemi-cubo o rayos y 4096 para el portal).
+Esta prueba se construyó con el objetivo de comparar el rendimiento observado utilizando los algoritmos para el cálculo de factores de forma extendidos implementados. Se ha puesto especial énfasis en las diferencias producidas al variar la cantidad de caras especulares de la escena, es decir, los parches cuyo coeficiente de reflexión es positivo. Las pruebas se realizaron con una cantidad de muestras fijas (196.608 para el hemi-cubo o rayos y 4.096 para el portal).
 
 \begin{table}[htbp]
 	\centering
 	\caption{Pruebas realizadas en \textit{Cornell Box} para identificar incidencia en la cantidad de caras especulares utilizadas en el tiempo de ejecución}
 \begin{tabular}{|l|l|l|l|}
 	\hline
-	\multicolumn{1}{|c|}{\textbf{Parches especulares}} & \multicolumn{1}{c|}{OpenGL} & \multicolumn{1}{c|}{Embree} & \multicolumn{1}{c|}{Híbrido} \\ \hline
-	\textbf{0}                              & 38                          & 126                         & -                            \\ \hline
-	\textbf{16}                             & 41                          & 118                         & 39                           \\ \hline
-	\textbf{32}                             & 48                          & 120                         & 40                           \\ \hline
-	\textbf{62}                             & 68                          & 121                         & 43                           \\ \hline
+	\multicolumn{1}{|c|}{\textbf{Parches especulares}} & \multicolumn{1}{c|}{OpenGL (s)} & \multicolumn{1}{c|}{Embree (s)} & \multicolumn{1}{c|}{Híbrido (s)} \\ \hline
+	\textbf{0}                              & \textbf{38}                          & 126                         & -                            \\ \hline
+	\textbf{16}                             & 41                          & 118                         & \textbf{39}                           \\ \hline
+	\textbf{32}                             & 48                          & 120                         & \textbf{40}                           \\ \hline
+	\textbf{64}                             & 68                          & 121                         & \textbf{43}                           \\ \hline
 \end{tabular}
 	\label{tab:caso3}
 \end{table}
@@ -431,13 +438,13 @@ En la Tabla \ref{tab:caso3} puede observarse cómo la traza de rayos supera en d
 	\label{img:difspecstreet}
 \end{figure}
 
-Adicionalmente, como se puede observar en la figura \ref{img:difspecstreet}, las diferencias obtenidas en el valor final de la iluminación en cada parche pueden ser sutiles no obstante asemejan la simulación a escenarios reales con un costo negligible en el tiempo de ejecución. En esta prueba en particular se notó un aumento de aproximadamente 20 segundos, de 670 a 690. Donde en el primer caso se utilizó únicamente la iluminación difusa a 690 segundos mientras que en segundo caso se activó la extensión utilizando trazado de rayos.
+Adicionalmente, como se puede observar en la Figura \ref{img:difspecstreet}, las diferencias obtenidas en el valor final de la iluminación en cada parche pueden ser sutiles no obstante asemejan la simulación a escenarios reales con un costo despreciable en el tiempo de ejecución. En esta prueba en particular, se notó un aumento de aproximadamente 20 segundos (de 670 a 690). Donde en el primer caso se utilizó únicamente la iluminación difusa mientras que en segundo caso se activó la extensión utilizando trazado de rayos.
 
 \subsubsection{Caso de prueba IV (Stress)}
 
-Finalmente, con el objetivo de evaluar el impacto de contar con muchas superficies especulares se probó qué tanto tiempo adicional insume la carga impuesta al algoritmo para considerar este tipo de superficie, los resultados pueden observarse en la Figura \ref{plot:este}. Se notó una diferencia máxima de 3\% del tiempo de cálculo de los factores de forma al variar la cantidad de superficies especulares entre 0 y 1500 parches. Es por ello que se puede concluir que al utilizar algoritmos de traza de rayos no se detecta un impacto significativo en el tiempo de ejecución.
+Finalmente, con el objetivo de evaluar el impacto de contar con muchas superficies especulares se probó qué tanto tiempo adicional insume la carga impuesta al algoritmo del hemisferio (Embree) para considerar este tipo de superficie. Los resultados pueden observarse en la Figura \ref{plot:este}. Se notó una diferencia máxima de 3\% del tiempo de cálculo de los factores de forma al variar la cantidad de superficies especulares entre 0 y 1500 parches. Es por ello que se puede concluir que al utilizar algoritmos de traza de rayos no se detecta un impacto significativo en el tiempo de ejecución.
 
-\begin{figure}
+\begin{figure}[htbp!]
 \begin{tikzpicture}
 \centering
 \begin{axis}[

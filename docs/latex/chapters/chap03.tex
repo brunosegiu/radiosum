@@ -51,7 +51,7 @@ La gestión de las tareas a relizar se llevó a cabo en el repositorio del proye
 \section{Diseño}
 \label{sec:disenio}
 
-Con la finalidad de evitar el alto acoplamiento, facilitar la extensión y reducir la cantidad de errores de integración se tomó la decisión de utilizar distintos módulos y sub-módulos que ofrezcan un conjunto de funcionalidades bien definido utilizando programación orientada a objetos. Esta decisión permite el añadido de nuevas características y la optimización de ciertas funcionalidades independientemente de los demás módulos contruidos.
+Con la finalidad de evitar el alto acoplamiento, facilitar la extensión y reducir la cantidad de errores de integración se tomó la decisión de utilizar distintos módulos y sub-módulos que ofrezcan un conjunto de funcionalidades bien definido utilizando programación orientada a objetos. Esta decisión permite el añadido de nuevas características y la optimización de ciertas funcionalidades independientemente de los demás módulos construidos.
 
 El diseño de la solución comprende dos componentes principales, la interfaz gráfica de usuario (GUI, por su nombre en inglés) y el motor de renderizado.
 
@@ -62,7 +62,7 @@ El paquete del motor de renderizado se compone de un conjunto de sub-módulos, e
 
 \subsubsection{Módulo de geometría}
 
-El módulo de geometría encapsula la información de las escenas leídas desde el disco duro, además de adaptar y optimizar los formatos de las primitivas geométricas para ser utilizados en las APIs de dibujado de terceros. La clase \verb|Scene|, diagramada en la Figura \ref{img:geom}, cargará distintos objetos desde el disco duro que serán manejados como una instancia de \verb|Mesh|.
+El módulo de geometría encapsula la información de las escenas leídas desde el disco duro, además de adaptar y optimizar los formatos de las primitivas geométricas para ser utilizados en las APIs de dibujado de terceros. La clase \verb|Scene|, diagramada en la Figura \ref{img:geom}, carga distintos objetos desde el disco duro que son manejados como una instancia de \verb|Mesh|.
 
 
 \vspace{5mm}
@@ -93,13 +93,13 @@ Un pipeline es definido a partir de un conjunto de funciones ejecutadas en el si
 	\item \verb|computeRadiosity()|
 \end{enumerate}
 
-Donde \verb|computeFormFactors()| variará dependiendo del método de cálculo elegido (Figura \ref{img:procesado}), donde puede utilizarse el método del hemi-cubo o el de raytracing. El primero de ellos utilizará un \textit{pipeline} configurado utilizando una API de rasterización, mientras que el segundo utilizará una API capaz de calcular intersecciones utilizando rayos.
+La función \verb|computeFormFactors()| variará dependiendo del método de cálculo elegido (Figura \ref{img:procesado}), donde puede utilizarse el método del hemi-cubo o el de raytracing. El primero de ellos utilizará un \textit{pipeline} configurado utilizando una API de rasterización, mientras que el segundo utilizará una API capaz de calcular intersecciones utilizando rayos.
 
-La ejecución de \verb|computeRadiosity()| dependerá directamente del manejador \verb|Solver| seleccionado por el usuario, este último ejecutará el algoritmo que calculará el vector de radiosidades para la escena.
+La ejecución de \verb|computeRadiosity()| dependerá directamente del manejador \verb|Solver| seleccionado por el usuario, este último ejecutará el algoritmo que calculará el vector de radiosidades para la escena, resolviendo el sistema lineal de radiosidad.
 
 \subsubsection{Módulo de visualización}
 
-El módulo de visualización se encarga de renderizar la escena actual desde el punto de vista seleccionado por el usuario. Además, debe tener la capacidad de mostrar las distintas propiedades de los materiales, tales como valor de emisión inicial, valor de reflexión especular y, visualización de geometría, para así facilitar la edición de las propiedades de los objetos y de sus caras. El proceso de renderizado comienza con una instancia de la clase \verb|DisplayController| que dibujará un conjunto de imágenes correspondiente a las propiedades de los materiales, \verb|SceneRenderer| en la Figura \ref{img:vis}. Luego un dibujante de texturas \verb|TextureRenderer| seleccionará y convertirá correctamente el resultado anterior a valores de tres canales (RGB). El módulo de visualización siempre tendrá una textura bidimensional como parámetro de salida.
+El módulo de visualización se encarga de renderizar la escena actual desde el punto de vista seleccionado por el usuario. Además, debe tener la capacidad de mostrar las distintas propiedades de los materiales, tales como valor de emisión inicial, valor de reflexión especular y, visualización de geometría, para así facilitar la edición de las propiedades de los objetos y de sus caras. El proceso de renderizado comienza con una instancia de la clase \verb|DisplayController| que dibuja un conjunto de imágenes correspondiente a las propiedades de los materiales, \verb|SceneRenderer| en la Figura \ref{img:vis}. Luego un dibujante de texturas \verb|TextureRenderer| selecciona y convierte correctamente el resultado anterior a valores de tres canales (RGB). El módulo de visualización siempre toma una textura bidimensional como parámetro de salida.
 
 \vspace{5mm}
 \begin{minipage}[h]{0.8\linewidth}
