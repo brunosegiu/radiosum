@@ -3,10 +3,10 @@
 
 Los algoritmos de iluminación global simulan el comportamiento de la luz en la naturaleza. La síntesis de imágenes fotorealistas generadas por computadora o la evaluación del diseño lumínico para arquitectura son algunos de los objetivos abarcados por este tipo de algoritmo.
 
-En este contexto, este proyecto se enmarca en el estudio, análisis y adaptación de técnicas que proponen extensiones a el método de radiosidad. Este método se basa en el estudio de la transferencia de energía lumínica entre superficies que componen una escena. Para simplificar el cálculo del factor de relación geométrico se subdivide la escena en una cantidad de superficies planas discreta. Es decir, las superficies del espacio deben ser subdivididas en otras planas más pequeñas a las que llamaremos parches.
+En este contexto, este proyecto se enmarca en el estudio, análisis y adaptación de técnicas que proponen extensiones a el método de radiosidad. Este método se basa en el estudio de la transferencia de energía lumínica entre superficies que componen una escena. Para simplificar el cálculo del intercambio de radiación entre elementos de la escena se subdivide la escena en una cantidad de superficies planas discreta, que se denominan parches
 
-Esta técnica considera únicamente superficies lambertianas, es decir, reflectores difusos perfectos. Esta limitación supone que la técnica no pueda aplicarse en una gran variedad de aplicaciones donde la incidencia de la reflexión especular tiene una gran incidencia en la iluminación de la escena.
+Este método de radiosidad clásico considera únicamente superficies lambertianas, es decir, reflectores difusos perfectos. Esta limitación supone que el método no pueda aplicarse en una gran variedad de escenas donde la incidencia de la reflexión especular tiene una gran incidencia en la iluminación de la escena.\footnote{Disponible en GitHub: https://github.com/brunosegiu/radiosum}.
 
-La extensión planteada propone la construcción de un algoritmo capaz de incorporar los efectos observados al considerar superficies especulares. Por otro lado, se proponen técnicas que permitan proveer nuevos acercamientos al cálculo de los factores de forma utilizando técnicas de paralelismo para el hardware moderno.
+La extensión planteada propone la construcción de un algoritmo capaz de considerar superficies especulares. Por otro lado, se proponen técnicas que permitan proveer nuevos acercamientos al cálculo de los factores de forma utilizando técnicas de paralelismo para el hardware moderno.
 
 \end{abstract}

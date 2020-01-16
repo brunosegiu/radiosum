@@ -32,7 +32,7 @@ Los principios claves del método aplicado a este proyecto fueron:
 	\item Dirigir y gestionar el flujo de trabajo implica la priorización de tareas a realizar dada una cantidad finita de recursos.
 \end{itemize}
 
-La gestión de las tareas a relizar se llevó a cabo en el repositorio del proyecto, con tareas como las vistas en la Figura \ref{img:kanban}, donde se consideran un conjunto de tareas:
+La gestión de las tareas a realizar se llevó a cabo en el repositorio del proyecto, con tareas como las vistas en la Figura \ref{img:kanban}, donde se consideran un conjunto de tareas:
 
 \begin{itemize}
 	\item Backlog: Las tareas a realizar, en orden de importancia.
@@ -85,7 +85,9 @@ El módulo de preprocesado se compone de un controlador principal (\verb|Preproc
 	\label{img:procesado}
 \end{minipage}
 
-Un pipeline es definido a partir de un conjunto de funciones ejecutadas en el siguiente orden:
+
+La clase Pipeline y sus derivadas de rasterización y traza de rayos definen un conjunto de tareas que se realizarán para calcular los factores de forma y el vector de radiosdiad. Las tareas suponen incializar el pipeline con información de la escena, calcular los factores de forma (eventualmente considerando la reflexión especular) y calcular el vector de radiosidad para los parches de la escena.
+Por ello, una instancia del pipeline es definida a partir de un conjunto de funciones ejecutadas en el siguiente orden:
 
 \begin{enumerate}
 	\item \verb|setConfig(scene, intrp, ref, chan, sol)|

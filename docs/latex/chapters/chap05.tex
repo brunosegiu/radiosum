@@ -81,7 +81,7 @@ Se denomina \textit{Escena - Cornell Box} a la mostrada en la Figura \ref{img:co
 	\label{img:street}
 \end{figure}
 
-Se denomina \textit{Escena - Calle} a la referente a la Figura \ref{img:street}. La escena está constituida por dos objetos, el primero de ellos es una cúpula (hemiesferio) subdividida en 2.407 cuadriláteros de igual área, cuyo objetivo es representar el cielo. Por otro lado, el segundo objeto es una representación de una porción de una calle en el barrio de Petit Bayonne, localizado en Bayona, Francia cuyas imágenes se aprecian en la figura \ref{img:streetcomp}. El modelo fue construido por Beniot, Acuña, et al. \cite{Benoit} con el objetivo de estudiar el fenómeno de la transferencia de calor a la escala de calle utilizando el método de elementos finitos. En total, la escena cuenta con 61.795 parches cuadrangulares.
+Se denomina \textit{Escena - Calle} a la referente a la Figura \ref{img:street}. La escena está constituida por dos objetos, el primero de ellos es una cúpula (hemisferio) subdividida en 2.407 cuadriláteros de igual área, cuyo objetivo es representar el cielo. Por otro lado, el segundo objeto es una representación de una porción de una calle en el barrio de Petit Bayonne, localizado en Bayona, Francia cuyas imágenes se aprecian en la figura \ref{img:streetcomp}. El modelo fue construido por Beniot, Acuña, et al. \cite{Benoit} con el objetivo de estudiar el fenómeno de la transferencia de calor a la escala de calle utilizando el método de elementos finitos. En total, la escena cuenta con 61.795 parches cuadrangulares.
 
 
 \begin{figure}[htbp]
@@ -113,24 +113,24 @@ Se proponen casos de prueba utilizando las escenas descritas en la Sección \ref
 
 \subsection{Métricas consideradas}
 \label{metricasestablecidas}
-Con el objetivo de medir correctamente las ventajas y desventajas de cada método de cálculo de factores de forma simples y extendidos que se han propuesto, se define un conjunto de métricas para evaluar su optimialidad en distintas dimensiones. Cada dimensión se aplica dependiendo del caso considerado.
+Con el objetivo de medir correctamente las ventajas y desventajas de cada método de cálculo de factores de forma simples y extendidos que se han propuesto, se define un conjunto de métricas para evaluar su optimalidad en distintas dimensiones. Cada dimensión se aplica dependiendo del caso considerado.
 
 \begin{itemize}
 	\item Rendimiento
 		\begin{itemize}
 			\item Tiempo de ejecución: Se registra el tiempo empleado en calcular completamente la matriz de factores de forma.
 		\end{itemize}
-	\item Matriz de factores de forma: Se compara la matriz de control $\mathbf{F_{C}}$, calculada utilizando la técnica de trazado de rayos con una gran resolución.
+	\item Matriz de factores de forma: Se compara la matriz de control $\mathbf{F_{C}}$, calculada utilizando la técnica de trazado de rayos con una gran resolución (3.145.728 rayos).
 		\begin{itemize}
 			\item Error relativo promedio por fila: $Ep_{i} = \sum_{j=1}^{N} \frac{|\mathbf{F_{C}}_{ij} -\mathbf{F}_{ij}|}{N \mathbf{F_{C}}_{ij}}$
 			\item Error relativo máximo por fila: $Em_{i} = \max_{j=1}^{N}\frac{|\mathbf{F}_{ij} -\mathbf{Fc}_{ij}|}{\mathbf{F_{C}}_{ij}}$
 		\end{itemize}
-	\item Dimensión vector de radiosidad (dado el vector $R$, y el vector de control $Rc$):
+	\item Vector de radiosidad (dado el vector $B$, y el vector de control $Rc$):
 	\begin{itemize}
 		\item Error relativo promedio de radiosidad: $Ep = \sum_{i=1}^{N} \frac{|R_{i}-R_{Ci}|}{N R_{Ci}}$
-		\item Error máximo de radiosidad: $Em = \max_{j=1}^{N}|\frac{R_{j} -Rc_{j}|}{R_{Ci}}$
+		\item Error máximo de radiosidad: $Em = \max_{j=1}^{N}|\frac{R_{j} -Rc_{j}}|{R_{Ci}}$
 	\end{itemize}
-\item Visualización:
+\item Valuación cualitativa:
 	\begin{itemize}
 		\item Calidad de resultados: Se evaluarán los resultados esperando que se asemejen a la realidad.
 	\end{itemize}
@@ -141,7 +141,7 @@ Las definiciones fueron concebidas con la idea de que es necesario controlar el 
 \subsection{Descripción de casos de prueba}
 
 \begin{enumerate}
-	\item \textit{Prueba difusa}: Se utilizan materiales estrictamente difusos en ambas escenas, cuyos colores no varían a lo largo de las pruebas realizadas. De esta manera se desactiva cualquier interacción especular. Se escoge un conjunto de parches que ofician de fuente luminosa. En caso de la escena \textit{Calle}, se seleccionan 10 parches de la cúpula hemiesférica para emular al sol. Por otro lado, para la escena \textit{Cornell Box} se utiliza la bola central como fuente luminosa.
+	\item \textit{Prueba difusa}: Se utilizan materiales estrictamente difusos en ambas escenas, cuyos colores no varían a lo largo de las pruebas realizadas. De esta manera se desactiva cualquier interacción especular. Se escoge un conjunto de parches que ofician de fuente luminosa. En caso de la escena \textit{Calle}, se seleccionan 10 parches de la cúpula hemisférica para emular al sol. Por otro lado, para la escena \textit{Cornell Box} se utiliza la bola central como fuente luminosa.
 	\item \textit{Prueba especular}: Se utilizan materiales difusos y especulares en ambas escenas, con una cantidad reducida de estos últimos. En caso de la escena \textit{Cornell Box} se utiliza el plano ubicado en el centro como reflector, mientras que en la escena \textit{Calle} se utiliza una selección de ventanas. Para cada \textit{pipeline} (completo) implementado se computa la radiosidad registrando el tiempo de renderizado según la cantidad de muestras configurada.
 	\item \textit{Prueba conjunta}: En la escena \textit{Cornell Box} se computarán dos variantes. En una de ellas se utilizan superficies con materiales exclusivamente difusos y en el segundo caso se añaden espejos, con el objetivo principal de destacar diferencias visuales percibidas al utilizar la extensión implementada.
 	\item \textit{Prueba de stress}: Se utiliza gran cantidad de espejos en ambas escenas.
@@ -149,18 +149,18 @@ Las definiciones fueron concebidas con la idea de que es necesario controlar el 
 
 \subsection{Resultados observados}
 
-En esta sección se presentan los resultados observados para los casos de prueba planteados. En particular, los resultados se detallan en función de la cantidad de muestras tomadas en cada hemi-cubo o hemiesferio según corresponda. Para realizar una comparación justa, se utiliza la misma cantidad de pixeles totales del hemi-cubo como la cantidad de rayos lanzados en el hemiesferio. Por ejemplo, para un hemi-cubo donde la cara frontal tiene dimensiones 32x32 pixeles el total de pixeles es de 32x32x3, totalizando 3072 pixeles. Por lo tanto, su caso equivalente en Embree corresponde a lanzar 3072 rayos.
+En esta sección se presentan los resultados observados para los casos de prueba planteados. En particular, los resultados se detallan en función de la cantidad de muestras tomadas en cada hemi-cubo o hemisferio según corresponda. Para realizar una comparación justa, se utiliza la misma cantidad de pixeles totales del hemi-cubo como la cantidad de rayos lanzados en el hemisferio. Por ejemplo, para un hemi-cubo donde la cara frontal tiene dimensiones 32x32 pixeles el total de pixeles es de 32x32x3, totalizando 3072 pixeles. Por lo tanto, su caso equivalente en Embree corresponde a lanzar 3072 rayos.
 
-\subsubsection{Caso de prueba I (Difusa)}
+\subsubsection{Caso de prueba I (Reflexión difusa)}
 
 \begin{table}[htbp]
 	\centering
 	\begin{tabular}{|c|c|l|l||l|l|}
 		\hline
-		\multicolumn{2}{|c|}{\multirow{3}{*}{\textbf{Muestras}}} & \multicolumn{4}{c|}{\textbf{Tiempo de ejecución (s)}}                                                                                  \\ \cline{3-6} 
-		\multicolumn{2}{|c|}{}                   & \multicolumn{2}{c||}{\textit{Cornell Box}}                 & \multicolumn{2}{c|}{\textit{Calle}}                      \\ \cline{3-6}
-		\multicolumn{2}{|c|}{}
-		& \multicolumn{1}{c|}{OpenGL-D} & \multicolumn{1}{c||}{Embree-D} & \multicolumn{1}{c|}{OpenGL-D} & \multicolumn{1}{c|}{Embree-D} \\ \hline
+		\multicolumn{2}{|c|}{\multirow{2}{*}{\textbf{Muestras}}} & \multicolumn{4}{c|}{\textbf{Tiempo de ejecución (s)}}                                                                                  \\ \cline{3-6} 
+		\multicolumn{2}{|c|}{}                   & \multicolumn{2}{c||}{\textit{Cornell Box}}                 & \multicolumn{2}{c|}{\textit{Calle}}                      \\ \cline{1-6}
+		\multicolumn{1}{|c|}{OpenGL} &\multicolumn{1}{c|}{Embree} &
+		\multicolumn{1}{c|}{OpenGL-D} & \multicolumn{1}{c||}{Embree-D} & \multicolumn{1}{c|}{OpenGL-D} & \multicolumn{1}{c|}{Embree-D} \\ \hline
 		\textbf{32x32}                        &
 		\textbf{3072}                        & 7                           & \textbf{3}                           & 68                          & 14                          \\ \hline
 		\textbf{64x64}                        &
@@ -202,7 +202,7 @@ coordinates {
 \addplot[
 smooth,
 color=red,
-mark=square,
+mark=*,
 ]
 coordinates {
 	(3072,3)(49512,30)(196608,116)(786432,446)(3145728,1778)
@@ -211,7 +211,7 @@ coordinates {
 \addplot[
 smooth,
 color=cyan,
-mark=square,
+mark=triangle,
 ]
 coordinates {
 	(3072,68)(49512,128)(196608,248)(786432,1213)(3145728,4018)
@@ -220,7 +220,7 @@ coordinates {
 \addplot[
 smooth,
 color=magenta,
-mark=square,
+mark=x,
 ]
 coordinates {
 	(96,14)(49512,174)(196608,665)(786432,2565)(3145728,7511)
@@ -234,7 +234,7 @@ coordinates {
 \label{plot:emglc1}
 \end{figure}
 
-Una de las consecuencias más interesantes a ser analizadas para detectar la cantidad de muestras óptimas a considerar es la calidad de la imagen final, y qué tan pronunciadas son las diferencias en la iluminación entre los parches, es decir, en qué medida difiere la radiosidad entre parches. Para este caso, se pudo observar (véase la Figura \ref{img:difres}) que si bien las resoluciones más bajas consumen menor cantidad de recursos los resultados tienen una calidad sustancialmente menor. Considerando que el modelo generalmente es utilizado para el cálculo de iluminación en una etapa de pre-procesado (fuera de línea), es recomendable evitar el uso de factores de muestreo tan bajos. Esto se ve acentuado en el análisis de la matriz de factores de forma, según las métricas establecidas en \ref{metricasestablecidas} se pudo comprobar que máximo error promedio apreciado (medida que se ha denominado $Ep$) fue de $0,05$ y $0,04$ utilizando $786.432$ muestras para los métodos del hemi-cubo y el hemiesferio mientras que el uso de $3.072$ muestras generó errores del entorno de los $0,14$ y $0,06$ respectivamente. Estos se ven aún más acentuados al realizar el cálculo de la radiosidad para cada parche.
+Una de las consecuencias más interesantes a ser analizadas para detectar la cantidad de muestras óptimas a considerar es la calidad de la imagen final, y qué tan pronunciadas son las diferencias en la iluminación entre los parches, es decir, en qué medida difiere la radiosidad entre parches. Para este caso, se pudo observar (véase la Figura \ref{img:difres}) que si bien las resoluciones más bajas consumen menor cantidad de recursos los resultados tienen una calidad sustancialmente menor. Considerando que el modelo generalmente es utilizado para el cálculo de iluminación en una etapa de pre-procesado (fuera de línea), es recomendable evitar el uso de factores de muestreo tan bajos. Esto se ve acentuado en el análisis de la matriz de factores de forma, según las métricas establecidas en \ref{metricasestablecidas} se pudo comprobar que máximo error promedio apreciado (medida que se ha denominado $Ep$) fue de $0,05$ y $0,04$ utilizando $786.432$ muestras para los métodos del hemi-cubo y el hemisferio mientras que el uso de $3.072$ muestras generó errores del entorno de los $0,14$ y $0,06$ respectivamente. Estos se ven aún más acentuados al realizar el cálculo de la radiosidad para cada parche.
 
 \begin{figure}[htbp]
 	\centering
@@ -262,73 +262,97 @@ Una de las consecuencias más interesantes a ser analizadas para detectar la can
 
 En este caso, se observa en la tabla \ref{tab:caso2} que el mejor rendimiento se obtiene utilizando el método híbrido, esto se debe a los hilos que ejecutan los cálculos correspondientes al rebote especular (utilizando traza de rayos) son ejecutados en la CPU mientras la GPU procesa hemi-cubos. Esta observación se ve respaldada por el hecho de que, en promedio se observó una ocupación rondando en los entornos de 100\% de la CPU y 35\% GPU en el método híbrido, 75\% de la CPU y 30\% GPU en el método utilizando OpenGL y 99\% en la implementación que solo utiliza traza de rayos. 
 
-
-\begin{table}[htbp]
+\begin{table}[htbp!]
 	\centering
 	\begin{tabular}{|l|l|l|l|l||l|l|l|}
 		\hline
-		\multicolumn{2}{|c|}{\multirow{3}{*}{\textbf{Muestras}}} & \multicolumn{6}{c|}{\textbf{Tiempo de ejecución (s)}}                                                                                  \\ \cline{3-8} 
-		\multicolumn{2}{|c|}{}                   & \multicolumn{3}{c||}{\textit{Cornell Box}}                 & \multicolumn{3}{c|}{\textit{Calle}}                      \\ \cline{3-8}
-		\multicolumn{2}{|c|}{}                          & \multicolumn{1}{c|}{GL-D+S} & \multicolumn{1}{c|}{E-D+S} & \multicolumn{1}{c||}{Híb} & GL-D+S                 & E-D+S & Híb \\ \hline
+		\multicolumn{2}{|c|}{\multirow{2}{*}{\textbf{Muestras}}} & \multicolumn{6}{c|}{\textbf{Tiempo de ejecución (s)}}                                                                                  \\ \cline{3-8} 
+		\multicolumn{2}{|c|}{}                   & \multicolumn{3}{c||}{\textit{Cornell Box}}                 & \multicolumn{3}{c|}{\textit{Calle}}                      \\ \cline{1-8}
+		\multicolumn{1}{|c|}{OpenGL} &\multicolumn{1}{c|}{Embree} & \multicolumn{1}{c|}{GL-D+S} & \multicolumn{1}{c|}{E-D+S} & \multicolumn{1}{c||}{Híb} & GL-D+S                 & E-D+S & Híb \\ \hline
 		\textbf{32x32 - 32}                                &
 		\textbf{3072 - 32}                                & 25                         & 53                          & \textbf{21}                           & 2563                   & 1221   & \textbf{943}     \\ \hline
 		\textbf{256x256 - 32}                                &
 		\textbf{196608 - 32}                               & 93                         & 134                         & \textbf{84}                          & \textbf{1054}                   & 2512   & 1643    \\ \hline
 		\textbf{512x512 - 64} &\textbf{786432 - 64}                              & 304                        & 486                         & \textbf{228}                          & \multicolumn{1}{c|}{-} & 5342   & \textbf{4725}    \\ \hline
 	\end{tabular}
-	\caption{Resultados obtenidos en el segundo caso de prueba. Notación: GL, E, Híb corresponden a OpenGL, Embree e Híbrido; D+S indica que se utilizaron reflexiones difusas y especulares. '-' indica casos de prueba que tomaron tiempos excesivos.}
+	\caption{Resultados obtenidos en el segundo caso de prueba. Notación: GL, E, Híb corresponden a OpenGL, Embree e Híbrido. La notación 'D+S' indica que se utilizaron reflexiones difusas y especulares. Los valores de muestras a la derecha indican la resolución de los espejos. \protect\footnotemark}
 	\label{tab:caso2}
 \end{table}
+\footnotetext{'-' indica casos de prueba que tomaron tiempos excesivos.}
 
-\begin{tikzpicture}
-\label{plot:emglc2}
-\begin{axis}[
-title={\textbf{Rendimiento en segundos. (Cornell Box)}},
-xlabel={Muestras (píxeles/rayos)},
-ylabel={Tiempo (s)},
-xmin=0,
-ymin=0,
-width=.85\textwidth, height=7cm,
-legend pos=north west,
-ymajorgrids=true,
-grid style=dashed,
-]
+El paralelismo de las implementaciones basadas en la GPU garantiza el mejor rendimiento, sin embargo, se pudo notar que el uso exclusivo de traza de rayos provee hasta 14 veces menor error máximo que los otros algoritmos implementados. En \textit{Cornell Box}, con 786.432 muestras se notó una diferencia de error máxima $Ep$ de $0.0138$ con el método híbrido y $0.0091$ utilizando el método de dibujado de portales, en comparación con el método de traza de rayos que logró un error de $0.000481$.
 
-\addplot[
-smooth,
-color=blue,
-mark=square,
-]
-coordinates {
-	(96,25)(768,93)(1536,304)
-};
-\addplot[
-smooth,
-color=red,
-mark=square,
-]
-coordinates {
-	(96,53)(768,134)(1536,486)
-};
+\begin{table}[htbp!]
+	\centering
+	\begin{tabular}{|l|l|l|l|l|}
+		\hline
+		\multicolumn{2}{|c|}{\multirow{2}{*}{\textbf{Muestras}}} & \multicolumn{3}{c|}{\textbf{Error relativo (normalizado)}}\\ \cline{3-5} 
+		\multicolumn{2}{|c|}{}                   & \multicolumn{3}{c|}{\textit{Cornell Box}}                                \\ \cline{1-5}
+		\multicolumn{1}{|c|}{OpenGL} &\multicolumn{1}{c|}{Embree} & \multicolumn{1}{c|}{GL-D+S} & \multicolumn{1}{c|}{E-D+S} & \multicolumn{1}{c|}{Híb} \\ \hline
+		\textbf{32x32 - 32}                                &
+		\textbf{3072 - 32}                                & 0.0138                         & 0.000481                          & 0.0091                                \\ \hline
+		0.0093                               &
+		\textbf{196608 - 32}                               & 93                         & 0.000108                         & 0.0073                             \\ \hline
+		\textbf{512x512 - 64} &\textbf{786432 - 64}                              & 0.0080                        & 0.000001                         & 0.0055                             \\ \hline
+	\end{tabular}
+	\caption{Resultados obtenidos en el segundo caso de prueba (Cornell Box).}
+	\label{tab:caso2err}
+\end{table}
 
-\addplot[
-smooth,
-color=cyan,
-mark=square,
-]
-coordinates {
-	(96,21)(768,84)(1536,228)
-};
+Esto se debe a que tanto en el uso de dibujado de portales o el algoritmo híbrido se utilizan estimaciones de la dirección en la que rebotaría el rayo en el espejo considerado, lo que degrada la autenticidad final de los datos obtenidos, sobre todo en el dibujado de portales donde la granularidad de las muestras obtenidas es inferior (se toman muestras por área y no por rayo). Por lo tanto, incluso si el método de traza de rayos posee un tiempo de ejecución un tanto mayor (que se debe mayormente al hecho de que se ejecuta únicamente en la CPU) se observa una calidad de datos de órdenes de magnitud superior a la de los otros métodos.
+
+\begin{figure}[htpb!]
+	\centering
+	\begin{tikzpicture}
+	\label{plot:emglc2}
+	\begin{axis}[
+	title={\textbf{Rendimiento en segundos. (Cornell Box con superficies especulares)}},
+	xlabel={Muestras (píxeles/rayos)},
+	ylabel={Tiempo (s)},
+	xmin=0,
+	ymin=0,
+	width=.85\textwidth, height=7cm,
+	legend pos=north west,
+	ymajorgrids=true,
+	grid style=dashed,
+	]
+	
+	\addplot[
+	smooth,
+	color=blue,
+	mark=o,
+	]
+	coordinates {
+		(96,25)(768,93)(1536,304)
+	};
+	\addplot[
+	smooth,
+	color=red,
+	mark=square,
+	]
+	coordinates {
+		(96,53)(768,134)(1536,486)
+	};
+	
+	\addplot[
+	smooth,
+	color=cyan,
+	mark=*,
+	]
+	coordinates {
+		(96,21)(768,84)(1536,228)
+	};
+	
+	
+	\legend{OpenGL,Embree,Híbrido}
+	
+	\end{axis}
+	\end{tikzpicture}
+	\caption{Rendimiento en segundos, considerando superficies especulares}
+\end{figure}
 
 
-\legend{OpenGL,Embree,Híbrido}
-
-\end{axis}
-\end{tikzpicture}
-
-El paralelismo de las implementaciones basadas en la GPU garantiza el mejor rendimiento, sin embargo, se pudo notar que el uso exclusivo de traza de rayos provee hasta 14 veces menor error máximo que los otros algoritmos implementados. En \textit{Cornell Box}, con 786.432 muestras se notó una diferencia de error máxima $Ep$ de $0.0138$ con el método híbrido y $0.0091$ utilizando el método de dibujado de portales, en comparación con el método de traza de rayos que logró un eror de $0.000481$. Esto se debe a que tanto en el uso de dibujado de portales o el algoritmo híbrido se utilizan estimaciones de la dirección en la que rebotaría el rayo en el espejo considerado, lo que degrada la autenticidad final de los datos obtenidos, sobre todo en el dibujado de portales donde la granularidad de las muestras obtenidas es inferior (se toman muestras por área y no por rayo). Por lo tanto, incluso si el método de traza de rayos posee un rendimiento un tanto menor (que se debe mayormente al hecho de que se ejecuta únicamente en la CPU) se observa una calidad de datos de órdenes de magnitud superior a la de los otros métodos.
-
-\begin{figure}[htbp]
+\begin{figure}[htbp!]
 	\centering
 	\begin{subfigure}{0.5\textwidth}
 		\includegraphics[width=1\linewidth]{assets/cornellesp2}
@@ -346,9 +370,9 @@ El paralelismo de las implementaciones basadas en la GPU garantiza el mejor rend
 	\label{img:difres2}
 \end{figure}
 
-Con el objetivo de cuantificar los datos de error observado se analizó el error promedio en el vector de radiosidad final (comparado a una muestra utilizando exclusivamente trazado de rayos con 786.432 muestras para el hemiesferio) y se constató que, tal como se había supuesto, el método es significativamente menos propenso a generar errores como se ve en la Figura \ref{img:difres2}.
+Con el objetivo de cuantificar los datos de error observado se analizó el error promedio en el vector de radiosidad final (comparado a una muestra utilizando exclusivamente trazado de rayos con 786.432 muestras para el hemisferio) y se constató que, tal como se había supuesto, el método es significativamente menos propenso a generar errores como se ve en la Figura \ref{img:difres2}.
 
-\begin{figure}
+\begin{figure}[htbp!]
 \begin{tikzpicture}
 \begin{axis}[
 xlabel={Muestras (píxeles/rayos)},
@@ -365,7 +389,7 @@ grid style=dashed,
 smooth,
 color=blue,
 mark=square,
-mark=o,error bars/.cd, y dir=both,y explicit
+mark=square,error bars/.cd, y dir=both,y explicit
 ]
 coordinates {
 	(3072,0.06634) +- (0, 0.015)
@@ -375,8 +399,8 @@ coordinates {
 \addplot[
 smooth,
 color=red,
-mark=square,
-mark=o,error bars/.cd, y dir=both,y explicit
+mark=triangle,
+mark=triangle,error bars/.cd, y dir=both,y explicit
 ]
 coordinates {
 	(3072,0.0406985) +- (0, 0.0025)
@@ -387,7 +411,7 @@ coordinates {
 \addplot[
 smooth,
 color=cyan,
-mark=square,
+mark=* ,
 mark=o,error bars/.cd, y dir=both,y explicit
 ]
 coordinates {
@@ -404,11 +428,12 @@ coordinates {
 \caption{Error promedio observado en valor final de radiosidad en Híbrido. Los intervalos muestran el error máximo.}
 \label{plot:errorcII}
 \end{figure}
+
 \subsubsection{Caso de prueba III (Conjunta)}
 
-Esta prueba se construyó con el objetivo de comparar el rendimiento observado utilizando los algoritmos para el cálculo de factores de forma extendidos implementados. Se ha puesto especial énfasis en las diferencias producidas al variar la cantidad de caras especulares de la escena, es decir, los parches cuyo coeficiente de reflexión es positivo. Las pruebas se realizaron con una cantidad de muestras fijas (196.608 para el hemi-cubo o rayos y 4.096 para el portal).
+Esta prueba se construyó con el objetivo de comparar el rendimiento observado utilizando los algoritmos para el cálculo de factores de forma extendidos implementados. Es interesante comparar las diferencias en los tiempos de ejecución para una cantidad de muestras fijas, incluso si se han notado grandes discrepancias entre los resultados observados entre los métodos. Se ha puesto especial énfasis en las diferencias producidas al variar la cantidad de caras especulares de la escena, es decir, los parches cuyo coeficiente de reflexión es positivo. Las pruebas se realizaron con una cantidad de muestras fijas (256x256x3 para el hemi-cubo o 196.608 rayos y 4.096 muestras para el portal).
 
-\begin{table}[htbp]
+\begin{table}[htbp!]
 	\centering
 	\caption{Pruebas realizadas en \textit{Cornell Box} para identificar incidencia en la cantidad de caras especulares utilizadas en el tiempo de ejecución}
 \begin{tabular}{|l|l|l|l|}
@@ -424,7 +449,7 @@ Esta prueba se construyó con el objetivo de comparar el rendimiento observado u
 
 En la Tabla \ref{tab:caso3} puede observarse cómo la traza de rayos supera en dos veces el tiempo a los otros algoritmos. Sin embargo, se ha de destacar (al igual que en las pruebas anteriores) que los resultados observados tendrían variaciones en caso de utilizarse resoluciones mayores para el dibujado de portales. En cuyo caso, los tiempos entre los casos de prueba serían más afines, aunque se conseguirían resultados peores dada las aproximaciones realizadas en el dibujado de portales. Esto se demuestra al emparejar la cantidad de muestras tomadas por el portal con las de cada cara del hemi-cubo (256); en este caso los tiempos de ejecución para $62$ parches especulares es de 150 segundos. Por lo tanto, si bien existe un tiempo de ejecución mayor la estabilidad (en tiempo de ejecución) y la calidad de los datos obtenidos hacen que el método de traza de rayos sea superior a las otras dos propuestas.
 
-\begin{figure}[htbp]
+\begin{figure}[htbp!]
 	\centering
 	\begin{subfigure}{0.47\textwidth}
 		\includegraphics[width=1\linewidth]{assets/streete}
