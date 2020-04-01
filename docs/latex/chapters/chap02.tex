@@ -71,7 +71,7 @@ Existen además distintas variaciones e híbridos de estos métodos ya que los m
 
 El método de radiosidad es una técnica de iluminación global que emula el transporte de la luz entre superficies difusas. El mismo nombre se utiliza también para describir la magnitud física definida como radiosidad, que indica el flujo de energía radiada por unidad de área ($\frac{W}{m^{2}}$).
 
-Originalmente, este modelo de iluminación global fue propuesto por [\citeauthor{Goral}], y se basa en modelos matemáticos similares a los que resuelven el problema de la transferencia de calor en sistemas cerrados discretos como diferencias finitas o elementos finitos.
+Originalmente, este modelo de iluminación global fue propuesto por \citeauthor{Goral}[\cite{Goral}], y se basa en modelos matemáticos similares a los que resuelven el problema de la transferencia de calor en sistemas cerrados discretos como diferencias finitas o elementos finitos.
 
 \subsection{Radiosidad en superficies lambertianas}
 
@@ -165,7 +165,7 @@ De \eqref{eq:ff} se obtienen las siguientes propiedades:
 \subsection{Métodos de cálculo de la matriz de Factores de Forma}
 \label{sec:calculoff}
 
-El cálculo de los factores de forma a través de la Eq. \eqref{eq:ff} analíticamente es inviable en la práctica pues supone la necesidad de conocer la visibilidad entre cada par de parches que componen la escena. Por tanto, es necesario establecer otros métodos que provean aproximaciones lo suficientemente correctas.
+El cálculo analítico de los factores de forma a través de la Eq. \eqref{eq:ff} es inviable en la práctica pues supone la necesidad de conocer la visibilidad entre cada par de parches que componen la escena. Por tanto, es necesario establecer otros métodos que provean aproximaciones lo suficientemente correctas.
 
 Geométricamente, puede establecerse una analogía para la computación de factores de forma conocida como <<analogía de Nusselt>> (ver Figura \ref{img:nusselt}). Se expresará el factor de forma como la proporción de área proyectada de $S_{j}$ en un hemisferio ubicado en el baricentro de $S_{i}$ y luego en un disco centrado en $S_{i}$.
 
@@ -199,7 +199,7 @@ A continuación, se describe el proceso para OpenGL 4.5 visualizado en la Figura
 	\item Procesamiento de primitivas geométricas:
 		\begin{enumerate}
 			\item Especificación de vértices: Inicialmente, las aplicaciones indican un conjunto de vértices a dibujar, definiendo cierto conjunto de primitivas geométricas como triángulos, cuadriláteros, puntos, líneas u otros.
-			\item \textit{Shader de vétices}: Esta etapa transforma los vértices de entrada suministrados por la aplicación. Generalmente se computan las transformaciones lineales necesarias para cambiar la base de las coordenadas de los vértices de un sistema local al sistema global que defina la aplicación. Las coordenadas retornadas deberán corresponderse con coordenadas del espacio de recorte. Es decir, coordenadas correspondientes al volumen de vista.
+			\item \textit{Shader de vértices}: Esta etapa transforma los vértices de entrada suministrados por la aplicación. Generalmente se computan las transformaciones lineales necesarias para cambiar la base de las coordenadas de los vértices de un sistema local al sistema global que defina la aplicación. Las coordenadas retornadas deberán corresponderse con coordenadas del espacio de recorte. Es decir, coordenadas correspondientes al volumen de vista.
 			\item Teselado: En esta etapa se procesan los vértices a nivel de primitiva geométrica, con el objetivo de subdividirlas para mejorar la resolución obtenida.
 			\item \textit{Shader de geometría}: En esta etapa también se procesan los vértices a nivel de primitiva geométrica con el objetivo de mutarlas y replicarlas.
 			\item Recortado: Esta etapa es \textit{fija}, es decir, no es programable. Todas las primitivas calculadas anteriormente que residan fuera del volumen de vista serán descartadas en las etapas futuras. Además, se transforma las primitivas a coordenadas de espacio de ventana.
@@ -217,13 +217,13 @@ A continuación, se describe el proceso para OpenGL 4.5 visualizado en la Figura
 
 Esta técnica de dibujado es extremadamente rápida, además, la mayoría de dispositivos contienen hardware especializado capaz de acelerar estos cálculos, comúnmente conocidos como Unidades de Procesamiento Gráfico (o GPU por sus siglas en inglés).
 
-Con el objetivo de calcular los factores de forma utilizando este hardware Cohen y Greenberg \cite{Cohen} idearon el método del hemi-cubo.
+Con el objetivo de calcular los factores de forma utilizando este hardware, Cohen y Greenberg \cite{Cohen} idearon el método del hemi-cubo.
 
 \subsubsection{El método del hemi-cubo}
 
 El hardware optimizado para realizar operaciones de rasterización tiene la capacidad de proyectar escenas tridimensionales sobre ventanas de vista planas a gran velocidad. 
 
-El método original de cálculo de factores de forma propone la proyección de la escena sobre un hemisferio centrado en $S_{i}$, sin embargo los modelos de proyección utilizados no lo facilitan pues las proyecciones se realizan sobre superficies planas. Por esto, Cohen y Greenberg \cite{Cohen} proponen proyectar la escena a un hemi-cubo centrado en $S_{i}$, esto supone el dibujado de cinco superficies planas, y por tanto puede ser realizada utilizando la rasterización como se aprecia en la Figura \ref{img:ff3}.
+El método original de cálculo de factores de forma propone la proyección de la escena sobre un hemisferio centrado en $S_{i}$. Sin embargo, los modelos de proyección utilizados no lo facilitan pues las transformaciones se realizan sobre superficies planas. Por esto, Cohen y Greenberg \cite{Cohen} proponen proyectar la escena a un hemi-cubo centrado en $S_{i}$, esto supone el dibujado de cinco superficies planas, y por tanto puede ser realizada utilizando la rasterización como se aprecia en la Figura \ref{img:ff3}.
 
 Para utilizar el hardware eficientemente se considera que se calcula una fila completa de $\mathbf{F}$, esto implica que dado el parche $S_{i}$, se calcula simultáneamente los factores de forma desde $S_{i}$ al resto de las superficies restantes. 
 
@@ -283,7 +283,7 @@ Para cada uno de los rayos emitidos, se determinará el punto de intersección m
 
 \subsubsection{El método del hemisferio}
 
-El trazado de rayos es una técnica efectiva según Kajiya \cite{Kajiya}, para resolver la ecuación del rendering, utilizando la técnica de \textit{trazado de camino} donde el haz de luz absorbe las propiedades de los materiales con los que interactúa. En este algoritmo, la integral se resuelve con un método de Monte Carlo, donde cada rayo representa una muestra estadísticamente independiente. Para resolver la doble integral presentada en la Eq. \eqref{eq:ff}.
+El trazado de rayos es una técnica efectiva según Kajiya \cite{Kajiya}, para resolver la ecuación del rendering, utilizando la técnica de \textit{trazado de camino} donde el haz de luz absorbe las propiedades de los materiales con los que interactúa. En este algoritmo, la integral se resuelve con un método de Monte Carlo, donde cada rayo representa una muestra estadísticamente independiente, para resolver la doble integral presentada en la Eq. \eqref{eq:ff}.
 
 Es posible pensar el problema original colocando un hemisferio unitario en el centro de $S_{i}$ orientada en la dirección de la normal de la superficie.
 
@@ -297,10 +297,9 @@ donde: \begin{itemize}
 		\item  $d$ sigue la distribución coseno.
 		\item $\beta(r, S_{j})$ toma el valor 1 si el rayo $ray(S_{i},d)$ interseca a $S_{j}$ o $0$ en otro caso.
 	   \end{itemize}
-\clearpage
 
 \vspace{5mm}
-\begin{figure}[htbp]
+\begin{figure}[htbp!]
 	\centering
 	\includegraphics[width=\linewidth]{assets/Raytracing}
 	\captionof{figure}{Representación gráfica del método de método de trazado de rayos para el cálculo de factores de forma}
@@ -309,7 +308,7 @@ donde: \begin{itemize}
 
 Cabe destacar que no es necesario utilizar una distribución de probabilidad con valores aleatorios o pseudo-aleatorios, sino que alcanza con utilizar una secuencia determinista de rayos que tengan una distribución que siga la del coseno.
 
-Para esto, pueden utilizarse otras distribuciones para la dirección de traza. Particularmente, una de ellas es la propuesta por Beckers y Beckers \cite{Beckers}, que presentan un método general de teselación de discos y hemisferios. Es deseable el hecho de que la propuesta para hemisferios genera un conjunto de celdas de igual factor de forma, es decir, las celdas del disco proyectado tienen la misma área. Esto hace que el método presente una calidad adecuada para la elección de las direcciones en la que se trazarán los rayos.
+Para esto, pueden utilizarse otras distribuciones para la dirección de traza. Particularmente, una de ellas es la propuesta por Beckers y Beckers \cite{Beckers}, que presentan un método general de teselación de discos y hemisferios. Es deseable el hecho de que la propuesta para hemisferios genera un conjunto de celdas de igual factor de forma, es decir, las celdas del disco proyectado según la analogía de Nusselt (Figura \ref{img:nusselt}) poseen la misma área. Esto hace que el método presente una calidad adecuada para la elección de las direcciones en la que se trazarán los rayos.
 
 \subsection{Extensión a superficies especulares}
 
@@ -319,19 +318,19 @@ Por ello se ha desarrollado una extensión del método de radiosidad para superf
 
 \vspace{5mm}
 \begin{figure}[htbp!]
-	\includegraphics[width=1\linewidth]{assets/extended}
+	\includegraphics[width=1\linewidth]{assets/extended2}
 	\captionof{figure}{Representación gráfica del cálculo del factor de forma extendido donde $k = \frac{1}{N}$, con $N$ muestras tomadas.}
 	\label{img:caminoespecular}
 \end{figure}
 
-Este método supone el trazado de rayos recursivo. En primer lugar, se lanza un rayo desde la superficie $S_{i}$, si  interseca una cara cuyo coeficiente de reflexión especular es mayor a cero se almacenará el total de $k(1 - \rho^{(s)}_{j})$ (donde $k = \frac{1}{nMuestras}$) como contribuyente del factor de forma $\mathbf{F}_{ij}$ y se calcularán las siguientes intersecciones con el residuo de la reflexión que se distribuirá entre los parches reflejados. Es decir, suponiendo que un rayo impacta $S_{k}$ desde el camino $(S_{i}, S_{j})$ donde $\rho^{(d)}_{j} \ge 0$ se agregará $k\rho^{(d)}_{j}(1 - \rho^{(s)}_{k})$ y se procederá hasta que $\rho^{(s)}_{z} = 0$ para una superficie intersecada $S_{z}$ o se alcance el máximo límite de recursión. Cabe destacar, que para que el algoritmo correctamente represente la realidad, se debe respetar la relación $0 < \rho^{(d)}_{i} + \rho^{(s)}_{i} <= 1$.
+Este método supone el trazado de rayos recursivo. En primer lugar, se lanza un rayo desde la superficie $S_{i}$, si  interseca una cara cuyo coeficiente de reflexión especular es mayor a cero se almacenará $k$ (donde $k = \frac{1}{nMuestras}$) como contribuyente del factor de forma $\mathbf{F}_{ij}$. Luego, suponiendo que un rayo impacta $S_{k}$ desde el camino $(S_{i}, S_{j})$ donde $\rho^{(s)}_{j} \ge 0$ se agregará $k\rho^{(s)}_{j}$ a $\mathbf{F}_{ik}$ y se procederá hasta que $\rho^{(s)}_{z} = 0$ para una superficie intersecada $S_{z}$ o se alcance el máximo límite de recursión. Cabe destacar, que para que el algoritmo correctamente represente la realidad, se debe respetar la relación $0 < \rho^{(d)}_{i} + \rho^{(s)}_{i} \leq 1 \text{ } \forall \text{ parche } i \in \text{ escena }$.
 
 \subsection{Cálculo del vector de radiosidades}
 \label{sec:vrad}
 
 Luego de computar la matriz $\mathbf{F}$ y dado los vectores de emisiones $E$ y reflexiones $R$, resta computar el vector de radiosidades correspondiente para cada parche, denominado $B$.
 
-Recordando la Eq. \eqref{eq:radiosity}, es posible deducir el problema al sistema de ecuaciones dado por:
+Recordando la Eq. \eqref{eq:radiosity} y considerando $\mathbf{R}$ a la matriz diagonal que contiene todas las reflectividades, es posible deducir el problema al sistema de ecuaciones dado por:
 
 \begin{equation}
 	E = (\mathbf{I} - \mathbf{RF})B
@@ -343,10 +342,10 @@ Recordando las propiedades en la Sección \ref{propsff}, podemos observar que:
 
 \begin{itemize}
 	\item $\sum_{j=1}^{N} \mathbf{F}_{ij} \leq 1 \forall{i \in [1,N]}$
-	\item $\rho^{(d)}_{i} \leq 1 \rightarrow \sum_{j=1}^{N} \mathbf{R}_{ij} \leq 1 \forall{i \in [1,N]}$
+	\item $\rho^{(d)}_{i} \leq 1 \rightarrow \mathbf{R}_{ii} \leq 1 \forall{i \in [1,N]}\text{ y }\mathbf{R}_{ij} = 0 \text{  }\forall{i,j \in [1,N], i \neq j}$
 \end{itemize}
 
-Esto implica que las entradas de $\mathbf{RF}$ s\texttt{}on siempre menores a $1$, por tanto la matriz $(\mathbf{I} - \mathbf{RF}) = M$ es diagonal dominante ya que $\sum_{j=1}^{N}|R_{ij}F_{ij}| \le 1 \forall i \in [1, N]$ y $R_{ii}F_{ii} = 0  \forall  i \in [1,N]$. Esto garantiza la convergencia del uso de métodos de resolución iterativos o de factorización, como el algoritmo de Gauss-Seidel o la factorización LU.
+Esto implica que las entradas de $\mathbf{RF}$ s\texttt{}on siempre menores a $1$, por tanto la matriz $(\mathbf{I} - \mathbf{RF}) = M$ es diagonal dominante ya que $R_{ii}\sum_{j=1}^{N}|F_{ij}| \le 1 \forall i \in [1, N]$. Lo que garantiza la convergencia del uso de métodos de resolución iterativos o de factorización, como el algoritmo de Gauss-Seidel o la factorización LU.
 
 Aunque los algoritmos clásicos de resolución de sistema de ecuaciones aplican a este problema, existen optimizaciones que hacen que su resolución se pueda aproximar de manera razonable con un costo computacional muy menor. Para ello, considerando que la matriz $\mathbf{F}$ es diagonal dominante, podemos utilizar la equación \ref{eq:iterativo} pues el \textit{residuo} (el término agregado en cada iteración) se reduce de la siguiente forma: $\left\|\mathbf{RF}B^{(i+1)}\right\| < \left\|\mathbf{RF}B^{(i)}\right\|$. El método planteado en la Eq. \eqref{eq:iterativo} es el método de Jacobi.
 
@@ -363,7 +362,7 @@ La computación gráfica es una herramienta sumamente útil para la generación 
 
 \subsection{OpenGL}
 
-Existen un conjunto bibliotecas de gráficas que soportan la rasterización (OpenGL, Vulkan, DirectX, Metal). En el contexto de este proyecto, se estudia el uso de Open Graphics Library (OpenGL).
+Existen un conjunto de bibliotecas de gráficas que soportan la rasterización (OpenGL, Vulkan, DirectX, Metal). En el contexto de este proyecto, se estudia el uso de Open Graphics Library (OpenGL).
 
 OpenGL es una especificación de una Interfaz de Programación de Aplicación (API por sus siglas en inglés) diseñada por la organización Khronos Group. Su cometido es el dibujado de gráficos bidimensionales o tridimensionales utilizando el método de rasterización (ver Sección \ref{sec:rasterizacion}). Los distintos fabricantes de sistemas operativos y tarjetas gráficas proporcionan implementaciones que se ajusten al hardware específico. Esta abstracción facilita la compatibilidad de las aplicaciones independientemente del hardware donde sean ejecutadas.
 

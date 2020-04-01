@@ -6,7 +6,7 @@ En este capítulo se presentan las conclusiones principales en relación a la in
 \section{Conclusiones}
 \label{sec:conclusiones}
 
-Este proyecto se dedicó al estudio, adaptación, implementación, extensión y comparación de distintos modelos de iluminación global que han surgido durante los años basados el método de radiosidad, así como posibles estrategias que optimicen el tiempo de ejecución observado. En este sentido, se logró comprobar que las extensiones del método de radiosidad que toman en consideración el fenómeno de la reflexión especular logran resultados con mayor realismo, observándose un costo adicional de computación despreciable, sobre todo al utilizar la técnica de traza de rayos.
+Este proyecto se dedicó al estudio, adaptación, implementación, extensión y comparación de distintos modelos de iluminación global basados en el método de radiosidad, así como posibles estrategias que optimicen el tiempo de ejecución observado. En este sentido, se logró comprobar que las extensiones del método de radiosidad que toman en consideración el fenómeno de la reflexión especular logran resultados con mayor realismo, observándose un costo adicional de computación despreciable, sobre todo al utilizar la técnica de traza de rayos.
 
 Adicionalmente, se comprobó que el método del hemi-cubo presenta mayores dificultades para adaptarse al cálculo de los factores de forma extendidos. Recurrir a métodos auxiliares para computar las direcciones de rebote son aproximaciones que pueden degradar la calidad de los resultados, tanto en el uso de traza de rayos o dibujado de portales. No obstante, el método se muestra superior en escenas exclusivamente difusas aún cuando no se han implementado estructuras de aceleración para el cálculo.
 
@@ -34,6 +34,6 @@ Además, como se aprecia en la Figura \ref{img:text} el uso de texturas proporci
 	\label{img:text}
 \end{figure}
 
-En tercer lugar, el desarrollo de nuevo \textit{hardware} permita que la traza de rayos pueda ser acelerada por la GPU a través de las extensiones DirectX DXR y Vulkan VK\_NVX\_raytracing, que son predominantemente utilizadas con tarjetas gráficas NVIDIA RTX. Por ello se propone el análisis de los algoritmos implementados en este tipo de dispositivos.
+En tercer lugar, el desarrollo de nuevo \textit{hardware} permite que la traza de rayos pueda ser acelerada por la GPU a través de las extensiones DirectX DXR y Vulkan VK\_NVX\_raytracing, que son predominantemente utilizadas con tarjetas gráficas NVIDIA RTX. Por ello se propone el análisis de los algoritmos implementados en este tipo de dispositivos.
 
-Finalmente, se propone considerar las posibles oclusiones parciales en el método híbrido, de forma de aumentar su precisión. Existen dos posibles formas de implementar este método. La primera consiste en considerar únicamente los puntos de los parches especulares que se dibujan en el hemi-cubo. La segunda alternativa supone lanzar rayos hacia los puntos aleatorios elegidos con la finalidad de determinar si existen oclusiones parciales e ignorar esos resultados.
+Finalmente, se propone considerar las posibles oclusiones parciales en el método híbrido, de forma de aumentar su precisión.

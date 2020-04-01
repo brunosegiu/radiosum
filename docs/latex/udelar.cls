@@ -517,7 +517,7 @@ nopostdot, 											 %quita el punto final en los acrónimos         .
 \thispagestyle{empty}
   \@mainmatterfalse
   \pagenumbering{roman}
-  \setcounter{page}{2}
+  \setcounter{page}{1}
   \makefrontpage
 }
 
@@ -738,7 +738,7 @@ Palabra clave:\\
   \clearpage
   \fi
   \udelar@mainBegin
-  \cleardoublepage
+  \clearpage
   \@mainmattertrue
   \pagestyle{plain}
   \pagenumbering{arabic}

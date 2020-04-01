@@ -125,10 +125,10 @@ Con el objetivo de medir correctamente las ventajas y desventajas de cada métod
 			\item Error relativo promedio por fila: $Ep_{i} = \sum_{j=1}^{N} \frac{|\mathbf{F_{C}}_{ij} -\mathbf{F}_{ij}|}{N \mathbf{F_{C}}_{ij}}$
 			\item Error relativo máximo por fila: $Em_{i} = \max_{j=1}^{N}\frac{|\mathbf{F}_{ij} -\mathbf{Fc}_{ij}|}{\mathbf{F_{C}}_{ij}}$
 		\end{itemize}
-	\item Vector de radiosidad (dado el vector $B$, y el vector de control $Rc$):
+	\item Vector de radiosidad (dado el vector $B$, y el vector de control $Bc$, calculado a partir de la matriz de factores de forma $\mathbf{F_{C}}$):
 	\begin{itemize}
-		\item Error relativo promedio de radiosidad: $Ep = \sum_{i=1}^{N} \frac{|R_{i}-R_{Ci}|}{N R_{Ci}}$
-		\item Error máximo de radiosidad: $Em = \max_{j=1}^{N}|\frac{R_{j} -Rc_{j}}|{R_{Ci}}$
+		\item Error relativo promedio de radiosidad: $Ep = \sum_{i=1}^{N} \frac{|B_{i}-B_{Ci}|}{N B_{Ci}}$
+		\item Error máximo de radiosidad: $Em = \max_{j=1}^{N}|{B_{j} - Bc_{j}}|{B_{Ci}}$
 	\end{itemize}
 \item Valuación cualitativa:
 	\begin{itemize}
@@ -161,18 +161,18 @@ En esta sección se presentan los resultados observados para los casos de prueba
 		\multicolumn{2}{|c|}{}                   & \multicolumn{2}{c||}{\textit{Cornell Box}}                 & \multicolumn{2}{c|}{\textit{Calle}}                      \\ \cline{1-6}
 		\multicolumn{1}{|c|}{OpenGL} &\multicolumn{1}{c|}{Embree} &
 		\multicolumn{1}{c|}{OpenGL-D} & \multicolumn{1}{c||}{Embree-D} & \multicolumn{1}{c|}{OpenGL-D} & \multicolumn{1}{c|}{Embree-D} \\ \hline
-		\textbf{32x32}                        &
+		\textbf{32x32x3}                        &
 		\textbf{3072}                        & 7                           & \textbf{3}                           & 68                          & 14                          \\ \hline
-		\textbf{64x64}                        &
+		\textbf{64x64x3}                        &
 		\textbf{49512}                       & \textbf{10}                          & 30                          & \textbf{128}                         & 174                         \\ \hline
-		\textbf{128x128}                        &
+		\textbf{128x128x3}                        &
 		\textbf{196608}                       & \textbf{31}                          & 116                         & \textbf{248}                         & 665                         \\ \hline
-		\textbf{256x256}                        &
+		\textbf{256x256x3}                        &
 		\textbf{786432}   & \textbf{251}                         & 446                         & \textbf{1213}                        & 2565                        \\ \hline
-		\textbf{1024x1024}                        &
+		\textbf{1024x1024x3}                        &
 		\textbf{3145728}                      & \textbf{992}                         & 1778                        & \textbf{4018}                        & 7511                        \\ \hline
 	\end{tabular}
-	\caption{Resultados obtenidos para el primer caso de prueba. El número de muestras representa la cantidad de píxeles/rayos dibujados.}
+	\caption{Resultados obtenidos para el primer caso de prueba. El número de muestras representa la cantidad de píxeles (en OpenGL) y rayos (en Embree) dibujados.}
 	\label{tab:tablecaso1}
 \end{table}
 
@@ -258,7 +258,7 @@ Una de las consecuencias más interesantes a ser analizadas para detectar la can
 	\label{img:difres}
 \end{figure}
 
-\subsubsection{Caso de prueba II (Especular)}
+\subsubsection{Caso de prueba II (Reflexión Difusa + Especular)}
 
 En este caso, se observa en la tabla \ref{tab:caso2} que el mejor rendimiento se obtiene utilizando el método híbrido, esto se debe a los hilos que ejecutan los cálculos correspondientes al rebote especular (utilizando traza de rayos) son ejecutados en la CPU mientras la GPU procesa hemi-cubos. Esta observación se ve respaldada por el hecho de que, en promedio se observó una ocupación rondando en los entornos de 100\% de la CPU y 35\% GPU en el método híbrido, 75\% de la CPU y 30\% GPU en el método utilizando OpenGL y 99\% en la implementación que solo utiliza traza de rayos. 
 
@@ -269,18 +269,17 @@ En este caso, se observa en la tabla \ref{tab:caso2} que el mejor rendimiento se
 		\multicolumn{2}{|c|}{\multirow{2}{*}{\textbf{Muestras}}} & \multicolumn{6}{c|}{\textbf{Tiempo de ejecución (s)}}                                                                                  \\ \cline{3-8} 
 		\multicolumn{2}{|c|}{}                   & \multicolumn{3}{c||}{\textit{Cornell Box}}                 & \multicolumn{3}{c|}{\textit{Calle}}                      \\ \cline{1-8}
 		\multicolumn{1}{|c|}{OpenGL} &\multicolumn{1}{c|}{Embree} & \multicolumn{1}{c|}{GL-D+S} & \multicolumn{1}{c|}{E-D+S} & \multicolumn{1}{c||}{Híb} & GL-D+S                 & E-D+S & Híb \\ \hline
-		\textbf{32x32 - 32}                                &
-		\textbf{3072 - 32}                                & 25                         & 53                          & \textbf{21}                           & 2563                   & 1221   & \textbf{943}     \\ \hline
-		\textbf{256x256 - 32}                                &
+		\textbf{32x32x3 - 32}                                &
+		\textbf{3072x3 - 32}                                & 25                         & 53                          & \textbf{21}                           & 2563                   & 1221   & \textbf{943}     \\ \hline
+		\textbf{256x256x3 - 32}                                &
 		\textbf{196608 - 32}                               & 93                         & 134                         & \textbf{84}                          & \textbf{1054}                   & 2512   & 1643    \\ \hline
-		\textbf{512x512 - 64} &\textbf{786432 - 64}                              & 304                        & 486                         & \textbf{228}                          & \multicolumn{1}{c|}{-} & 5342   & \textbf{4725}    \\ \hline
+		\textbf{512x512x3 - 64} &\textbf{786432 - 64}                              & 304                        & 486                         & \textbf{228}                          & \multicolumn{1}{c|}{-} & 5342   & \textbf{4725}    \\ \hline
 	\end{tabular}
-	\caption{Resultados obtenidos en el segundo caso de prueba. Notación: GL, E, Híb corresponden a OpenGL, Embree e Híbrido. La notación 'D+S' indica que se utilizaron reflexiones difusas y especulares. Los valores de muestras a la derecha indican la resolución de los espejos. \protect\footnotemark}
+	\caption{Resultados obtenidos en el segundo caso de prueba. Notación: GL, E, Híb corresponden a OpenGL, Embree e Híbrido. La notación 'D+S' indica que se utilizaron reflexiones difusas y especulares. Los valores de muestras a la derecha indican la resolución de los espejos. '-' indica casos de prueba que tomaron tiempos excesivos.}
 	\label{tab:caso2}
 \end{table}
-\footnotetext{'-' indica casos de prueba que tomaron tiempos excesivos.}
 
-El paralelismo de las implementaciones basadas en la GPU garantiza el mejor rendimiento, sin embargo, se pudo notar que el uso exclusivo de traza de rayos provee hasta 14 veces menor error máximo que los otros algoritmos implementados. En \textit{Cornell Box}, con 786.432 muestras se notó una diferencia de error máxima $Ep$ de $0.0138$ con el método híbrido y $0.0091$ utilizando el método de dibujado de portales, en comparación con el método de traza de rayos que logró un error de $0.000481$.
+El paralelismo de las implementaciones basadas en la GPU garantiza el mejor rendimiento, sin embargo, se pudo notar que el uso exclusivo de traza de rayos provee hasta 800 veces menor error máximo que los otros algoritmos implementados. En \textit{Cornell Box}, con 786.432 muestras se notó una diferencia de error máxima $Ep$ de $0,0080$ con el método híbrido y $0,0055$ utilizando el método de dibujado de portales, en comparación con el método de traza de rayos que logró un error de $0,1 \times 10^{-3}$.
 
 \begin{table}[htbp!]
 	\centering
@@ -289,11 +288,11 @@ El paralelismo de las implementaciones basadas en la GPU garantiza el mejor rend
 		\multicolumn{2}{|c|}{\multirow{2}{*}{\textbf{Muestras}}} & \multicolumn{3}{c|}{\textbf{Error relativo (normalizado)}}\\ \cline{3-5} 
 		\multicolumn{2}{|c|}{}                   & \multicolumn{3}{c|}{\textit{Cornell Box}}                                \\ \cline{1-5}
 		\multicolumn{1}{|c|}{OpenGL} &\multicolumn{1}{c|}{Embree} & \multicolumn{1}{c|}{GL-D+S} & \multicolumn{1}{c|}{E-D+S} & \multicolumn{1}{c|}{Híb} \\ \hline
-		\textbf{32x32 - 32}                                &
+		\textbf{32x32x3 - 32}                                &
 		\textbf{3072 - 32}                                & 0.0138                         & 0.000481                          & 0.0091                                \\ \hline
-		0.0093                               &
-		\textbf{196608 - 32}                               & 93                         & 0.000108                         & 0.0073                             \\ \hline
-		\textbf{512x512 - 64} &\textbf{786432 - 64}                              & 0.0080                        & 0.000001                         & 0.0055                             \\ \hline
+		\textbf{256x256x3 - 32}                               &
+		\textbf{196608 - 32}                               & 0.0093                         & 0.000108                         & 0.0073                             \\ \hline
+		\textbf{512x512x3 - 64} &\textbf{786432 - 64}                              & 0.0080                        & 0.000010                         & 0.0055                             \\ \hline
 	\end{tabular}
 	\caption{Resultados obtenidos en el segundo caso de prueba (Cornell Box).}
 	\label{tab:caso2err}
@@ -431,7 +430,7 @@ coordinates {
 
 \subsubsection{Caso de prueba III (Conjunta)}
 
-Esta prueba se construyó con el objetivo de comparar el rendimiento observado utilizando los algoritmos para el cálculo de factores de forma extendidos implementados. Es interesante comparar las diferencias en los tiempos de ejecución para una cantidad de muestras fijas, incluso si se han notado grandes discrepancias entre los resultados observados entre los métodos. Se ha puesto especial énfasis en las diferencias producidas al variar la cantidad de caras especulares de la escena, es decir, los parches cuyo coeficiente de reflexión es positivo. Las pruebas se realizaron con una cantidad de muestras fijas (256x256x3 para el hemi-cubo o 196.608 rayos y 4.096 muestras para el portal).
+Esta prueba se construyó con el objetivo de comparar el rendimiento observado utilizando los algoritmos para el cálculo de factores de forma extendidos implementados. Es interesante comparar las diferencias en los tiempos de ejecución para una cantidad de muestras fijas, incluso si se han notado grandes discrepancias entre los resultados observados entre los métodos. Se ha puesto especial énfasis en las diferencias producidas al variar la cantidad de caras especulares de la escena, es decir, los parches cuyo coeficiente de reflexión es positivo. Las pruebas se realizaron con una cantidad de muestras fijas (256x256x3 para el hemi-cubo o 196.608 rayos para Embree y 4.096 muestras para el portal).
 
 \begin{table}[htbp!]
 	\centering
@@ -470,8 +469,10 @@ Adicionalmente, como se puede observar en la Figura \ref{img:difspecstreet}, las
 Finalmente, con el objetivo de evaluar el impacto de contar con muchas superficies especulares se probó qué tanto tiempo adicional insume la carga impuesta al algoritmo del hemisferio (Embree) para considerar este tipo de superficie. Los resultados pueden observarse en la Figura \ref{plot:este}. Se notó una diferencia máxima de 3\% del tiempo de cálculo de los factores de forma al variar la cantidad de superficies especulares entre 0 y 1500 parches. Es por ello que se puede concluir que al utilizar algoritmos de traza de rayos no se detecta un impacto significativo en el tiempo de ejecución.
 
 \begin{figure}[htbp!]
+	\centering
+	\resizebox{0.7\textwidth}{!}{
 \begin{tikzpicture}
-\centering
+
 \begin{axis}[
 ybar=7pt,
 enlargelimits=0.15,
@@ -491,7 +492,7 @@ width=\linewidth
 \addplot coordinates {(49512,191) (196608,705) (786432,2745)};
 \legend{0 superficies, 20 superficies, 1500 superficies}
 \end{axis}
-\end{tikzpicture}
+\end{tikzpicture}}
 \caption{Variación en el tiempo de ejecución en función de la cantidad de muestras y superficies especulares}
 \label{plot:este}
 \end{figure}

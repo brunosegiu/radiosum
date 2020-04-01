@@ -19,14 +19,20 @@ Para implementar el cálculo de factores de forma se implementó la función \ve
 	\item En primera instancia, son configurados los \textit{buffers} en memoria necesarios para representar el hemi-cubo.
 	Para ello, se crea un \textit{Frame Buffer Object} en la GPU que está compuesto de 5 texturas, cada una de ellas correspondiente a una de las caras a dibujar. Cabe destacar, que estas texturas se componen de dos imágenes: una conteniendo enteros sin signo que son utilizados para representar el \verb|id| de los parches vistos desde el centro del hemi-cubo y la restante contiene los valores de profundidad necesarios para el algoritmo del Z-Buffer.
 	\item En la segunda etapa se establecen las matrices de transformación de vista, es decir, las transformaciones que alinean el volúmen de vista al hemi-cubo. Esto implica trasladar el origen de vista hacia el baricentro de la cara en cuestión, y alinearla a su normal.
-	\item En la tercera etapa se procede a dibujar cada objeto en la escena desde el parche considerado en las cinco texturas que componen el hemi-cubo. Con el objetivo de tener el mejor rendimiento posible, se hace uso de los shaders de geometría para realizar una única llamada de dibujado por objeto. Este método solamente realiza un cambio de textura de dibujado, es decir, solo se liga las texturas correspondientes al hemi-cubo una única vez, en lugar de ligar una a una cada cara. Esto se debe a que esta es una de las operaciones más costosas según la Figura \ref{img:statechangescost}. Como puede apreciarse en el Algoritmo \ref{alg:renderHemicube} solo se realiza una única llamada de ligamiento del hemi-cubo. Específicamente, la implementación sigue el siguiente patrón:
+	\item En la tercera etapa se procede a dibujar cada objeto en la escena desde el parche considerado en las cinco texturas que componen el hemi-cubo. Con el objetivo de tener el mejor rendimiento posible, se hace uso de los shaders de geometría para realizar una única llamada de dibujado por objeto. Este método solamente realiza un cambio de textura de dibujado, es decir, solo se liga las texturas correspondientes al hemi-cubo una única vez, en lugar de ligar una a una cada cara. Esto se debe a que esta es una de las operaciones más costosas según la Figura \ref{img:statechangescost}. 
 	
-\begin{minipage}[htbp]{\linewidth}
-	\centering
-	\includegraphics[width=0.6\linewidth]{assets/statecosts}
-	\captionof{figure}{Costo de cambios de estado en OpenGL. Se muestra el costo de las distintas operacioens en orden inverso de cantidad de operaciones realizables por segundo para la tarjeta Nvidia GTX 480. \cite{nvidia}}
-	\label{img:statechangescost}
-\end{minipage}
+	\vspace{10mm}
+	\begin{minipage}[htbp]{\linewidth}
+		\centering
+		\includegraphics[width=0.6\linewidth]{assets/statecosts}
+		\captionof{figure}{Costo de cambios de estado en OpenGL. Se muestra el costo de las distintas operacioens en orden inverso de cantidad de operaciones realizables por segundo para la tarjeta Nvidia GTX 480. \cite{nvidia}}
+		\label{img:statechangescost}
+	\end{minipage}
+	\vspace{10mm}
+
+Como puede apreciarse en el Algoritmo \ref{alg:renderHemicube} solo se realiza una única llamada de ligamiento del hemi-cubo. Específicamente, la implementación sigue el siguiente patrón:
+	
+
 
 	\begin{enumerate}
 		\item El shader de vértices es simplemente \textit{passthough} lo que significa que conecta las entradas provistas por la CPU con su salida.
@@ -45,13 +51,13 @@ Para implementar el cálculo de factores de forma se implementó la función \ve
 		\State $alinearCamara(parche)$ //alinear la cámara a la normal del parche
 		\State $dibujar(escena)$ //dibujar la escena en el hemi-cubo (GPU)
 		\State $hemicubo \gets leerHemicubo()$ //leer los píxeles del hemi-cubo
-		\State $procesarHemicubo(parche, hemicubo)$ //hallar la fila asociada al parche
+		\State $procesarHemicubo(parche, hemicubo)$ //hallar la fila asociada al parche de F
 		\EndLoop
 		\EndFunction
 	\end{algorithmic}
 \end{algorithm}
 
-	\item En última instancia es necesario procesar la información del hemi-cubo dibujado para obtener una nueva fila de la matriz $\mathbf{F}$. Para esto, se suman los delta factores de forma de los pixeles para cada partche de la escena. Este proceso puede ser realizado tanto en GPU como CPU y sigue el patrón que se muestra en el Algoritmo \ref{alg:processHemicube}. Ambos métodos fueron implementados y se detallan a continuación:
+	\item En última instancia es necesario procesar la información del hemi-cubo dibujado para obtener una nueva fila de la matriz $\mathbf{F}$. Para esto, se suman los delta factores de forma de los pixeles para cada parche de la escena. Este proceso puede ser realizado tanto en GPU como CPU y sigue el patrón que se muestra en el Algoritmo \ref{alg:processHemicube}. Ambos métodos fueron implementados y se detallan a continuación:
 	\begin{itemize}
 		\item Computar factores de forma en GPU: Se utilizan \textit{compute shaders} para reducir las cinco texturas que componen el hemi-cubo en un único \textit{Shader Buffer Object} que representa un arreglo de bytes en la GPU. En este caso, el arreglo representará una fila completa de la matriz. Para calcular cada entrada se utiliza una textura inmutable (es decir, no modificable) auxiliar que contiene los valores de corrección expresados en las Eqs. \eqref{eq:ff} y \eqref{eq:ffgreenberg} en conjunción con la función \verb|atomicAdd| para sumar las componentes de los factores de forma de cada elemento. Al ser la GPU un multiprocesador puede ocurrir que varios hilos intenten sumar en la misma celda de \textbf{F} al mismo tiempo y la operación \verb|atomicAdd| obliga a realizar esas operaciones secuencialmente.
 		Es posible acceder a este buffer desde la CPU mediante la función \verb|glMapBuffer|, que a través del dispositivo DMA (del inglés \textit{Direct Memory Access}) permite la lectura de la memoria VRAM (localizada físicamente en la GPU) de forma directa, aunque requiere de la sincronización entre GPU-CPU.
@@ -80,7 +86,7 @@ Para implementar el cálculo de factores de forma se implementó la función \ve
 \end{algorithm}
 
 \subsection{El algoritmo del hemisferio}
-El algoritmo del hemisferio (Sección 2.2.2) fue implementado utilizando la biblioteca de traza de rayos Embree que implica una solución alternativa al método del hemi-cubo. Esta biblioteca soporta el trazado de rayos en la CPU en múltiples superficies, en particular, triángulos y cuadriláteros utilizando BHV (del inglés \textit{Bounding Volume Hirarchies}). Estas estructuras de datos se basan en árboles que sub-dividen la escena en un conjunto de volúmenes simples que encapsulan un grupo de primitivas geométricas y cada nivel garantiza la reducción de tamaño de dichas estructuras. Su utilidad radica en la simplificación del cálculo de la intersección rayo-objeto, pues el cómputo de la intersección de un rayo con un volumen envolvente tiene un costo despreciable en comparación al muestreo de todas las primitivas que están contenidas en él. La aceleración se da cuando no hay intersección entre el volumen y el rayo, en caso de "fallo" se asegura a su vez el fallo de la intersección con todas las primitivas que el volumen contiene.
+El algoritmo del hemisferio (Sección 2.2.2) fue implementado utilizando la biblioteca de traza de rayos Embree que implica una solución alternativa al método del hemi-cubo. Esta biblioteca soporta el trazado de rayos en la CPU en múltiples superficies, en particular, triángulos y cuadriláteros utilizando BHV (del inglés \textit{Bounding Volume Hirarchies}). Estas estructuras de datos se basan en árboles que sub-dividen la escena en un conjunto de volúmenes simples que encapsulan un grupo de primitivas geométricas y cada nivel garantiza la reducción de tamaño de dichas estructuras. Su utilidad radica en la simplificación del cálculo de la intersección rayo-objeto, pues el cómputo de la intersección de un rayo con un volumen envolvente tiene un costo despreciable en comparación al muestreo de todas las primitivas que están contenidas en él. La aceleración se da cuando no hay intersección entre el volumen y el rayo, pues en caso de "fallo" se asegura a su vez el fallo en la intersección del rayo con todas las primitivas que el volumen contiene.
 
 \begin{algorithm}
 	\caption{Cálculo de una fila de los factores de forma utilizando traza de rayos}
@@ -93,8 +99,8 @@ El algoritmo del hemisferio (Sección 2.2.2) fue implementado utilizando la bibl
 			\Loop{$direccion \in direcciones:$}
 			//traza de rayos desde el baricentro
 			\State $interseccion \gets trazarRayo(escena, baricentro, direcciones)$ 
-			\State $parcheVisto \gets obtenerIdParche(intersection)$
-			\If{$esValido(parcheVisto)$}//si el id no es inválido (id del vacío)
+			\State $parcheVisto \gets obtenerIdParche(interseccion)$
+			\If{$esValido(parcheVisto)$}//si el id es válido (no es el id del vacío)
 			\State $fila[parcheVisto] \gets + \frac{1}{nMuestras}$ //añadir la fracción de ff
 			\EndIf
 			\EndLoop
@@ -109,7 +115,7 @@ Luego se procede a la traza de rayos. $\mathbf{F}_{ij}$ se calculará como $\fra
 
 El muestreo de puntos partiendo del origen del hemisferio en las direcciones determinadas se calcula utilizando la función \verb|rtcIntersect1| de la biblioteca Embree, que retorna, de forma similar a OpenGL, un identificador de primitiva relativo al objeto que se intersecta. Para transformarlo en un identificador global se utilizan los valores obtenidos \verb|geomID| y \verb|primID| además de un mapa de \textit{offsets} que contienen un número con la cantidad de primitivas que anteceden a un objeto. Obtenido el conjunto de primitivas vistas, resta reducirla para generar una fila de la matriz adicionando $\frac{1}{nMuestras}$ para cada rayo.
 
-Para manejar los distintos hilos de ejecución se utilizó una combinación entre la biblioteca estándar \verb|std::threading| y OpenMP. La primera se utilizó en combinación con \verb|std::lock| para manejar los distintos hilos de la interfaz de usuario y el procesamiento de hemisferios. Mientras que por otro lado para manejar la traza de rayo se utilizó la extensión provista por OpenMP para paralelizar ciclos \verb|for|, por lo que cada rayo se maneja en un hilo independiente de forma transparente.
+Para manejar los distintos hilos de ejecución se utilizó una combinación entre la biblioteca estándar \verb|std::threading| y OpenMP. La primera se utilizó en combinación con \verb|std::lock| para manejar los distintos hilos de la interfaz de usuario y del procesamiento de hemisferios. Mientras que por otro lado para manejar la traza de rayo se utilizó la extensión provista por OpenMP para paralelizar ciclos \verb|for|, por lo que cada rayo se maneja en un hilo independiente de forma transparente.
 
 \section{Cálculo de factores de forma de la componente especular}
 
@@ -118,7 +124,7 @@ El cálculo de factores de forma extendidos fue implementado en dos variantes pa
 \subsection{Extensión del método del hemicubo}
 Ambas variantes son métodos de “dos pasadas” donde se dibuja el hemicubo normalmente, y luego de determinar cuáles de las caras visibles tienen componente especular, se proyecta nuevamente la escena para determinar qué parches son visibles a través de la reflexión.
 
-Los métodos utilizados son heurísticos pues se basan en aproximaciones a la reflexión para aprovechar el hardware al máximo. Hay un factor de error que depende drásticamente del área de los parches y de la disposición general de la geometría, ya que al contrario de la técnica de trazado de rayos, se conoce qué parches son visibles pero se desconoce el punto exacto del espacio que es el correspondiente a cada pixel del hemi-cubo ya que solamente se almacenan los identificadores de los parches. A su vez, con motivo de simplificar el algoritmo no se considerara el delta factor de forma en el calculo de la componente especular.
+Los métodos utilizados son heurísticos pues se basan en aproximaciones a la reflexión para aprovechar el hardware al máximo. Hay un factor de error que depende drásticamente del área de los parches y de la disposición general de la geometría, ya que al contrario de la técnica de trazado de rayos, se conoce qué parches son visibles pero se desconoce el punto exacto del espacio que es el correspondiente a cada pixel del hemi-cubo ya que solamente se almacenan los identificadores de los parches. A su vez, con motivo de simplificar el algoritmo no se considerará el delta factor de forma en el calculo de la componente especular (ver Algoritmos 4 y 5).
 
 La primer variante utiliza el método de dibujado de portales en la GPU, mientras que la segunda fue implementada utilizando \textit{trazado de rayos} en la CPU.
 
@@ -158,7 +164,7 @@ Finalmente, se obtienen los identificadores de las caras reflejadas. En caso de 
 		\State $parchesVistos \gets leerBuffer()$
 		\Loop{$parcheRef \in parchesVistos$}
 		\If{$esValido(parcheRef)$}
-		\State $fila[parcheRef] \gets +(\frac{1}{nSamples})$
+		\State $fila[parcheRef] \gets +(\frac{1}{nMuestras})$ // en lugar de delta FF se usa 1 / nMuestras
 		\If{$esEspecular(parcheRef)$} // si el coeficiente de reflexión especular es no nulo
 		\State $dibujarPortal(parcheObj, parcheRef)$
 		\EndIf
@@ -178,7 +184,7 @@ El método híbrido consiste en la utilización del trazado de rayos para comput
 	\label{img:hibrido}
 \end{figure}
 
-Esto emula el fenómeno de la reflexión, aunque introduce errores al aproximar la dirección real de reflexión. Esto se debe a que no se han de considerar las posibles oclusiones parciales entre las caras, dado que no se trazan rayos hacia el espejo en la dirección de los pixeles visibles en el hemi-cubo, sino que se eligen puntos al azar.
+Esto emula el fenómeno de la reflexión, aunque introduce errores al aproximar la dirección real de reflexión. Debido a que no se han de considerar las posibles oclusiones parciales entre las caras, dado que no se trazan rayos hacia el espejo en la dirección de los pixeles visibles en el hemi-cubo, sino que se eligen puntos al azar.
 
 \begin{algorithm}
 	\caption{Cálculo de las caras vistas utilizando trazado de rayos}
@@ -190,11 +196,11 @@ Esto emula el fenómeno de la reflexión, aunque introduce errores al aproximar 
 			\Loop{$ origen \in origenes$}
 				\State $dir \gets normalizar(parche.baricentro() - parcheObj.baricentro())$
 				\State $refDir \gets reflejar(dir, parcheObj.obtenerNormal())$
-				\State $parche \gets trazarRayo(origen, refDir)$
-				\If{$esValido(interseccion)$}
-				\State $fila[parche] \gets +(\frac{1}{nMuestras})$
-					\If{$esEspecular(interseccion)$}
-						\State $dibujarReflexiones(parcheObj, interseccion)$
+				\State $parcheRef \gets trazarRayo(origen, refDir)$
+				\If{$esValido(parcheRef)$}
+				\State $fila[parcheRef] \gets +(\frac{1}{nMuestras})$
+					\If{$esEspecular(parcheRef)$}
+						\State $dibujarReflexiones(parcheObj, parcheRef)$
 					\EndIf
 				\EndIf
 			\EndLoop
@@ -204,11 +210,11 @@ Esto emula el fenómeno de la reflexión, aunque introduce errores al aproximar 
 
 \subsection{Extensión del método del hemisferio}
 
-En el caso del trazado de rayos, la extensión de los factores de forma es prácticamente trivial. Comprende la extensión de la función \verb|traceRay()|, que en lugar de retornar un único valor para la cara vista, retornará un conjunto de pares de identificadores de caras y fracción de factor de forma. Básicamente, si el rayo inicial interseca una cara cuyo coeficiente de reflexión especular es mayor a cero se almacenará el total de $k(1 - \rho^{(s)}_{j})$ (donde $k = \frac{1}{nMuestras}$) como contribuyente del factor de forma $\mathbf{F}_{ij}$ y se calcularán las siguientes intersecciones con el \textit{residuo} de la reflexión que se distribuirá entre los parches reflejados. Es decir, suponiendo que un rayo impacta $S_{k}$ desde el camino $(S_{i}, S_{j})$ donde $\rho^{(s))}_{j} \ge 0$ se agregará $k\rho^{(s))}_{j}(1 - \rho_{k})$ y se procederá de forma recursiva hasta que $\rho_{z} = 0$ para una superficie intersecada $S_{z}$ o se alcance el máximo límite de recursión cómo se aprecia en la Figura \ref{img:caminoespecular}.
+En el caso del trazado de rayos, la extensión de los factores de forma es prácticamente trivial. Comprende la extensión de la función \verb|traceRay()|, que en lugar de retornar un único valor para la cara vista, retornará un conjunto de pares de identificadores de caras y fracción de factor de forma. Básicamente, si el rayo inicial interseca una cara j cuyo coeficiente de reflexión especular ($\rho_{j}^{(s)}$) es mayor a cero se almacenará de $k$ (donde $k = \frac{1}{nMuestras}$) como contribuyente del factor de forma $\mathbf{F}_{ij}$ y se calcularán las siguientes intersecciones con el \textit{residuo} de la reflexión que se distribuirá entre los parches reflejados. Es decir, suponiendo que un rayo impacta $S_{k}$ desde el camino $(S_{i}, S_{j})$ donde $\rho^{(s))}_{j} \ge 0$ se agregará $k\rho^{(s))}_{j}$ y se procederá de forma recursiva hasta que $\rho_{z}^{(s)} = 0$ para una superficie intersecada $S_{z}$ o se alcance el máximo límite de recursión cómo se aprecia en la Figura \ref{img:caminoespecular}.
 
 \section{Cálculo de la radiosidad}
 
-Recordando la Sección \ref{sec:vrad}, se han propuesto dos métodos para resolver el sistema, y calcular la radiosidad $\mathbf{B}$. El método "exacto" supone la resolución del sistema de ecuaciones dado por $(\mathbf{(I - RF)B} = E$, mientras que el segundo método está regido por el esquema iterativo dado por la Eq. \eqref{eq:iterativo}.
+Recordando la Sección \ref{sec:vrad}, se han propuesto dos métodos para resolver el sistema, y calcular la radiosidad $\mathbf{B}$. El método 'exacto' supone la resolución del sistema de ecuaciones dado por $(\mathbf{(I - RF)B} = E$, mientras que el segundo método está regido por el esquema iterativo dado por la Eq. \eqref{eq:iterativo}.
 
 En el primer caso, debido a que las características de algunas escenas de prueba utilizadas muestran que las matrices de factores de forma pueden ser dispersas (es decir, una gran cantidad de entradas de la matriz son nulas) la implementación se realizó utilizando la biblioteca de álgebra lineal \textit{Eigen}. En este caso, dadas las características de la matriz se optó por añadir soporte para los siguientes métodos:
 
